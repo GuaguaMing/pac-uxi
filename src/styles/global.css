@@ -209,46 +209,193 @@ button {
   background: #ffffff;
 }
 
+/* ==================== 1. 預設/電腦版樣式：把手機專用按鈕徹底隱藏 ==================== */
+.hamburger-toggle-btn,
+.sidebar-close-btn {
+  display: none !important;
+  /* 👈 強制在電腦版大畫面完全隱藏，消滅殘留 */
+}
+
+/* ==================== 2. RWD 全自動響應式樣式 (統一斷點 860px) ==================== */
 @media (max-width: 860px) {
+
+  /* 調整整體外殼結構，讓主畫面不再被原本的側邊欄空間推擠 */
   .app-shell {
     flex-direction: column;
   }
 
-  .app-sidebar {
+  /* 1. 🌟 點亮並顯示左上角漢堡按鈕 🌟 */
+  .hamburger-toggle-btn {
+    display: flex !important;
+    /* 👈 關鍵：用 !important 強制覆蓋外層的隱藏設定 */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    font-size: 20px;
+    padding: 4px 10px;
+    height: 34px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 2. 側邊欄頂部品牌區與關閉按鈕 */
+  .brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    min-width: 0;
-    max-height: 210px;
+    padding: 16px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #eee;
   }
 
+  .sidebar-close-btn {
+    display: block !important;
+    /* 👈 關鍵：在手機版顯示關閉按鈕 */
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888;
+    padding: 4px 8px;
+  }
+
+  /* 3. 側邊欄主體變更為「側滑抽屜」，徹底廢除舊的 width: 100% 壓頂設定 */
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    /* 👈 預設隱藏在螢幕左側外面 */
+    width: 280px;
+    height: 100vh;
+    max-height: none !important;
+    /* 👈 強制清除舊有的 210px 高度限制 */
+    background-color: #ffffff;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    /* 垂直排列 */
+  }
+
+  /* 當 React 狀態 isOpen 為 true 時滑出 */
+  .app-sidebar.mobile-open {
+    left: 0;
+  }
+
+  /* 4. 導覽按鈕區：強制垂直單排排列，徹底取消舊的 grid 網格 */
   .app-nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex !important;
+    flex-direction: column !important;
+    /* 👈 強制直向一筆畫排列 */
+    width: 100% !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box;
+    gap: 8px;
   }
 
+  /* 導覽按鈕本身樣式修正 */
+  .nav-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    /* 👈 讓圖示與文字靠左對齊 */
+    width: 100% !important;
+    padding: 12px 16px !important;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+  }
+
+  /* 主工作區頂部留白微調 */
   .workspace-topbar {
     height: auto;
-    padding: 12px;
+    padding: 12px 12px 12px 64px !important;
+    /* 👈 左邊留白 64px，幫漢堡按鈕留位置，不蓋到字 */
+  }
+
+  /* 5. 黑色半透明背景遮罩 */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 998;
   }
 }
 
+
 /* ── Role Avatars ── */
-.av-mgr { background: #fef3c7; color: #d97706; }
-.av-sup { background: #ede9fe; color: #7c3aed; }
-.av-pt { background: #eff6ff; color: #2563eb; }
-.av-ot { background: #fce7f3; color: #9d174d; }
-.av-st { background: #dcfce7; color: #16a34a; }
-.av-nur { background: #ccfbf1; color: #0d9488; }
-.av-doc { background: #fef3c7; color: #92400e; }
-.av-pha { background: #ede9fe; color: #7c3aed; }
-.av-nut { background: #dcfce7; color: #16a34a; }
-.av-adm { background: #f1f5f9; color: #475569; }
-.av-it { background: rgba(37, 99, 235, 0.7); color: #ffffff; }
+.av-mgr {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.av-sup {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.av-pt {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.av-ot {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.av-st {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.av-nur {
+  background: #ccfbf1;
+  color: #0d9488;
+}
+
+.av-doc {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.av-pha {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.av-nut {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.av-adm {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.av-it {
+  background: rgba(37, 99, 235, 0.7);
+  color: #ffffff;
+}
 
 /* ── Role Switcher Container & FAB ── */
 .role-switcher-container {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  left: 24px;
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -320,6 +467,7 @@ button {
     transform: scale(0.92) translateY(12px);
     opacity: 0;
   }
+
   100% {
     transform: scale(1) translateY(0);
     opacity: 1;
@@ -411,4 +559,3 @@ button {
   font-size: 13px;
   padding-right: 4px;
 }
-
