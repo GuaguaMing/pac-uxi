@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAC 後台設定管理</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563EB;--blue-light:#EFF6FF;--blue-mid:#BFDBFE;--blue-dark:#1E40AF;
+  --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;
+  --gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--gray-900:#0F172A;
+  --green:#16A34A;--green-light:#DCFCE7;--green-mid:#BBF7D0;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --purple:#7C3AED;--purple-light:#EDE9FE;
+  --teal:#0D9488;--teal-light:#CCFBF1;
+  --white:#FFFFFF;
+  --admin-dark:#1E293B;--admin-darker:#0F172A;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--gray-50);color:var(--gray-900);height:100vh;display:flex;overflow:hidden;font-size:14px}
+
+/* ── 後台專用 Sidebar ── */
+.sidebar{width:200px;min-width:200px;background:var(--admin-dark);display:flex;flex-direction:column;z-index:10}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-text{font-size:13px;font-weight:700;color:var(--white);letter-spacing:.02em}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.back-link{display:flex;align-items:center;gap:6px;padding:10px 16px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06);transition:color .15s}
+.back-link:hover{color:rgba(255,255,255,.85)}
+.sidebar-nav{padding:8px 0;flex:1}
+.nav-section-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;padding:10px 16px 5px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+.nav-item.active{background:rgba(37,99,235,.25);color:var(--white);font-weight:600;border-left-color:var(--blue)}
+.sidebar-user{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:8px}
+.admin-avatar{width:28px;height:28px;border-radius:50%;background:rgba(37,99,235,.5);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.admin-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.85)}
+.admin-role{font-size:10px;color:rgba(255,255,255,.4)}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.breadcrumb{font-size:12px;color:var(--gray-500)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:var(--white)}.btn-primary:hover{background:var(--blue-dark)}
+.btn-secondary{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}.btn-secondary:hover{background:var(--gray-50)}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--blue-mid)}.btn-ghost:hover{background:var(--blue-light)}
+.btn-danger{background:var(--white);color:var(--red);border:1px solid #FECACA}.btn-danger:hover{background:var(--red-light)}
+.btn-amber{background:var(--white);color:var(--amber);border:1px solid #FDE68A}.btn-amber:hover{background:var(--amber-light)}
+.btn-sm{padding:5px 10px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:600}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.badge-gray{background:var(--gray-100);color:var(--gray-500)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+
+/* ── Page header ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:18px;font-weight:700}
+.page-subtitle{font-size:12px;color:var(--gray-500);margin-top:3px}
+
+/* ── Stats strip ── */
+.stats-row{display:flex;gap:10px;margin-bottom:20px}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:14px 20px;flex:1}
+.stat-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:700;color:var(--gray-900)}
+.stat-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.stat-card.s-blue .stat-value{color:var(--blue)}
+.stat-card.s-green .stat-value{color:var(--green)}
+.stat-card.s-amber .stat-value{color:var(--amber)}
+.stat-card.s-red .stat-value{color:var(--red)}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.toolbar-left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search-wrap{position:relative}
+.search-wrap input{padding:7px 10px 7px 30px;border:1px solid var(--gray-300);border-radius:7px;font-size:12px;outline:none;width:220px}
+.search-wrap input:focus{border-color:var(--blue)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:13px}
+select.filter{padding:7px 10px;border:1px solid var(--gray-300);border-radius:7px;font-size:12px;color:var(--gray-700);background:var(--white);outline:none;cursor:pointer}
+
+/* ── Member table ── */
+.table-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;overflow:hidden}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-size:11px;font-weight:700;color:var(--gray-500);text-align:left;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.data-table td{padding:12px 14px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--gray-50)}
+.member-cell{display:flex;align-items:center;gap:10px}
+.member-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.member-name{font-size:13px;font-weight:600;color:var(--gray-900)}
+.member-email{font-size:11px;color:var(--gray-400);margin-top:1px}
+.role-tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:600}
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot-green{background:var(--green)}
+.dot-gray{background:var(--gray-400)}
+.dot-red{background:var(--red)}
+.action-btns{display:flex;gap:5px}
+.last-login{font-size:12px;color:var(--gray-600)}
+.last-login-sub{font-size:10px;color:var(--gray-400)}
+
+/* ── Permission matrix ── */
+.perm-container{overflow-x:auto}
+.perm-table{border-collapse:collapse;font-size:12px;min-width:900px;width:100%}
+.perm-table th{padding:10px 8px;background:var(--gray-50);border:1px solid var(--gray-200);font-size:11px;font-weight:700;color:var(--gray-600);text-align:center;white-space:nowrap}
+.perm-table th.module-col{text-align:left;padding:10px 14px;min-width:160px;position:sticky;left:0;z-index:2;background:var(--gray-50)}
+.perm-table td{padding:10px 8px;border:1px solid var(--gray-100);text-align:center;vertical-align:middle}
+.perm-table td.module-cell{text-align:left;padding:10px 14px;font-weight:500;color:var(--gray-700);position:sticky;left:0;z-index:1;background:var(--white);font-size:12px}
+.perm-table td.module-cell .mod-icon{margin-right:6px}
+.perm-table tr:hover td{background:var(--blue-light)}
+.perm-table tr:hover td.module-cell{background:var(--blue-light)}
+.perm-table thead th.role-header{min-width:72px}
+.perm-table thead tr:first-child th{border-bottom:2px solid var(--gray-200)}
+.perm-cb{width:16px;height:16px;accent-color:var(--blue);cursor:pointer}
+.role-header-inner{display:flex;flex-direction:column;align-items:center;gap:3px}
+.role-av-sm{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin:0 auto 2px}
+.perm-legend{display:flex;align-items:center;gap:16px;margin-top:12px;font-size:11px;color:var(--gray-500)}
+.perm-legend-item{display:flex;align-items:center;gap:5px}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
+.modal{background:var(--white);border-radius:12px;width:520px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-lg{width:640px}
+.modal-header{padding:16px 20px 13px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{width:25px;height:25px;border-radius:5px;border:none;background:var(--gray-100);color:var(--gray-500);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:7px;flex-shrink:0}
+
+/* ── Forms ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:span 2}
+.form-group label{font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em}
+.form-control{padding:8px 11px;border:1px solid var(--gray-300);border-radius:7px;font-size:13px;color:var(--gray-800);background:var(--white);outline:none;transition:border-color .15s}
+.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
+select.form-control{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2394A3B8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
+
+/* HIS import */
+.his-box{background:var(--gray-50);border:2px dashed var(--gray-300);border-radius:10px;padding:20px;text-align:center;margin-bottom:14px;cursor:pointer;transition:all .15s}
+.his-box:hover{border-color:var(--blue);background:var(--blue-light)}
+.his-box-icon{font-size:28px;margin-bottom:8px}
+.his-box-text{font-size:13px;font-weight:600;color:var(--gray-700)}
+.his-box-sub{font-size:11px;color:var(--gray-400);margin-top:3px}
+.import-result{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;overflow:hidden}
+.import-result-header{padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-size:12px;font-weight:600;color:var(--gray-600)}
+.import-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--gray-100)}
+.import-row:last-child{border-bottom:none}
+.import-check{accent-color:var(--blue);width:15px;height:15px;cursor:pointer}
+.import-name{font-size:13px;font-weight:600;flex:1}
+.import-meta{font-size:11px;color:var(--gray-500)}
+
+/* Info note */
+.info-note{font-size:12px;padding:10px 12px;border-radius:6px;margin-bottom:12px;line-height:1.6}
+.info-note.blue{background:var(--blue-light);color:var(--blue-dark)}
+.info-note.amber{background:var(--amber-light);color:var(--amber)}
+.info-note.red{background:var(--red-light);color:var(--red)}
+
+/* Tabs */
+.modal-tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:16px}
+.modal-tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.modal-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+.hidden{display:none!important}
+.divider{height:1px;background:var(--gray-100);margin:14px 0}
+</style>
+</head>
+<body>
+
+<!-- 後台專用 SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">PAC 後台管理</div>
+    <div class="logo-sub">System Administration</div>
+  </div>
+<!--
+  <div class="back-link" onclick="alert('返回 → PAC 管理系統主畫面')">
+    ← 返回系統
+  </div>
+-->
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">帳號管理</div>
+    <div class="nav-item active" onclick="showPage('members')">👥 成員管理</div>
+    <div class="nav-section-label">權限設定</div>
+    <div class="nav-item" onclick="showPage('permissions')">🔑 角色權限矩陣</div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="admin-avatar">資</div>
+    <div>
+      <div class="admin-name">王志偉</div>
+      <div class="admin-role">系統管理員・資訊部</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb" id="bc">後台設定管理 › 成員管理</div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:var(--gray-400)">員郭醫院・PAC 系統 v1.0</span>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- ══ 成員管理頁 ══ -->
+    <div id="pg-members">
+      <div class="page-header">
+        <div>
+          <div class="page-title">👥 成員管理</div>
+          <div class="page-subtitle">管理所有 PAC 系統使用者帳號</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="openModal('modal-import')">📥 從杏翔 HIS 匯入</button>
+          <button class="btn btn-primary" onclick="openModal('modal-add')">＋ 新增成員</button>
+        </div>
+      </div>
+
+      <!-- 統計 -->
+      <div class="stats-row">
+        <div class="stat-card s-blue"><div class="stat-label">總帳號數</div><div class="stat-value">24</div><div class="stat-sub">員郭醫院</div></div>
+        <div class="stat-card s-green"><div class="stat-label">啟用中</div><div class="stat-value">21</div><div class="stat-sub">正常使用</div></div>
+        <div class="stat-card s-amber"><div class="stat-label">停用</div><div class="stat-value">2</div><div class="stat-sub">已離職/暫停</div></div>
+        <div class="stat-card s-red"><div class="stat-label">30天未登入</div><div class="stat-value">1</div><div class="stat-sub">待確認</div></div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="搜尋姓名、信箱、員工編號">
+          </div>
+          <select class="filter">
+            <option>全部角色</option>
+            <option>個管師</option>
+            <option>復健主管</option>
+            <option>復健治療師</option>
+            <option>護理師</option>
+            <option>醫師</option>
+            <option>藥師</option>
+            <option>營養師</option>
+            <option>行政</option>
+          </select>
+          <select class="filter">
+            <option>全部狀態</option>
+            <option>啟用中</option>
+            <option>已停用</option>
+          </select>
+        </div>
+        <span style="font-size:12px;color:var(--gray-400)">共 24 位成員</span>
+      </div>
+
+      <!-- 成員列表 -->
+      <div class="table-card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>成員</th>
+              <th>角色</th>
+              <th>所屬單位</th>
+              <th>帳號狀態</th>
+              <th>最後登入</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="member-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ 角色權限矩陣頁 ══ -->
+    <div id="pg-permissions" class="hidden">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🔑 角色權限矩陣</div>
+          <div class="page-subtitle">設定各角色可存取的功能模組・勾選代表「可存取」</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="resetToDefault()">↺ 還原預設值</button>
+          <button class="btn btn-primary btn-sm" onclick="alert('權限設定已儲存')">儲存設定</button>
+        </div>
+      </div>
+
+      <div class="info-note blue">ℹ️ 此為模組存取等級設定。各模組內的操作權限（填寫/審核/唯讀等）由各模組自身邏輯控制，將於開發階段細化。</div>
+
+      <div class="table-card">
+        <div class="perm-container">
+          <table class="perm-table" id="perm-table">
+            <!-- 由 JS 渲染 -->
+          </table>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid var(--gray-100)">
+          <div class="perm-legend">
+            <div class="perm-legend-item"><input type="checkbox" checked disabled style="accent-color:var(--blue)"> 可存取此模組</div>
+            <div class="perm-legend-item"><input type="checkbox" disabled> 無存取權限</div>
+            <span style="color:var(--gray-300)">｜</span>
+            <span style="color:var(--gray-400)">變更後請點「儲存設定」生效</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- 新增成員 -->
+<div id="modal-add" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">＋ 新增成員</div>
+      <button class="modal-close" onclick="closeModal('modal-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>姓名 <span style="color:var(--red)">*</span></label>
+          <input class="form-control" placeholder="e.g. 林美惠">
+        </div>
+        <div class="form-group">
+          <label>員工編號</label>
+          <input class="form-control" placeholder="e.g. E20240012">
+        </div>
+        <div class="form-group">
+          <label>電子郵件 <span style="color:var(--red)">*</span></label>
+          <input class="form-control" type="email" placeholder="e.g. lin@yuankuo.com.tw">
+        </div>
+        <div class="form-group">
+          <label>電話號碼</label>
+          <input class="form-control" placeholder="e.g. 0912-345-678">
+        </div>
+        <div class="form-group">
+          <label>所屬單位 <span style="color:var(--red)">*</span></label>
+          <select class="form-control">
+            <option value="">請選擇</option>
+            <option>復健科</option><option>護理部</option><option>醫師</option>
+            <option>藥劑科</option><option>營養科</option><option>行政部</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>系統角色 <span style="color:var(--red)">*</span></label>
+          <select class="form-control">
+            <option value="">請選擇</option>
+            <option>個管師</option><option>復健主管</option><option>PT（物理治療師）</option>
+            <option>OT（職能治療師）</option><option>ST（語言治療師）</option>
+            <option>護理師</option><option>醫師</option><option>藥師</option>
+            <option>營養師</option><option>行政</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>初始密碼設定</label>
+          <select class="form-control">
+            <option>系統自動產生（發送至電子郵件）</option>
+            <option>手動設定</option>
+          </select>
+        </div>
+      </div>
+      <div class="info-note amber" style="margin-top:10px">⚠️ 建立帳號後將寄送啟用通知至填寫的電子郵件，請確認信箱無誤。</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-add');alert('帳號已建立，啟用通知已發送')">建立帳號</button>
+    </div>
+  </div>
+</div>
+
+<!-- 從杏翔 HIS 匯入 -->
+<div id="modal-import" class="modal-overlay hidden">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title">📥 從杏翔 HIS 匯入成員</div>
+      <button class="modal-close" onclick="closeModal('modal-import')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-note blue">連接至杏翔護理資訊系統，搜尋院內人員並直接匯入建立帳號。</div>
+      <div class="modal-tabs">
+        <div class="modal-tab active" onclick="switchImportTab(this,'search')">🔍 搜尋人員</div>
+        <div class="modal-tab" onclick="switchImportTab(this,'batch')">📂 批次匯入</div>
+      </div>
+      <!-- 搜尋 -->
+      <div id="import-tab-search">
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <input class="form-control" style="flex:1" placeholder="輸入姓名或員工編號搜尋杏翔系統" id="his-search-input">
+          <button class="btn btn-primary" onclick="showHisResults()">搜尋</button>
+        </div>
+        <div id="his-result-area">
+          <div style="padding:24px;text-align:center;color:var(--gray-400);font-size:12px">輸入關鍵字搜尋院內人員</div>
+        </div>
+      </div>
+      <!-- 批次 -->
+      <div id="import-tab-batch" class="hidden">
+        <div class="his-box" onclick="alert('模擬連接杏翔 HIS 系統中...\n\n實際開發時將呼叫 HIS API 取得人員清單')">
+          <div class="his-box-icon">🏥</div>
+          <div class="his-box-text">連接杏翔 HIS 系統</div>
+          <div class="his-box-sub">點擊同步取得復健科、護理部等相關部門人員清單</div>
+        </div>
+        <div class="info-note amber">⚠️ 批次匯入將以 HIS 現有資料為準，匯入後仍可手動調整角色與單位。</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-import')">取消</button>
+      <button class="btn btn-primary" id="import-confirm-btn" onclick="closeModal('modal-import');alert('已匯入選取人員，請確認角色設定')">匯入選取（0）</button>
+    </div>
+  </div>
+</div>
+
+<!-- 編輯成員 -->
+<div id="modal-edit" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-edit-title">✏️ 編輯成員</div>
+      <button class="modal-close" onclick="closeModal('modal-edit')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>姓名</label>
+          <input class="form-control" id="edit-name">
+        </div>
+        <div class="form-group">
+          <label>電子郵件</label>
+          <input class="form-control" id="edit-email" type="email">
+        </div>
+        <div class="form-group">
+          <label>所屬單位</label>
+          <select class="form-control" id="edit-dept">
+            <option>復健科</option><option>護理部</option><option>醫師</option>
+            <option>藥劑科</option><option>營養科</option><option>行政部</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>系統角色</label>
+          <select class="form-control" id="edit-role">
+            <option>個管師</option><option>復健主管</option><option>PT（物理治療師）</option>
+            <option>OT（職能治療師）</option><option>ST（語言治療師）</option>
+            <option>護理師</option><option>醫師</option><option>藥師</option>
+            <option>營養師</option><option>行政</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>帳號狀態</label>
+          <select class="form-control" id="edit-status">
+            <option value="active">啟用中</option>
+            <option value="disabled">已停用</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>密碼重設</label>
+          <button class="btn btn-amber btn-sm" onclick="alert('密碼重設信已發送至使用者信箱')">📧 發送重設信</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="closeModal('modal-edit');alert('帳號已停用')">停用帳號</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-edit');alert('成員資料已更新')">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 確認停用 -->
+<div id="modal-disable" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚠️ 確認停用帳號</div>
+      <button class="modal-close" onclick="closeModal('modal-disable')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-note red">停用後該帳號將無法登入系統，但資料與紀錄將完整保留。如需恢復可重新啟用。</div>
+      <div style="font-size:13px;color:var(--gray-700)">確定停用 <strong id="disable-name"></strong> 的帳號嗎？</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-disable')">取消</button>
+      <button class="btn btn-danger" onclick="closeModal('modal-disable');alert('帳號已停用')">確認停用</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 成員資料 ──
+const MEMBERS = [
+  {name:'林美惠', ch:'林', email:'lin.meihui@yuankuo.com.tw', av:'av-mgr', role:'個管師', dept:'復健科', status:'active', lastLogin:'2026/06/25 08:34', loginSub:'Chrome・Mac'},
+  {name:'王大明', ch:'王', email:'wang.daming@yuankuo.com.tw', av:'av-sup', role:'復健主管', dept:'復健科', status:'active', lastLogin:'2026/06/25 07:50', loginSub:'Chrome・Windows'},
+  {name:'黃志豪', ch:'黃', email:'huang.zhihao@yuankuo.com.tw', av:'av-pt', role:'PT', dept:'復健科', status:'active', lastLogin:'2026/06/24 16:20', loginSub:'Safari・Mac'},
+  {name:'李佳穎', ch:'李', email:'lee.jiaying@yuankuo.com.tw', av:'av-ot', role:'OT', dept:'復健科', status:'active', lastLogin:'2026/06/24 15:45', loginSub:'Chrome・Windows'},
+  {name:'吳怡君', ch:'吳', email:'wu.yijun@yuankuo.com.tw', av:'av-st', role:'ST', dept:'復健科', status:'active', lastLogin:'2026/06/24 14:10', loginSub:'Chrome・Windows'},
+  {name:'陳建宏', ch:'陳', email:'chen.jianhong@yuankuo.com.tw', av:'av-pt', role:'PT', dept:'復健科', status:'active', lastLogin:'2026/06/23 17:30', loginSub:'Chrome・Windows'},
+  {name:'張雅婷', ch:'張', email:'chang.yating@yuankuo.com.tw', av:'av-ot', role:'OT', dept:'復健科', status:'active', lastLogin:'2026/06/22 09:15', loginSub:'Safari・iPhone'},
+  {name:'陳玉玲', ch:'陳', email:'chen.yuling@yuankuo.com.tw', av:'av-nur', role:'護理師', dept:'護理部', status:'active', lastLogin:'2026/06/25 07:00', loginSub:'Chrome・Windows'},
+  {name:'林淑芬', ch:'林', email:'lin.shufen@yuankuo.com.tw', av:'av-nur', role:'護理師', dept:'護理部', status:'active', lastLogin:'2026/06/24 22:10', loginSub:'Chrome・Windows'},
+  {name:'張宗達', ch:'張', email:'chang.zongda@yuankuo.com.tw', av:'av-doc', role:'醫師', dept:'復健科', status:'active', lastLogin:'2026/06/24 12:00', loginSub:'Chrome・Mac'},
+  {name:'林建志', ch:'林', email:'lin.jianzhi@yuankuo.com.tw', av:'av-pha', role:'藥師', dept:'藥劑科', status:'active', lastLogin:'2026/06/20 09:30', loginSub:'Chrome・Windows'},
+  {name:'周雅玲', ch:'周', email:'chou.yaling@yuankuo.com.tw', av:'av-nut', role:'營養師', dept:'營養科', status:'active', lastLogin:'2026/06/18 11:00', loginSub:'Chrome・Mac'},
+  {name:'蔡書明', ch:'蔡', email:'tsai.shuming@yuankuo.com.tw', av:'av-adm', role:'行政', dept:'行政部', status:'active', lastLogin:'2026/06/25 08:00', loginSub:'Chrome・Windows'},
+  {name:'黃怡真', ch:'黃', email:'huang.yizhen@yuankuo.com.tw', av:'av-adm', role:'行政', dept:'行政部', status:'active', lastLogin:'2026/06/24 17:50', loginSub:'Chrome・Windows'},
+  {name:'李家豪', ch:'李', email:'lee.jiahao@yuankuo.com.tw', av:'av-pt', role:'PT', dept:'復健科', status:'disabled', lastLogin:'2026/04/10 09:00', loginSub:'已離職'},
+  {name:'王小敏', ch:'王', email:'wang.xiaomin@yuankuo.com.tw', av:'av-nur', role:'護理師', dept:'護理部', status:'disabled', lastLogin:'2026/05/20 14:00', loginSub:'已停用'},
+];
+
+const AV_STYLE = {
+  'av-mgr':'background:var(--amber-light);color:var(--amber)',
+  'av-sup':'background:var(--purple-light);color:var(--purple)',
+  'av-pt':'background:var(--blue-light);color:var(--blue)',
+  'av-ot':'background:#FCE7F3;color:#9D174D',
+  'av-st':'background:var(--green-light);color:var(--green)',
+  'av-nur':'background:var(--teal-light);color:var(--teal)',
+  'av-doc':'background:#FEF3C7;color:#92400E',
+  'av-pha':'background:var(--purple-light);color:var(--purple)',
+  'av-nut':'background:var(--green-light);color:var(--green)',
+  'av-adm':'background:var(--gray-100);color:var(--gray-600)',
+};
+const ROLE_BADGE = {
+  '個管師':'background:#FEF3C7;color:#92400E',
+  '復健主管':'background:var(--purple-light);color:var(--purple)',
+  'PT':'background:var(--blue-light);color:var(--blue)',
+  'OT':'background:#FCE7F3;color:#9D174D',
+  'ST':'background:var(--green-light);color:var(--green)',
+  '護理師':'background:var(--teal-light);color:var(--teal)',
+  '醫師':'background:#FEF3C7;color:#78350F',
+  '藥師':'background:var(--purple-light);color:var(--purple)',
+  '營養師':'background:var(--green-light);color:var(--green)',
+  '行政':'background:var(--gray-100);color:var(--gray-600)',
+};
+
+function renderMembers() {
+  const tbody = document.getElementById('member-tbody');
+  tbody.innerHTML = MEMBERS.map((m,i) => {
+    const st = m.status === 'active'
+      ? `<span class="status-dot"><span class="dot dot-green"></span> 啟用中</span>`
+      : `<span class="status-dot"><span class="dot dot-gray"></span> <span style="color:var(--gray-400)">已停用</span></span>`;
+    const rowStyle = m.status === 'disabled' ? 'opacity:.55' : '';
+    return `<tr style="${rowStyle}">
+      <td>
+        <div class="member-cell">
+          <div class="member-av" style="${AV_STYLE[m.av]||''}">${m.ch}</div>
+          <div>
+            <div class="member-name">${m.name}</div>
+            <div class="member-email">${m.email}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="role-tag" style="${ROLE_BADGE[m.role]||''}">${m.role}</span></td>
+      <td style="font-size:12px;color:var(--gray-600)">${m.dept}</td>
+      <td>${st}</td>
+      <td><div class="last-login">${m.lastLogin}</div><div class="last-login-sub">${m.loginSub}</div></td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-ghost btn-xs" onclick="openEdit(${i})">編輯</button>
+          ${m.status==='active'?`<button class="btn btn-danger btn-xs" onclick="confirmDisable('${m.name}')">停用</button>`:`<button class="btn btn-secondary btn-xs" onclick="alert('帳號已重新啟用')">啟用</button>`}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openEdit(i) {
+  const m = MEMBERS[i];
+  document.getElementById('modal-edit-title').textContent = `✏️ 編輯成員：${m.name}`;
+  document.getElementById('edit-name').value = m.name;
+  document.getElementById('edit-email').value = m.email;
+  document.getElementById('edit-status').value = m.status;
+  openModal('modal-edit');
+}
+
+function confirmDisable(name) {
+  document.getElementById('disable-name').textContent = name;
+  openModal('modal-disable');
+}
+
+// ── 權限矩陣 ──
+const MODULES = [
+  {icon:'🏠', name:'個人儀表板'},
+  {icon:'📋', name:'個案管理'},
+  {icon:'🛏', name:'病床管理'},
+  {icon:'📅', name:'班表總覽'},
+  {icon:'🏡', name:'居家排班管理'},
+  {icon:'📊', name:'評估量表'},
+  {icon:'💪', name:'復健紀錄'},
+  {icon:'📤', name:'指標匯出'},
+  {icon:'👤', name:'個人資訊頁'},
+];
+
+const ROLES_LIST = [
+  {label:'個管師', av:'av-mgr', ch:'個'},
+  {label:'復健主管', av:'av-sup', ch:'主'},
+  {label:'PT', av:'av-pt', ch:'P'},
+  {label:'OT', av:'av-ot', ch:'O'},
+  {label:'ST', av:'av-st', ch:'S'},
+  {label:'護理師', av:'av-nur', ch:'護'},
+  {label:'醫師', av:'av-doc', ch:'醫'},
+  {label:'藥師', av:'av-pha', ch:'藥'},
+  {label:'營養師', av:'av-nut', ch:'營'},
+  {label:'行政', av:'av-adm', ch:'行'},
+];
+
+// 預設權限矩陣 [模組][角色]
+const DEFAULT_PERMS = [
+//     個管  主管  PT   OT   ST  護理  醫師  藥師  營養  行政
+  [true, true, true, true, true, true, true, true, true, true],  // 儀表板
+  [true, false,false,false,false,false,false,false,false,false], // 個案管理
+  [true, false,false,false,false,true, false,false,false,false], // 病床管理
+  [true, true, true, true, true, false,false,false,false,false], // 班表
+  [true, true, true, true, true, false,false,false,false,false], // 居家排班
+  [true, true, true, true, true, true, true, true, true, false], // 評估量表
+  [true, true, true, true, true, false,false,false,false,false], // 復健紀錄
+  [true, false,false,false,false,false,false,false,false,false], // 指標匯出
+  [true, true, true, true, true, true, true, true, true, true], // 個人資訊
+];
+
+let currentPerms = DEFAULT_PERMS.map(row=>[...row]);
+
+function renderPermMatrix() {
+  const table = document.getElementById('perm-table');
+  let html = '<thead><tr><th class="module-col">功能模組</th>';
+  ROLES_LIST.forEach((r,ri) => {
+    html += `<th class="role-header"><div class="role-header-inner"><div class="role-av-sm" style="${AV_STYLE[r.av]||''}">${r.ch}</div>${r.label}</div></th>`;
+  });
+  html += '</tr></thead><tbody>';
+  MODULES.forEach((m,mi) => {
+    html += `<tr><td class="module-cell"><span class="mod-icon">${m.icon}</span>${m.name}</td>`;
+    ROLES_LIST.forEach((r,ri) => {
+      html += `<td><input type="checkbox" class="perm-cb" ${currentPerms[mi][ri]?'checked':''} onchange="currentPerms[${mi}][${ri}]=this.checked"></td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function resetToDefault() {
+  currentPerms = DEFAULT_PERMS.map(row=>[...row]);
+  renderPermMatrix();
+}
+
+// ── 頁面切換 ──
+function showPage(page) {
+  document.getElementById('pg-members').classList.toggle('hidden', page!=='members');
+  document.getElementById('pg-permissions').classList.toggle('hidden', page!=='permissions');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const bc = {members:'後台設定管理 › 成員管理', permissions:'後台設定管理 › 角色權限矩陣'};
+  document.getElementById('bc').textContent = bc[page];
+  if(page==='permissions') renderPermMatrix();
+}
+
+// ── HIS 搜尋示意 ──
+const HIS_DATA = [
+  {name:'陳志明', dept:'復健科', title:'物理治療師', emp:'E20240021'},
+  {name:'謝佳慧', dept:'護理部', title:'護理師', emp:'E20240022'},
+  {name:'劉建國', dept:'復健科', title:'職能治療師', emp:'E20240023'},
+];
+let selectedImport = new Set();
+
+function showHisResults() {
+  const area = document.getElementById('his-result-area');
+  let html = `<div class="import-result"><div class="import-result-header">找到 ${HIS_DATA.length} 筆結果（尚未在 PAC 系統建立帳號）</div>`;
+  HIS_DATA.forEach((p,i) => {
+    html += `<div class="import-row">
+      <input type="checkbox" class="import-check" onchange="toggleImport(${i},this.checked)">
+      <div style="flex:1"><div class="import-name">${p.name}</div><div class="import-meta">${p.dept}・${p.title}・員工編號 ${p.emp}</div></div>
+    </div>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function toggleImport(i, checked) {
+  if(checked) selectedImport.add(i); else selectedImport.delete(i);
+  document.getElementById('import-confirm-btn').textContent = `匯入選取（${selectedImport.size}）`;
+}
+
+function switchImportTab(el, tab) {
+  document.querySelectorAll('.modal-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('import-tab-search').classList.toggle('hidden', tab!=='search');
+  document.getElementById('import-tab-batch').classList.toggle('hidden', tab!=='batch');
+}
+
+// ── Modal helpers ──
+function openModal(id){document.getElementById(id).classList.remove('hidden')}
+function closeModal(id){document.getElementById(id).classList.add('hidden')}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden')}));
+
+// Init
+renderMembers();
+</script>
+</body>
+</html>

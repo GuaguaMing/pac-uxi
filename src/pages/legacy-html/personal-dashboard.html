@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAC 個人儀表板</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563EB;--blue-light:#EFF6FF;--blue-mid:#BFDBFE;--blue-dark:#1E40AF;
+  --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;
+  --gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--gray-900:#0F172A;
+  --green:#16A34A;--green-light:#DCFCE7;--green-mid:#BBF7D0;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --purple:#7C3AED;--purple-light:#EDE9FE;
+  --teal:#0D9488;--teal-light:#CCFBF1;
+  --white:#FFFFFF;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--gray-50);color:var(--gray-900);height:100vh;display:flex;overflow:hidden;font-size:14px}
+
+/* ── Sidebar ── */
+.sidebar{width:192px;min-width:192px;background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;z-index:10}
+.sidebar-logo{padding:16px 16px 13px;border-bottom:1px solid var(--gray-200)}
+.logo-text{font-size:14px;font-weight:700;color:var(--blue)}
+.logo-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.sidebar-nav{padding:6px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--gray-500);border-left:3px solid transparent;cursor:default}
+.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:600;border-left-color:var(--blue)}
+.nav-item.disabled{opacity:.38;cursor:not-allowed}
+.sidebar-user{margin-top: auto;padding:11px 14px;border-top:1px solid var(--gray-200)}
+.user-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.user-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.av-mgr{background:var(--amber-light);color:var(--amber)}
+.av-sup{background:var(--purple-light);color:var(--purple)}
+.av-pt{background:var(--blue-light);color:var(--blue)}
+.av-ot{background:#FCE7F3;color:#9D174D}
+.av-st{background:var(--green-light);color:var(--green)}
+.av-nur{background:var(--teal-light);color:var(--teal)}
+.av-doc{background:#FEF3C7;color:#92400E}
+.av-pha{background:var(--purple-light);color:var(--purple)}
+.av-nut{background:var(--green-light);color:var(--green)}
+.av-adm{background:var(--gray-100);color:var(--gray-600)}
+.user-name{font-size:12px;font-weight:600;color:var(--gray-700)}
+.user-role-label{font-size:11px;color:var(--gray-400)}
+.role-switcher{position:relative}
+.role-select{width:100%;padding:5px 24px 5px 8px;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;font-weight:600;color:var(--gray-600);background:var(--white);cursor:pointer;appearance:none;outline:none}
+.role-select:focus{border-color:var(--blue)}
+.role-arrow{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--gray-400);pointer-events:none}
+
+/* ── Main ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:20}
+.breadcrumb{font-size:12px;color:var(--gray-500)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-date{font-size:11px;color:var(--gray-400)}
+.notif-btn{position:relative;width:34px;height:34px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s}
+.notif-btn:hover{background:var(--gray-50);border-color:var(--gray-300)}
+.notif-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--red);color:var(--white);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--white)}
+.content{flex:1;overflow-y:auto;padding:20px;transition:margin-right .25s}
+.content.shifted{margin-right:360px}
+
+/* ── Notification Panel ── */
+.notif-panel{position:fixed;top:0;right:-360px;width:360px;height:100vh;background:var(--white);border-left:1px solid var(--gray-200);box-shadow:-4px 0 24px rgba(0,0,0,.1);z-index:50;display:flex;flex-direction:column;transition:right .25s}
+.notif-panel.open{right:0}
+.notif-panel-header{padding:16px 18px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.notif-panel-title{font-size:15px;font-weight:700}
+.notif-panel-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.notif-close{width:26px;height:26px;border-radius:5px;border:none;background:var(--gray-100);color:var(--gray-500);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.notif-close:hover{background:var(--gray-200)}
+.notif-list{flex:1;overflow-y:auto;padding:8px 0}
+.notif-section-label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;padding:10px 18px 5px}
+.notif-item{display:flex;gap:10px;padding:10px 18px;cursor:pointer;transition:background .12s;border-left:3px solid transparent}
+.notif-item:hover{background:var(--gray-50)}
+.notif-item.unread{background:var(--blue-light);border-left-color:var(--blue)}
+.notif-item.urgent{background:var(--red-light);border-left-color:var(--red)}
+.notif-item.urgent:hover{background:#FECACA}
+.notif-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ni-blue{background:var(--blue-light)}
+.ni-red{background:var(--red-light)}
+.ni-amber{background:var(--amber-light)}
+.ni-green{background:var(--green-light)}
+.ni-purple{background:var(--purple-light)}
+.notif-body{flex:1;min-width:0}
+.notif-title{font-size:12px;font-weight:600;color:var(--gray-900);margin-bottom:2px}
+.notif-desc{font-size:11px;color:var(--gray-500);line-height:1.5}
+.notif-time{font-size:10px;color:var(--gray-400);margin-top:3px}
+.notif-mark-all{padding:10px 18px;font-size:11px;color:var(--blue);cursor:pointer;border-top:1px solid var(--gray-100);flex-shrink:0;text-align:center}
+.notif-mark-all:hover{background:var(--blue-light)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:var(--white)}.btn-primary:hover{background:var(--blue-dark)}
+.btn-secondary{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}.btn-secondary:hover{background:var(--gray-50)}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--blue-mid)}.btn-ghost:hover{background:var(--blue-light)}
+.btn-green{background:var(--white);color:var(--green);border:1px solid var(--green-mid)}.btn-green:hover{background:var(--green-light)}
+.btn-amber{background:var(--white);color:var(--amber);border:1px solid #FDE68A}.btn-amber:hover{background:var(--amber-light)}
+.btn-red{background:var(--white);color:var(--red);border:1px solid #FECACA}.btn-red:hover{background:var(--red-light)}
+.btn-sm{padding:5px 10px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:600}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.badge-gray{background:var(--gray-100);color:var(--gray-500)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}
+
+/* ── Dashboard layout ── */
+.dash-greeting{margin-bottom:20px}
+.dash-greeting h1{font-size:20px;font-weight:700;color:var(--gray-900)}
+.dash-greeting p{font-size:13px;color:var(--gray-500);margin-top:3px}
+
+/* Stats strip */
+.stats-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.stat-card{background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:14px 18px;display:flex;flex-direction:column;gap:3px;min-width:110px;flex:1}
+.stat-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em}
+.stat-value{font-size:24px;font-weight:700;color:var(--gray-900)}
+.stat-sub{font-size:11px;color:var(--gray-400)}
+.stat-card.s-blue{border-color:var(--blue-mid);background:var(--blue-light)}.stat-card.s-blue .stat-value{color:var(--blue)}
+.stat-card.s-green{border-color:var(--green-mid);background:var(--green-light)}.stat-card.s-green .stat-value{color:var(--green)}
+.stat-card.s-amber{border-color:#FDE68A;background:var(--amber-light)}.stat-card.s-amber .stat-value{color:var(--amber)}
+.stat-card.s-red{border-color:#FECACA;background:var(--red-light)}.stat-card.s-red .stat-value{color:var(--red)}
+.stat-card.s-purple{border-color:#DDD6FE;background:var(--purple-light)}.stat-card.s-purple .stat-value{color:var(--purple)}
+
+/* Two-col grid */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dash-grid.three-col{grid-template-columns:1fr 1fr 1fr}
+.span-2{grid-column:span 2}
+
+/* Widget card */
+.widget{background:var(--white);border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
+.widget-header{padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.widget-title{font-size:13px;font-weight:700;color:var(--gray-700);display:flex;align-items:center;gap:6px}
+.widget-action{font-size:11px;color:var(--blue);cursor:pointer}
+.widget-action:hover{text-decoration:underline}
+.widget-body{padding:12px 16px}
+.widget-body.no-pad{padding:0}
+.widget-empty{padding:20px;text-align:center;color:var(--gray-400);font-size:12px}
+
+/* Todo list */
+.todo-list{display:flex;flex-direction:column}
+.todo-item{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .12s}
+.todo-item:last-child{border-bottom:none}
+.todo-item:hover{background:var(--gray-50)}
+.todo-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.todo-body{flex:1;min-width:0}
+.todo-title{font-size:12px;font-weight:600;color:var(--gray-800);margin-bottom:2px}
+.todo-meta{font-size:11px;color:var(--gray-500)}
+.todo-badge{flex-shrink:0;align-self:center}
+.todo-item.urgent .todo-title{color:var(--red)}
+
+/* Case list in widget */
+.mini-case-list{display:flex;flex-direction:column}
+.mini-case{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .12s}
+.mini-case:last-child{border-bottom:none}
+.mini-case:hover{background:var(--gray-50)}
+.mini-case-name{font-size:12px;font-weight:600;color:var(--gray-800);min-width:60px}
+.mini-case-meta{font-size:11px;color:var(--gray-500);flex:1}
+.mini-case-right{display:flex;align-items:center;gap:6px}
+
+/* Progress bar */
+.prog-row{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--gray-100)}
+.prog-row:last-child{border-bottom:none}
+.prog-label{font-size:12px;color:var(--gray-700);min-width:70px}
+.prog-bar-wrap{flex:1;height:6px;background:var(--gray-100);border-radius:999px;overflow:hidden}
+.prog-bar{height:100%;border-radius:999px;background:var(--blue)}
+.prog-bar.green{background:var(--green)}
+.prog-bar.amber{background:var(--amber)}
+.prog-count{font-size:11px;color:var(--gray-500);min-width:40px;text-align:right}
+
+/* Schedule list */
+.sched-list{display:flex;flex-direction:column}
+.sched-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gray-100)}
+.sched-item:last-child{border-bottom:none}
+.sched-time{font-size:11px;font-weight:600;color:var(--gray-500);min-width:44px}
+.sched-name{font-size:12px;font-weight:600;color:var(--gray-800);flex:1}
+.sched-meta{font-size:11px;color:var(--gray-400)}
+.th-tag{display:inline-flex;align-items:center;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700}
+.th-pt{background:#DBEAFE;color:#1D4ED8}
+.th-ot{background:#FCE7F3;color:#9D174D}
+.th-st{background:var(--green-light);color:var(--green)}
+
+/* Countdown */
+.countdown-list{display:flex;flex-direction:column}
+.cd-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gray-100)}
+.cd-item:last-child{border-bottom:none}
+.cd-name{font-size:12px;font-weight:600;color:var(--gray-800);flex:1}
+.cd-meta{font-size:11px;color:var(--gray-500)}
+.cd-days{font-size:13px;font-weight:700;min-width:50px;text-align:right}
+.cd-days.urgent{color:var(--red)}
+.cd-days.warn{color:var(--amber)}
+.cd-days.ok{color:var(--green)}
+
+/* Indicator banner */
+.indicator-banner{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;color:var(--white)}
+.ib-left h3{font-size:14px;font-weight:700;margin-bottom:3px}
+.ib-left p{font-size:12px;opacity:.85}
+.ib-right{display:flex;gap:8px}
+
+/* Approval widget */
+.approval-list{display:flex;flex-direction:column}
+.approval-item{padding:10px 16px;border-bottom:1px solid var(--gray-100)}
+.approval-item:last-child{border-bottom:none}
+.approval-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.approval-name{font-size:12px;font-weight:600;color:var(--gray-800)}
+.approval-reason{font-size:11px;color:var(--gray-500);margin-bottom:6px}
+.approval-actions{display:flex;gap:5px}
+
+/* Billing list */
+.billing-list{display:flex;flex-direction:column}
+.billing-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gray-100)}
+.billing-item:last-child{border-bottom:none}
+.billing-name{font-size:12px;font-weight:600;color:var(--gray-800);flex:1}
+.billing-meta{font-size:11px;color:var(--gray-500)}
+.billing-amount{font-size:12px;font-weight:600;color:var(--gray-700)}
+
+/* Admin build list */
+.build-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--gray-100)}
+.build-item:last-child{border-bottom:none}
+.build-name{font-size:12px;font-weight:600;color:var(--gray-800);flex:1}
+.build-meta{font-size:11px;color:var(--gray-500)}
+
+.hidden{display:none!important}
+.mt-12{margin-top:12px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<!--
+  <div class="sidebar-logo">
+    <div class="logo-text">PAC 管理系統</div>
+    <div class="logo-sub">急性後期照護</div>
+  </div>
+   <nav class="sidebar-nav">
+    <div class="nav-item active">🏠 個人儀表板</div>
+    <div class="nav-item disabled">📋 個案管理</div>
+    <div class="nav-item disabled">🛏 病床管理</div>
+    <div class="nav-item disabled">📅 班表總覽頁</div>
+    <div class="nav-item disabled">🏡 居家排班管理</div>
+    <div class="nav-item disabled">📊 評估量表</div>
+    <div class="nav-item disabled">💪 復健紀錄</div>
+    <div class="nav-item disabled">📤 指標匯出</div>
+  </nav> 
+-->
+  <div class="sidebar-user">
+    <div class="user-row">
+      <div class="user-avatar av-mgr" id="user-av">林</div>
+      <div>
+        <div class="user-name" id="user-name">林美惠</div>
+        <div class="user-role-label" id="user-role-label">個案管理師</div>
+      </div>
+    </div>
+    <div class="role-switcher">
+      <select class="role-select" id="role-select" onchange="switchRole(this.value)">
+        <option value="mgr">個管師</option>
+        <option value="sup">復健主管</option>
+        <option value="pt">PT（物理治療師）</option>
+        <option value="ot">OT（職能治療師）</option>
+        <option value="st">ST（語言治療師）</option>
+        <option value="nur">護理師</option>
+        <option value="doc">醫師</option>
+        <option value="pha">藥師</option>
+        <option value="nut">營養師</option>
+        <option value="adm">行政</option>
+      </select>
+      <span class="role-arrow">▾</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb" id="bc">個人儀表板</div>
+    <div class="topbar-right">
+      <span class="topbar-date">2026/06/24 週三</span>
+      <button class="notif-btn" id="notif-btn" onclick="toggleNotif()">
+        🔔
+        <span class="notif-badge" id="notif-badge">5</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+    <!-- 儀表板內容由 JS 渲染 -->
+  </div>
+</div>
+
+<!-- 通知面板 -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-panel-header">
+    <div>
+      <div class="notif-panel-title">🔔 通知中心</div>
+      <div class="notif-panel-sub" id="notif-unread-count">5 則未讀</div>
+    </div>
+    <button class="notif-close" onclick="toggleNotif()">✕</button>
+  </div>
+  <div class="notif-list" id="notif-list">
+    <!-- 通知由 JS 渲染 -->
+  </div>
+  <div class="notif-mark-all" onclick="markAllRead()">全部標為已讀</div>
+</div>
+
+<script>
+// ── 角色設定 ──
+const ROLES = {
+  mgr:  {name:'林美惠', label:'個案管理師', av:'av-mgr', ch:'林'},
+  sup:  {name:'王大明', label:'復健主管', av:'av-sup', ch:'王'},
+  pt:   {name:'黃志豪', label:'PT（物理治療師）', av:'av-pt', ch:'黃'},
+  ot:   {name:'李佳穎', label:'OT（職能治療師）', av:'av-ot', ch:'李'},
+  st:   {name:'吳怡君', label:'ST（語言治療師）', av:'av-st', ch:'吳'},
+  nur:  {name:'陳玉玲', label:'護理師', av:'av-nur', ch:'陳'},
+  doc:  {name:'張宗達', label:'醫師', av:'av-doc', ch:'張'},
+  pha:  {name:'林建志', label:'藥師', av:'av-pha', ch:'林'},
+  nut:  {name:'周雅玲', label:'營養師', av:'av-nut', ch:'周'},
+  adm:  {name:'蔡書明', label:'行政', av:'av-adm', ch:'蔡'},
+};
+
+// ── 通知資料 ──
+const NOTIFS = {
+  mgr: [
+    {type:'urgent', icon:'⚠️', ic:'ni-red', title:'展延即將到期', desc:'陳建國・CVA・第 4 週，應於 2 天內送展延', time:'今天 09:15', unread:true},
+    {type:'urgent', icon:'⚠️', ic:'ni-red', title:'展延即將到期', desc:'王淑芬・TKR・第 6 週，應於 3 天內送展延', time:'今天 09:15', unread:true},
+    {type:'unread', icon:'📝', ic:'ni-purple', title:'待審核：評估修改申請', desc:'黃志豪（PT）申請修改・陳建國複評 1', time:'今天 08:42', unread:true},
+    {type:'unread', icon:'💰', ic:'ni-amber', title:'待審核：批價申請', desc:'王大明（復健主管）已審核・劉家豪 6 月批價', time:'昨天 17:20', unread:true},
+    {type:'', icon:'👤', ic:'ni-blue', title:'新轉介個案', desc:'上游：臺大醫院・李○○・CVA，待收案判斷', time:'昨天 14:05', unread:false},
+    {type:'', icon:'✓', ic:'ni-green', title:'展延通過', desc:'張明輝・Hip Fx，健保署已通過展延', time:'昨天 11:30', unread:false},
+  ],
+  sup: [
+    {type:'unread', icon:'📋', ic:'ni-purple', title:'待審核：評估修改申請', desc:'黃志豪（PT）申請修改・陳建國複評 1', time:'今天 08:42', unread:true},
+    {type:'unread', icon:'🔄', ic:'ni-amber', title:'換班申請', desc:'李佳穎 申請 06/26 與陳建宏換班', time:'今天 07:55', unread:true},
+    {type:'', icon:'✓', ic:'ni-green', title:'居家個案已成立', desc:'劉家豪・CVA・3PT 3OT 報名完成', time:'昨天 16:00', unread:false},
+  ],
+  pt: [
+    {type:'urgent', icon:'📊', ic:'ni-red', title:'評估逾期提醒', desc:'王淑芬・複評 2 應於今日填寫', time:'今天 08:00', unread:true},
+    {type:'unread', icon:'🏡', ic:'ni-blue', title:'新居家個案可報名', desc:'林○○・CVA・大安區（4.2km）', time:'今天 07:30', unread:true},
+    {type:'', icon:'✓', ic:'ni-green', title:'修改申請通過', desc:'陳建國複評 1・復健主管已核准修改', time:'昨天 15:20', unread:false},
+  ],
+  ot: [
+    {type:'urgent', icon:'📊', ic:'ni-red', title:'評估待填提醒', desc:'陳建國・複評 1 應於明日填寫', time:'今天 09:00', unread:true},
+    {type:'unread', icon:'🏡', ic:'ni-blue', title:'新居家個案可報名', desc:'林○○・CVA・大安區（4.2km）', time:'今天 07:30', unread:true},
+  ],
+  st: [
+    {type:'unread', icon:'📊', ic:'ni-amber', title:'評估待填提醒', desc:'劉家豪・初評尚未填寫', time:'今天 09:00', unread:true},
+  ],
+  nur: [
+    {type:'unread', icon:'📋', ic:'ni-purple', title:'PAC 收案判斷委託', desc:'個管師林美惠委託判斷・李○○・CVA', time:'今天 10:20', unread:true},
+    {type:'', icon:'📊', ic:'ni-amber', title:'評估待填', desc:'陳建國・護理評估・複評 1', time:'今天 09:00', unread:false},
+  ],
+  doc: [
+    {type:'urgent', icon:'👤', ic:'ni-red', title:'待判斷個案', desc:'新轉介・李○○・CVA，需判斷是否符合 PAC', time:'今天 10:30', unread:true},
+    {type:'unread', icon:'📋', ic:'ni-amber', title:'醫囑待確認', desc:'劉家豪 確認為 PAC，請提供醫囑方向', time:'今天 09:15', unread:true},
+    {type:'', icon:'📊', ic:'ni-blue', title:'評估待填', desc:'陳建國・醫師評估・複評 1', time:'今天 09:00', unread:false},
+  ],
+  pha: [
+    {type:'unread', icon:'📊', ic:'ni-amber', title:'評估待填', desc:'陳建國・藥師評估・複評 1', time:'今天 09:00', unread:true},
+    {type:'', icon:'📊', ic:'ni-amber', title:'評估待填', desc:'王淑芬・藥師評估・複評 2', time:'昨天 09:00', unread:false},
+  ],
+  nut: [
+    {type:'unread', icon:'📊', ic:'ni-green', title:'評估待填', desc:'陳建國・營養師評估・複評 1', time:'今天 09:00', unread:true},
+  ],
+  adm: [
+    {type:'urgent', icon:'🏥', ic:'ni-red', title:'今日入院待建檔', desc:'陳志明・CVA・預計 10:00 入院', time:'今天 08:00', unread:true},
+    {type:'urgent', icon:'🏥', ic:'ni-red', title:'今日入院待建檔', desc:'黃○○・Hip Fx・預計 14:00 入院', time:'今天 08:00', unread:true},
+    {type:'unread', icon:'💰', ic:'ni-amber', title:'待批價', desc:'劉家豪・居家復健 06/23 執行・個管師已審核', time:'今天 07:30', unread:true},
+    {type:'', icon:'💰', ic:'ni-amber', title:'月初獎金結算提醒', desc:'5 月已結案個案共 3 件，請至杏翔系統結算', time:'06/01 09:00', unread:false},
+  ],
+};
+
+// ── 儀表板內容 ──
+function renderDashboard(role) {
+  const content = document.getElementById('content');
+  const cfg = ROLES[role];
+
+  const greets = {
+    mgr:'今日有 2 件個案展延即將到期，請留意。',
+    sup:'今日共安排 8 位個案，3 件待審核申請。',
+    pt:'今日有 4 位個案待治療，1 件評估待填。',
+    ot:'今日有 3 位個案待治療，1 件評估待填。',
+    st:'今日有 2 位個案待治療，1 件評估待填。',
+    nur:'今日病房入住 12 人，1 件 PAC 判斷委託待處理。',
+    doc:'有 1 件 PAC 收案待判斷，1 件醫囑待完成。',
+    pha:'本週有 2 份評估量表待填寫。',
+    nut:'本週有 1 份評估量表待填寫。',
+    adm:'今日有 2 位入院個案待建檔，1 件批價待處理。',
+  };
+
+  let html = `
+    <div class="dash-greeting">
+      <h1>早安，${cfg.name.replace(cfg.ch,'')||cfg.name} 👋</h1>
+      <p>${greets[role]}</p>
+    </div>
+  `;
+
+  if (role === 'mgr') html += renderMgr();
+  else if (role === 'sup') html += renderSup();
+  else if (['pt','ot','st'].includes(role)) html += renderTherapist(role);
+  else if (role === 'nur') html += renderNur();
+  else if (role === 'doc') html += renderDoc();
+  else if (role === 'pha' || role === 'nut') html += renderPharNut(role);
+  else if (role === 'adm') html += renderAdm();
+
+  content.innerHTML = html;
+}
+
+function renderMgr() {
+  return `
+  <!-- 指標提醒 banner（1月/7月才出現，此處示意） -->
+  <div class="indicator-banner">
+    <div class="ib-left">
+      <h3>📊 半年指標彙整提醒</h3>
+      <p>2026 年上半年（1月～6月）成果報告應於 7 月 15 日前送出健保署</p>
+    </div>
+    <div class="ib-right">
+      <button class="btn btn-secondary btn-sm" onclick="alert('跳轉至 → 指標匯出模組')">前往彙整</button>
+    </div>
+  </div>
+
+  <!-- 統計 -->
+  <div class="stats-row">
+    <div class="stat-card s-blue"><div class="stat-label">在院 PAC 個案</div><div class="stat-value">12</div><div class="stat-sub">住院 8・日照 4</div></div>
+    <div class="stat-card s-green"><div class="stat-label">今日入院</div><div class="stat-value">2</div><div class="stat-sub">CVA・Hip Fx</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">今日出院</div><div class="stat-value">1</div><div class="stat-sub">TKR 結案</div></div>
+    <div class="stat-card s-red"><div class="stat-label">展延倒數 ≤5天</div><div class="stat-value">2</div><div class="stat-sub">需優先處理</div></div>
+    <div class="stat-card"><div class="stat-label">全院床位使用率</div><div class="stat-value">78%</div><div class="stat-sub">28 / 36 床</div></div>
+    <div class="stat-card s-purple"><div class="stat-label">居家個案</div><div class="stat-value">5</div><div class="stat-sub">進行中</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <!-- 今日待辦 -->
+    <div class="widget span-2">
+      <div class="widget-header">
+        <div class="widget-title">📌 今日待辦</div>
+        <span class="badge badge-red">6 件</span>
+      </div>
+      <div class="todo-list">
+        <div class="todo-item urgent" onclick="alert('跳轉至 → 個案管理・陳建國展延準備')">
+          <div class="todo-icon ni-red">⚠️</div>
+          <div class="todo-body">
+            <div class="todo-title">【緊急】陳建國 展延倒數 2 天</div>
+            <div class="todo-meta">CVA・住院・第 4 週・應於 2026/06/26 前送出</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-red">2天</span></div>
+        </div>
+        <div class="todo-item urgent" onclick="alert('跳轉至 → 個案管理・王淑芬展延準備')">
+          <div class="todo-icon ni-red">⚠️</div>
+          <div class="todo-body">
+            <div class="todo-title">【緊急】王淑芬 展延倒數 3 天</div>
+            <div class="todo-meta">TKR・住院・第 6 週・應於 2026/06/27 前送出</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-red">3天</span></div>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 個案管理・新轉介待判斷')">
+          <div class="todo-icon ni-blue">👤</div>
+          <div class="todo-body">
+            <div class="todo-title">新轉介個案待收案判斷</div>
+            <div class="todo-meta">李○○・CVA・上游：臺大醫院（待我判斷）</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-blue">待判斷</span></div>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 個案管理・待醫師判斷')">
+          <div class="todo-icon ni-amber">🩺</div>
+          <div class="todo-body">
+            <div class="todo-title">待醫師判斷：黃○○</div>
+            <div class="todo-meta">病摘已送張宗達醫師・CVA・等待回覆中</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-amber">等待中</span></div>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 評估量表・待審核修改申請')">
+          <div class="todo-icon ni-purple">📝</div>
+          <div class="todo-body">
+            <div class="todo-title">待審核：評估修改申請</div>
+            <div class="todo-meta">復健主管 王大明 已審核・陳建國複評 1（PT）</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-purple">待我審核</span></div>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 居家排班管理・待審核批價')">
+          <div class="todo-icon ni-amber">💰</div>
+          <div class="todo-body">
+            <div class="todo-title">待審核：批價申請</div>
+            <div class="todo-meta">劉家豪・居家復健 6 月・復健主管已審核</div>
+          </div>
+          <div class="todo-badge"><span class="badge badge-amber">待我審核</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 展延倒數 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">⏱ 展延倒數</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 個案管理（全部個案）')">全部個案</span>
+      </div>
+      <div class="countdown-list">
+        <div class="cd-item">
+          <div><div class="cd-name">陳建國</div><div class="cd-meta">CVA・住院・第4週</div></div>
+          <div class="cd-days urgent">2 天</div>
+        </div>
+        <div class="cd-item">
+          <div><div class="cd-name">王淑芬</div><div class="cd-meta">TKR・住院・第6週</div></div>
+          <div class="cd-days urgent">3 天</div>
+        </div>
+        <div class="cd-item">
+          <div><div class="cd-name">劉家豪</div><div class="cd-meta">CVA・日照・第3週</div></div>
+          <div class="cd-days warn">8 天</div>
+        </div>
+        <div class="cd-item">
+          <div><div class="cd-name">林翠娟</div><div class="cd-meta">Hip Fx・住院・第9週</div></div>
+          <div class="cd-days ok">18 天</div>
+        </div>
+        <div class="cd-item">
+          <div><div class="cd-name">張明輝</div><div class="cd-meta">CVA・住院・第11週</div></div>
+          <div class="cd-days ok">21 天</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 評估填寫進度 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">📊 評估填寫進度</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 評估量表模組')">發送提醒</span>
+      </div>
+      <div class="mini-case-list">
+        <div class="mini-case" onclick="alert('跳轉至 → 評估量表・陳建國')">
+          <div class="mini-case-name">陳建國</div>
+          <div class="mini-case-meta">複評1・PT待填・OT待填</div>
+          <div class="mini-case-right"><span class="badge badge-amber">2人待填</span></div>
+        </div>
+        <div class="mini-case" onclick="alert('跳轉至 → 評估量表・王淑芬')">
+          <div class="mini-case-name">王淑芬</div>
+          <div class="mini-case-meta">複評2・PT逾期</div>
+          <div class="mini-case-right"><span class="badge badge-red">逾期</span></div>
+        </div>
+        <div class="mini-case" onclick="alert('跳轉至 → 評估量表・劉家豪')">
+          <div class="mini-case-name">劉家豪</div>
+          <div class="mini-case-meta">初評・全部待填</div>
+          <div class="mini-case-right"><span class="badge badge-amber">待填</span></div>
+        </div>
+        <div class="mini-case" onclick="alert('跳轉至 → 評估量表・林翠娟')">
+          <div class="mini-case-name">林翠娟</div>
+          <div class="mini-case-meta">複評3・全部完成</div>
+          <div class="mini-case-right"><span class="badge badge-green">✓ 完成</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 居家批價狀態 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">💰 居家批價追蹤</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 居家排班管理・批價')">全部</span>
+      </div>
+      <div class="billing-list">
+        <div class="billing-item">
+          <div><div class="billing-name">劉家豪</div><div class="billing-meta">06/23 執行・復健主管已審</div></div>
+          <span class="badge badge-amber">待我審核</span>
+        </div>
+        <div class="billing-item">
+          <div><div class="billing-name">黃建國</div><div class="billing-meta">06/20 執行・已送行政</div></div>
+          <span class="badge badge-blue">批價中</span>
+        </div>
+        <div class="billing-item">
+          <div><div class="billing-name">陳志明</div><div class="billing-meta">06/15 執行</div></div>
+          <span class="badge badge-green">✓ 完成</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 床位概覽 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">🛏 床位概覽</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 病床管理模組')">管理床位</span>
+      </div>
+      <div class="widget-body">
+        <div class="prog-row"><div class="prog-label">3F（PAC）</div><div class="prog-bar-wrap"><div class="prog-bar" style="width:83%"></div></div><div class="prog-count">10/12</div></div>
+        <div class="prog-row"><div class="prog-label">4F（一般）</div><div class="prog-bar-wrap"><div class="prog-bar green" style="width:60%"></div></div><div class="prog-count">9/15</div></div>
+        <div class="prog-row"><div class="prog-label">5F（混合）</div><div class="prog-bar-wrap"><div class="prog-bar amber" style="width:89%"></div></div><div class="prog-count">8/9</div></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <span class="badge badge-green">今日入院 2</span>
+          <span class="badge badge-amber">今日出院 1</span>
+          <span class="badge badge-blue">待排床 1</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSup() {
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-blue"><div class="stat-label">今日院內個案</div><div class="stat-value">8</div><div class="stat-sub">PT 5・OT 4・ST 2</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">待審核申請</div><div class="stat-value">3</div><div class="stat-sub">修改 1・換班 1・批價 1</div></div>
+    <div class="stat-card s-purple"><div class="stat-label">評估待填</div><div class="stat-value">4</div><div class="stat-sub">跨 3 位個案</div></div>
+    <div class="stat-card s-green"><div class="stat-label">居家個案</div><div class="stat-value">5</div><div class="stat-sub">進行中</div></div>
+  </div>
+  <div class="dash-grid">
+    <!-- 我今日的治療 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">🏃 我今日的治療</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 班表總覽頁')">查看班表</span>
+      </div>
+      <div class="sched-list">
+        <div class="sched-item"><div class="sched-time">09:00</div><div class="sched-name">陳建國</div><div class="sched-meta">CVA・A301</div><span class="th-tag th-pt">PT</span></div>
+        <div class="sched-item"><div class="sched-time">10:30</div><div class="sched-name">林翠娟</div><div class="sched-meta">Hip Fx・B205</div><span class="th-tag th-pt">PT</span></div>
+        <div class="sched-item"><div class="sched-time">14:00</div><div class="sched-name">張明輝</div><div class="sched-meta">CVA・C118</div><span class="th-tag th-pt">PT</span></div>
+      </div>
+    </div>
+    <!-- 待審核 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">📝 待我審核</div>
+        <span class="badge badge-amber">3 件</span>
+      </div>
+      <div class="approval-list">
+        <div class="approval-item">
+          <div class="approval-top"><div class="approval-name">評估修改申請・黃志豪</div><span class="badge badge-purple">待審核</span></div>
+          <div class="approval-reason">陳建國複評 1（PT）・修改原因：Br.Stage 上肢填寫有誤</div>
+          <div class="approval-actions"><button class="btn btn-red btn-xs" onclick="alert('拒絕')">拒絕</button><button class="btn btn-green btn-xs" onclick="alert('核准後送個管師')">核准→送個管師</button></div>
+        </div>
+        <div class="approval-item">
+          <div class="approval-top"><div class="approval-name">換班申請・李佳穎</div><span class="badge badge-amber">待審核</span></div>
+          <div class="approval-reason">06/26（OT）申請與陳建宏換班</div>
+          <div class="approval-actions"><button class="btn btn-red btn-xs" onclick="alert('拒絕')">拒絕</button><button class="btn btn-green btn-xs" onclick="alert('核准')">核准</button></div>
+        </div>
+        <div class="approval-item">
+          <div class="approval-top"><div class="approval-name">批價審核・劉家豪</div><span class="badge badge-amber">待審核</span></div>
+          <div class="approval-reason">居家復健 6 月・執行 6 次・NT$ 3,600</div>
+          <div class="approval-actions"><button class="btn btn-red btn-xs" onclick="alert('退回')">退回</button><button class="btn btn-green btn-xs" onclick="alert('核准→送個管師')">核准→送個管師</button></div>
+        </div>
+      </div>
+    </div>
+    <!-- 治療師評估進度 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">📊 治療師評估進度</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 評估量表模組')">詳情</span>
+      </div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">黃志豪</div><div class="mini-case-meta">陳建國複評1待填・王淑芬複評2逾期</div><span class="badge badge-red">逾期</span></div>
+        <div class="mini-case"><div class="mini-case-name">李佳穎</div><div class="mini-case-meta">陳建國複評1待填・劉家豪初評待填</div><span class="badge badge-amber">待填</span></div>
+        <div class="mini-case"><div class="mini-case-name">吳怡君</div><div class="mini-case-meta">所有評估已完成</div><span class="badge badge-green">✓ 完成</span></div>
+      </div>
+    </div>
+    <!-- 居家個案狀態 -->
+    <div class="widget">
+      <div class="widget-header">
+        <div class="widget-title">🏡 居家個案狀態</div>
+        <span class="widget-action" onclick="alert('跳轉至 → 居家排班管理')">全部</span>
+      </div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">劉家豪</div><div class="mini-case-meta">進行中・第3週・PT 3 OT 3</div><span class="badge badge-blue">進行中</span></div>
+        <div class="mini-case"><div class="mini-case-name">黃建國</div><div class="mini-case-meta">準備展延・第5週</div><span class="badge badge-amber">準備展延</span></div>
+        <div class="mini-case"><div class="mini-case-name">陳淑真</div><div class="mini-case-meta">即將結案・第11週</div><span class="badge badge-purple">即將結案</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTherapist(role) {
+  const tagMap = {pt:'th-pt', ot:'th-ot', st:'th-st'};
+  const labelMap = {pt:'PT', ot:'OT', st:'ST'};
+  const tag = `<span class="th-tag ${tagMap[role]}">${labelMap[role]}</span>`;
+  const cases = {
+    pt:[{t:'09:00',n:'陳建國',m:'CVA・A301'},{t:'10:30',n:'林翠娟',m:'Hip Fx・B205'},{t:'14:00',n:'張明輝',m:'CVA・C118'},{t:'15:30',n:'王淑芬',m:'TKR・A302'}],
+    ot:[{t:'09:30',n:'陳建國',m:'CVA・A301'},{t:'11:00',n:'劉家豪',m:'CVA・日照'},{t:'14:30',n:'林翠娟',m:'Hip Fx・B205'}],
+    st:[{t:'10:00',n:'陳建國',m:'CVA・A301'},{t:'13:30',n:'劉家豪',m:'CVA・日照'}],
+  };
+  const evals = {
+    pt:[{n:'王淑芬',m:'複評2・逾期',b:'badge-red',l:'逾期'},{n:'陳建國',m:'複評1・明日應填',b:'badge-amber',l:'待填'}],
+    ot:[{n:'陳建國',m:'複評1・明日應填',b:'badge-amber',l:'待填'},{n:'劉家豪',m:'初評・待填',b:'badge-amber',l:'待填'}],
+    st:[{n:'劉家豪',m:'初評・待填',b:'badge-amber',l:'待填'}],
+  };
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-blue"><div class="stat-label">今日治療個案</div><div class="stat-value">${cases[role].length}</div><div class="stat-sub">院內排班</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">評估待填</div><div class="stat-value">${evals[role].length}</div><div class="stat-sub">含逾期</div></div>
+    <div class="stat-card s-green"><div class="stat-label">居家個案</div><div class="stat-value">${role==='pt'?2:role==='ot'?2:0}</div><div class="stat-sub">本週執行</div></div>
+    <div class="stat-card"><div class="stat-label">本月執行次數</div><div class="stat-value">${role==='pt'?18:role==='ot'?14:8}</div><div class="stat-sub">院內＋居家</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📅 今日治療排班</div><span class="widget-action" onclick="alert('跳轉至 → 班表總覽頁')">查看班表</span></div>
+      <div class="sched-list">
+        ${cases[role].map(c=>`<div class="sched-item"><div class="sched-time">${c.t}</div><div class="sched-name">${c.n}</div><div class="sched-meta">${c.m}</div>${tag}</div>`).join('')}
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📊 評估待填</div><span class="widget-action" onclick="alert('跳轉至 → 評估量表模組')">前往填寫</span></div>
+      ${evals[role].length ? `<div class="mini-case-list">
+        ${evals[role].map(e=>`<div class="mini-case" onclick="alert('跳轉至 → 評估量表・${e.n}')"><div class="mini-case-name">${e.n}</div><div class="mini-case-meta">${e.m}</div><span class="badge ${e.b}">${e.l}</span></div>`).join('')}
+      </div>` : `<div class="widget-empty">目前無待填評估 ✓</div>`}
+    </div>
+    ${role !== 'st' ? `
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">🏡 可報名居家個案</div><span class="widget-action" onclick="alert('跳轉至 → 居家排班管理')">查看全部</span></div>
+      <div class="mini-case-list">
+        <div class="mini-case" onclick="alert('跳轉至 → 居家排班管理・報名')">
+          <div><div class="mini-case-name">林○○</div><div class="mini-case-meta">CVA・大安區（4.2km）・截止 06/25</div></div>
+          <span class="badge badge-green">報名</span>
+        </div>
+        <div class="mini-case" onclick="alert('跳轉至 → 居家排班管理・報名')">
+          <div><div class="mini-case-name">周○○</div><div class="mini-case-meta">Hip Fx・信義區（6.8km）・截止 06/26</div></div>
+          <span class="badge badge-green">報名</span>
+        </div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">🏡 我的居家排班</div><span class="widget-action" onclick="alert('跳轉至 → 居家排班管理')">詳情</span></div>
+      <div class="sched-list">
+        <div class="sched-item"><div class="sched-time">本週四</div><div class="sched-name">劉家豪</div><div class="sched-meta">大安區・下午 14:00</div>${tag}</div>
+        <div class="sched-item"><div class="sched-time">本週五</div><div class="sched-name">黃建國</div><div class="sched-meta">信義區・下午 15:30</div>${tag}</div>
+      </div>
+    </div>` : `<div class="widget"><div class="widget-header"><div class="widget-title">📋 本月填寫紀錄</div></div><div class="widget-body"><div style="font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:4px">本月已完成 8 份評估</div><div style="font-size:11px;color:var(--gray-500)">初評 3・複評 4・結案 1</div></div></div><div class="widget"><div class="widget-header"><div class="widget-title">✓ 最近填寫紀錄</div></div><div class="mini-case-list"><div class="mini-case"><div class="mini-case-name">陳建國</div><div class="mini-case-meta">複評1・2026/06/24</div><span class="badge badge-green">已送出</span></div><div class="mini-case"><div class="mini-case-name">林翠娟</div><div class="mini-case-meta">複評3・2026/06/20</div><span class="badge badge-green">已送出</span></div></div></div>`}
+  </div>`;
+}
+
+function renderNur() {
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-blue"><div class="stat-label">今日病房入住</div><div class="stat-value">12</div><div class="stat-sub">PAC 8・一般 4</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">評估待填</div><div class="stat-value">2</div><div class="stat-sub">護理評估</div></div>
+    <div class="stat-card s-red"><div class="stat-label">PAC 判斷委託</div><div class="stat-value">1</div><div class="stat-sub">待我回覆</div></div>
+    <div class="stat-card s-green"><div class="stat-label">今日入院</div><div class="stat-value">2</div><div class="stat-sub">待準備病房</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="widget span-2">
+      <div class="widget-header"><div class="widget-title">📌 今日待辦</div></div>
+      <div class="todo-list">
+        <div class="todo-item urgent" onclick="alert('跳轉至 → 個案管理・PAC 收案判斷')">
+          <div class="todo-icon ni-red">🩺</div>
+          <div class="todo-body"><div class="todo-title">【待回覆】PAC 收案判斷委託</div><div class="todo-meta">個管師 林美惠 委託・李○○・CVA・請協助判斷是否符合收案條件</div></div>
+          <span class="badge badge-red">待判斷</span>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 評估量表・陳建國')">
+          <div class="todo-icon ni-amber">📊</div>
+          <div class="todo-body"><div class="todo-title">評估待填：陳建國</div><div class="todo-meta">護理評估・複評 1・應填日期 2026/06/25</div></div>
+          <span class="badge badge-amber">待填</span>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 評估量表・王淑芬')">
+          <div class="todo-icon ni-amber">📊</div>
+          <div class="todo-body"><div class="todo-title">評估待填：王淑芬</div><div class="todo-meta">護理評估・複評 2・逾期</div></div>
+          <span class="badge badge-red">逾期</span>
+        </div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">🛏 今日病房排床</div><span class="widget-action" onclick="alert('跳轉至 → 病床管理模組')">查看全部</span></div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">A301</div><div class="mini-case-meta">陳建國・CVA・住院中</div><span class="badge badge-blue">PAC</span></div>
+        <div class="mini-case"><div class="mini-case-name">A302</div><div class="mini-case-meta">王淑芬・TKR・住院中</div><span class="badge badge-blue">PAC</span></div>
+        <div class="mini-case"><div class="mini-case-name">B205</div><div class="mini-case-meta">林翠娟・Hip Fx・住院中</div><span class="badge badge-blue">PAC</span></div>
+        <div class="mini-case"><div class="mini-case-name">C118</div><div class="mini-case-meta">今日入院・陳志明・CVA</div><span class="badge badge-green">今日入院</span></div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📋 本月評估填寫紀錄</div></div>
+      <div class="widget-body">
+        <div style="font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:4px">本月已完成 12 份評估</div>
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:12px">護理評估・巴氏量表</div>
+        <div class="prog-row"><div class="prog-label">初評</div><div class="prog-bar-wrap"><div class="prog-bar green" style="width:100%"></div></div><div class="prog-count">5/5</div></div>
+        <div class="prog-row"><div class="prog-label">複評</div><div class="prog-bar-wrap"><div class="prog-bar amber" style="width:70%"></div></div><div class="prog-count">7/10</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDoc() {
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-red"><div class="stat-label">待判斷個案</div><div class="stat-value">1</div><div class="stat-sub">PAC 收案判斷</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">醫囑待確認</div><div class="stat-value">1</div><div class="stat-sub">已確認 PAC</div></div>
+    <div class="stat-card s-blue"><div class="stat-label">評估待填</div><div class="stat-value">2</div><div class="stat-sub">醫師評估量表</div></div>
+    <div class="stat-card s-green"><div class="stat-label">本月已完成</div><div class="stat-value">8</div><div class="stat-sub">評估填寫</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="widget span-2">
+      <div class="widget-header"><div class="widget-title">📌 今日待辦</div></div>
+      <div class="todo-list">
+        <div class="todo-item urgent" onclick="alert('跳轉至 → 個案管理・PAC 收案判斷・李○○')">
+          <div class="todo-icon ni-red">👤</div>
+          <div class="todo-body"><div class="todo-title">【待判斷】PAC 收案判斷</div><div class="todo-meta">李○○・CVA・上游：臺大醫院・個管師 林美惠 委託</div></div>
+          <span class="badge badge-red">待我判斷</span>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 個案管理・劉家豪・醫囑填寫')">
+          <div class="todo-icon ni-amber">📋</div>
+          <div class="todo-body"><div class="todo-title">醫囑待確認：劉家豪</div><div class="todo-meta">CVA・日照・已確認 PAC，請提供復健治療方向醫囑</div></div>
+          <span class="badge badge-amber">待填醫囑</span>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 評估量表・陳建國・醫師評估')">
+          <div class="todo-icon ni-blue">📊</div>
+          <div class="todo-body"><div class="todo-title">評估待填：陳建國</div><div class="todo-meta">醫師評估・複評 1・應填日期 2026/06/25</div></div>
+          <span class="badge badge-amber">待填</span>
+        </div>
+        <div class="todo-item" onclick="alert('跳轉至 → 評估量表・王淑芬・醫師評估')">
+          <div class="todo-icon ni-blue">📊</div>
+          <div class="todo-body"><div class="todo-title">評估待填：王淑芬</div><div class="todo-meta">醫師評估・複評 2・應填日期 2026/06/27</div></div>
+          <span class="badge badge-amber">待填</span>
+        </div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📋 本月評估填寫</div></div>
+      <div class="widget-body">
+        <div style="font-size:22px;font-weight:700;color:var(--blue);margin-bottom:4px">8 <span style="font-size:13px;font-weight:400;color:var(--gray-500)">/ 預計 10 份</span></div>
+        <div class="prog-row" style="padding:8px 0"><div class="prog-label">已完成</div><div class="prog-bar-wrap"><div class="prog-bar" style="width:80%"></div></div><div class="prog-count">8/10</div></div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📅 近期居家 PAC 交接</div></div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">劉家豪</div><div class="mini-case-meta">首次訪視 2026/06/18・已交接 PAC 團隊</div><span class="badge badge-green">完成</span></div>
+        <div class="mini-case"><div class="mini-case-name">王建民</div><div class="mini-case-meta">首次訪視 2026/07/02・預計安排中</div><span class="badge badge-amber">待安排</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderPharNut(role) {
+  const isPha = role === 'pha';
+  const evalLabel = isPha ? '藥師評估' : '營養師評估';
+  const items = isPha
+    ? [{n:'陳建國',m:'複評1・應填 06/25',b:'badge-amber',l:'待填'},{n:'王淑芬',m:'複評2・逾期',b:'badge-red',l:'逾期'},{n:'劉家豪',m:'初評・應填 06/26',b:'badge-amber',l:'待填'}]
+    : [{n:'陳建國',m:'複評1・應填 06/25',b:'badge-amber',l:'待填'}];
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-amber"><div class="stat-label">本週評估待填</div><div class="stat-value">${items.length}</div><div class="stat-sub">${evalLabel}</div></div>
+    <div class="stat-card s-green"><div class="stat-label">本月已完成</div><div class="stat-value">${isPha?10:6}</div><div class="stat-sub">份評估</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="widget span-2">
+      <div class="widget-header"><div class="widget-title">📊 評估待填清單</div><span class="widget-action" onclick="alert('跳轉至 → 評估量表模組')">前往填寫</span></div>
+      <div class="mini-case-list">
+        ${items.map(e=>`<div class="mini-case" onclick="alert('跳轉至 → 評估量表・${e.n}')"><div class="mini-case-name">${e.n}</div><div class="mini-case-meta">${evalLabel}・${e.m}</div><span class="badge ${e.b}">${e.l}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">✓ 本月填寫紀錄</div></div>
+      <div class="widget-body">
+        <div style="font-size:22px;font-weight:700;color:var(--green);margin-bottom:6px">${isPha?10:6} <span style="font-size:13px;font-weight:400;color:var(--gray-500)">份已完成</span></div>
+        <div style="font-size:11px;color:var(--gray-500)">初評 ${isPha?3:2}・複評 ${isPha?6:4}・結案 ${isPha?1:0}</div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">📋 最近填寫</div></div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">林翠娟</div><div class="mini-case-meta">${evalLabel}・複評3・2026/06/20</div><span class="badge badge-green">✓</span></div>
+        <div class="mini-case"><div class="mini-case-name">張明輝</div><div class="mini-case-meta">${evalLabel}・複評3・2026/06/18</div><span class="badge badge-green">✓</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAdm() {
+  return `
+  <div class="stats-row">
+    <div class="stat-card s-red"><div class="stat-label">今日待建檔</div><div class="stat-value">2</div><div class="stat-sub">入院個案</div></div>
+    <div class="stat-card s-amber"><div class="stat-label">待批價</div><div class="stat-value">3</div><div class="stat-sub">居家個案</div></div>
+    <div class="stat-card s-purple"><div class="stat-label">月初獎金結算</div><div class="stat-value">3</div><div class="stat-sub">件待處理</div></div>
+    <div class="stat-card s-green"><div class="stat-label">本月已批價</div><div class="stat-value">18</div><div class="stat-sub">件完成</div></div>
+  </div>
+  <div class="dash-grid">
+    <!-- 今日待建檔 -->
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">🏥 今日入院待建檔</div><span class="badge badge-red">2 件</span></div>
+      <div class="todo-list">
+        <div class="todo-item urgent" onclick="alert('提醒：需登打至杏翔系統')">
+          <div class="todo-icon ni-red">🏥</div>
+          <div class="todo-body"><div class="todo-title">陳志明</div><div class="todo-meta">CVA・預計 10:00 入院・A301 床・個管師：林美惠</div></div>
+          <span class="badge badge-red">待建檔</span>
+        </div>
+        <div class="todo-item urgent" onclick="alert('提醒：需登打至杏翔系統')">
+          <div class="todo-icon ni-red">🏥</div>
+          <div class="todo-body"><div class="todo-title">黃○○</div><div class="todo-meta">Hip Fx・預計 14:00 入院・C203 床・個管師：林美惠</div></div>
+          <span class="badge badge-red">待建檔</span>
+        </div>
+      </div>
+    </div>
+    <!-- 待批價 -->
+    <div class="widget">
+      <div class="widget-header"><div class="widget-title">💰 居家批價待處理</div><span class="badge badge-amber">3 件</span></div>
+      <div class="billing-list">
+        <div class="billing-item">
+          <div><div class="billing-name">劉家豪</div><div class="billing-meta">06/23 執行・個管師已審核 ✓</div></div>
+          <div style="text-align:right"><div class="billing-amount">NT$ 600</div><button class="btn btn-primary btn-xs mt-12" onclick="alert('提醒：至杏翔系統批價')">批價</button></div>
+        </div>
+        <div class="billing-item">
+          <div><div class="billing-name">黃建國</div><div class="billing-meta">06/22 執行・個管師已審核 ✓</div></div>
+          <div style="text-align:right"><div class="billing-amount">NT$ 600</div><button class="btn btn-primary btn-xs mt-12" onclick="alert('提醒：至杏翔系統批價')">批價</button></div>
+        </div>
+        <div class="billing-item">
+          <div><div class="billing-name">陳淑真</div><div class="billing-meta">06/21 執行・個管師已審核 ✓</div></div>
+          <div style="text-align:right"><div class="billing-amount">NT$ 600</div><button class="btn btn-primary btn-xs mt-12" onclick="alert('提醒：至杏翔系統批價')">批價</button></div>
+        </div>
+      </div>
+    </div>
+    <!-- 月初獎金結算 -->
+    <div class="widget span-2">
+      <div class="widget-header"><div class="widget-title">💵 月初獎金結算提醒</div><span class="badge badge-purple">3 件待結算</span></div>
+      <div class="info-note" style="background:var(--purple-light);color:var(--purple);font-size:12px;padding:10px 16px;border-bottom:1px solid #DDD6FE">
+        5 月已結案個案共 3 件，請至杏翔系統完成費用結算（每月月初處理上月資料）
+      </div>
+      <div class="mini-case-list">
+        <div class="mini-case"><div class="mini-case-name">陳淑真</div><div class="mini-case-meta">居家 PAC・12週結案・5月30日・執行 72次</div><button class="btn btn-ghost btn-xs" onclick="alert('提醒：至杏翔系統結算')">結算</button></div>
+        <div class="mini-case"><div class="mini-case-name">李大成</div><div class="mini-case-meta">居家 PAC・4週結案・5月18日・執行 24次</div><button class="btn btn-ghost btn-xs" onclick="alert('提醒：至杏翔系統結算')">結算</button></div>
+        <div class="mini-case"><div class="mini-case-name">鄭美玲</div><div class="mini-case-meta">居家 PAC・6週結案・5月25日・執行 36次</div><button class="btn btn-ghost btn-xs" onclick="alert('提醒：至杏翔系統結算')">結算</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── 通知面板 ──
+let notifOpen = false;
+let currentRole = 'mgr';
+
+function toggleNotif() {
+  notifOpen = !notifOpen;
+  document.getElementById('notif-panel').classList.toggle('open', notifOpen);
+  document.getElementById('content').classList.toggle('shifted', notifOpen);
+  if (notifOpen) renderNotifs(currentRole);
+}
+
+function renderNotifs(role) {
+  const items = NOTIFS[role] || [];
+  const unread = items.filter(n=>n.unread).length;
+  document.getElementById('notif-badge').textContent = unread;
+  document.getElementById('notif-badge').style.display = unread > 0 ? 'flex' : 'none';
+  document.getElementById('notif-unread-count').textContent = unread > 0 ? `${unread} 則未讀` : '全部已讀';
+
+  const listEl = document.getElementById('notif-list');
+  if (!items.length) { listEl.innerHTML = '<div style="padding:30px;text-align:center;color:var(--gray-400);font-size:13px">目前沒有通知</div>'; return; }
+
+  const urgent = items.filter(n=>n.type==='urgent');
+  const unreadItems = items.filter(n=>n.type==='unread');
+  const read = items.filter(n=>n.type==='');
+
+  let html = '';
+  if (urgent.length) {
+    html += `<div class="notif-section-label">🚨 緊急</div>`;
+    html += urgent.map(n=>`<div class="notif-item urgent"><div class="notif-icon ${n.ic}">${n.icon}</div><div class="notif-body"><div class="notif-title">${n.title}</div><div class="notif-desc">${n.desc}</div><div class="notif-time">${n.time}</div></div></div>`).join('');
+  }
+  if (unreadItems.length) {
+    html += `<div class="notif-section-label">🔵 未讀</div>`;
+    html += unreadItems.map(n=>`<div class="notif-item unread"><div class="notif-icon ${n.ic}">${n.icon}</div><div class="notif-body"><div class="notif-title">${n.title}</div><div class="notif-desc">${n.desc}</div><div class="notif-time">${n.time}</div></div></div>`).join('');
+  }
+  if (read.length) {
+    html += `<div class="notif-section-label">已讀</div>`;
+    html += read.map(n=>`<div class="notif-item"><div class="notif-icon ${n.ic}">${n.icon}</div><div class="notif-body"><div class="notif-title">${n.title}</div><div class="notif-desc">${n.desc}</div><div class="notif-time">${n.time}</div></div></div>`).join('');
+  }
+  listEl.innerHTML = html;
+}
+
+function markAllRead() {
+  const items = NOTIFS[currentRole] || [];
+  items.forEach(n=>{ n.unread=false; n.type=''; });
+  renderNotifs(currentRole);
+}
+
+// ── 角色切換 ──
+function switchRole(role) {
+  currentRole = role;
+  const cfg = ROLES[role];
+  document.getElementById('user-av').textContent = cfg.ch;
+  document.getElementById('user-av').className = 'user-avatar ' + cfg.av;
+  document.getElementById('user-name').textContent = cfg.name;
+  document.getElementById('user-role-label').textContent = cfg.label;
+
+  const unread = (NOTIFS[role]||[]).filter(n=>n.unread).length;
+  document.getElementById('notif-badge').textContent = unread;
+  document.getElementById('notif-badge').style.display = unread > 0 ? 'flex' : 'none';
+
+  renderDashboard(role);
+  if (notifOpen) renderNotifs(role);
+}
+
+// Init
+renderDashboard('mgr');
+renderNotifs('mgr');
+</script>
+</body>
+</html>

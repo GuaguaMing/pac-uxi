@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAC 個人資訊頁</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563EB;--blue-light:#EFF6FF;--blue-mid:#BFDBFE;--blue-dark:#1E40AF;
+  --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;
+  --gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--gray-900:#0F172A;
+  --green:#16A34A;--green-light:#DCFCE7;--green-mid:#BBF7D0;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --purple:#7C3AED;--purple-light:#EDE9FE;
+  --teal:#0D9488;--teal-light:#CCFBF1;
+  --white:#FFFFFF;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--gray-50);color:var(--gray-900);height:100vh;display:flex;overflow:hidden;font-size:14px}
+
+/* Sidebar */
+.sidebar{width:192px;min-width:192px;background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;z-index:10}
+.sidebar-logo{padding:16px 16px 13px;border-bottom:1px solid var(--gray-200)}
+.logo-text{font-size:14px;font-weight:700;color:var(--blue)}
+.logo-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.sidebar-nav{padding:6px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--gray-500);border-left:3px solid transparent;cursor:default}
+.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:600;border-left-color:var(--blue)}
+.nav-item.disabled{opacity:.38;cursor:not-allowed}
+.sidebar-user{margin-top: auto;padding:11px 14px;border-top:1px solid var(--gray-200)}
+.user-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.user-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.av-mgr{background:var(--amber-light);color:var(--amber)}
+.av-sup{background:var(--purple-light);color:var(--purple)}
+.av-pt{background:var(--blue-light);color:var(--blue)}
+.av-ot{background:#FCE7F3;color:#9D174D}
+.av-st{background:var(--green-light);color:var(--green)}
+.av-nur{background:var(--teal-light);color:var(--teal)}
+.av-doc{background:#FEF3C7;color:#92400E}
+.av-pha{background:var(--purple-light);color:var(--purple)}
+.av-nut{background:var(--green-light);color:var(--green)}
+.av-adm{background:var(--gray-100);color:var(--gray-600)}
+.user-name{font-size:12px;font-weight:600;color:var(--gray-700)}
+.user-role-label{font-size:11px;color:var(--gray-400)}
+.role-switcher{position:relative}
+.role-select{width:100%;padding:5px 24px 5px 8px;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;font-weight:600;color:var(--gray-600);background:var(--white);cursor:pointer;appearance:none;outline:none}
+.role-select:focus{border-color:var(--blue)}
+.role-arrow{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--gray-400);pointer-events:none}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.breadcrumb{font-size:12px;color:var(--gray-500)}
+.content{flex:1;overflow-y:auto;padding:28px 32px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:var(--white)}.btn-primary:hover{background:var(--blue-dark)}
+.btn-secondary{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}.btn-secondary:hover{background:var(--gray-50)}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--blue-mid)}.btn-ghost:hover{background:var(--blue-light)}
+.btn-danger{background:var(--white);color:var(--red);border:1px solid #FECACA}.btn-danger:hover{background:var(--red-light)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* Profile layout */
+.profile-layout{display:grid;grid-template-columns:260px 1fr;gap:24px;max-width:960px}
+
+/* Profile card */
+.profile-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;height:fit-content}
+.profile-avatar-lg{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;flex-shrink:0}
+.profile-name{font-size:18px;font-weight:700;color:var(--gray-900)}
+.profile-role-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--gray-600)}
+.profile-dept{font-size:12px;color:var(--gray-500)}
+.profile-readonly-note{font-size:11px;color:var(--gray-400);padding:8px 10px;background:var(--gray-50);border-radius:6px;border:1px solid var(--gray-200);width:100%;text-align:left;line-height:1.5}
+.profile-divider{width:100%;height:1px;background:var(--gray-100)}
+.profile-stat-row{display:flex;gap:16px;width:100%;justify-content:center}
+.profile-stat{text-align:center}
+.profile-stat-val{font-size:18px;font-weight:700;color:var(--blue)}
+.profile-stat-label{font-size:10px;color:var(--gray-400);margin-top:1px}
+
+/* Right column */
+.right-col{display:flex;flex-direction:column;gap:16px}
+
+/* Section card */
+.section-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;overflow:hidden}
+.section-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.section-title{font-size:13px;font-weight:700;color:var(--gray-700);display:flex;align-items:center;gap:7px}
+.section-body{padding:18px 20px}
+
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:span 2}
+.form-group label{font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em}
+.form-control{padding:8px 11px;border:1px solid var(--gray-300);border-radius:7px;font-size:13px;color:var(--gray-800);background:var(--white);outline:none;transition:border-color .15s}
+.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
+.form-control[readonly]{background:var(--gray-50);color:var(--gray-500);cursor:default}
+.form-control[readonly]:focus{border-color:var(--gray-300);box-shadow:none}
+.readonly-hint{font-size:10px;color:var(--gray-400);margin-top:2px}
+.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+
+/* Toggle switch */
+.notif-group{display:flex;flex-direction:column;gap:0}
+.notif-section-label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;padding:12px 0 7px;border-bottom:1px solid var(--gray-100);margin-bottom:2px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--gray-50)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-info{flex:1;padding-right:16px}
+.toggle-label{font-size:13px;font-weight:500;color:var(--gray-800)}
+.toggle-desc{font-size:11px;color:var(--gray-400);margin-top:2px}
+.toggle{position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:var(--gray-300);border-radius:999px;transition:.2s}
+.slider:before{position:absolute;content:'';height:16px;width:16px;left:3px;bottom:3px;background:var(--white);border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input:checked+.slider{background:var(--blue)}
+input:checked+.slider:before{transform:translateX(16px)}
+
+/* Device list */
+.device-list{display:flex;flex-direction:column;gap:10px}
+.device-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50)}
+.device-item.current{border-color:var(--blue-mid);background:var(--blue-light)}
+.device-left{display:flex;align-items:center;gap:10px}
+.device-icon{font-size:20px}
+.device-name{font-size:13px;font-weight:600;color:var(--gray-800)}
+.device-meta{font-size:11px;color:var(--gray-500);margin-top:1px}
+.device-current-badge{font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border:1px solid var(--blue-mid);padding:2px 7px;border-radius:4px}
+
+/* Password */
+.pwd-row{display:flex;flex-direction:column;gap:12px}
+.pwd-strength{display:flex;gap:4px;margin-top:4px}
+.pwd-bar{height:4px;flex:1;border-radius:999px;background:var(--gray-200)}
+.pwd-bar.filled.weak{background:var(--red)}
+.pwd-bar.filled.medium{background:var(--amber)}
+.pwd-bar.filled.strong{background:var(--green)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
+.modal{background:var(--white);border-radius:12px;width:420px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-header{padding:16px 20px 13px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{width:25px;height:25px;border-radius:5px;border:none;background:var(--gray-100);color:var(--gray-500);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:16px 20px}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:7px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<!--
+  <div class="sidebar-logo">
+    <div class="logo-text">PAC 管理系統</div>
+    <div class="logo-sub">急性後期照護</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item disabled">🏠 個人儀表板</div>
+    <div class="nav-item disabled">📋 個案管理</div>
+    <div class="nav-item disabled">🛏 病床管理</div>
+    <div class="nav-item disabled">📅 班表總覽頁</div>
+    <div class="nav-item disabled">🏡 居家排班管理</div>
+    <div class="nav-item disabled">📊 評估量表</div>
+    <div class="nav-item disabled">💪 復健紀錄</div>
+    <div class="nav-item disabled">📤 指標匯出</div>
+    <div class="nav-item active">👤 個人資訊</div>
+  </nav>
+-->
+  <div class="sidebar-user">
+    <div class="user-row">
+      <div class="user-avatar av-mgr" id="user-av">林</div>
+      <div>
+        <div class="user-name" id="user-name">林美惠</div>
+        <div class="user-role-label" id="user-role-label">個案管理師</div>
+      </div>
+    </div>
+    <div class="role-switcher">
+      <select class="role-select" id="role-select" onchange="switchRole(this.value)">
+        <option value="mgr">個管師</option>
+        <option value="sup">復健主管</option>
+        <option value="pt">PT（物理治療師）</option>
+        <option value="ot">OT（職能治療師）</option>
+        <option value="st">ST（語言治療師）</option>
+        <option value="nur">護理師</option>
+        <option value="doc">醫師</option>
+        <option value="pha">藥師</option>
+        <option value="nut">營養師</option>
+        <option value="adm">行政</option>
+      </select>
+      <span class="role-arrow">▾</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">個人資訊</div>
+    <div style="font-size:11px;color:var(--gray-400)">2026/06/25 週四</div>
+  </div>
+  <div class="content">
+    <div class="profile-layout">
+
+      <!-- 左側：個人卡片 -->
+      <div>
+        <div class="profile-card">
+          <div class="profile-avatar-lg av-mgr" id="profile-av-lg">林</div>
+          <div>
+            <div class="profile-name" id="profile-name">林美惠</div>
+            <div class="profile-dept" id="profile-dept">復健科・員郭醫院</div>
+          </div>
+          <div class="profile-role-badge" id="profile-role-badge">🔒 個案管理師</div>
+          <div class="profile-readonly-note">ℹ️ 角色與所屬單位由系統管理員設定，如需變更請聯繫資訊部門。</div>
+          <div class="profile-divider"></div>
+          <div class="profile-stat-row">
+            <div class="profile-stat">
+              <div class="profile-stat-val" id="profile-stat-val">24</div>
+              <div class="profile-stat-label" id="profile-stat-label">管理個案</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-val" style="color:var(--green)">3年</div>
+              <div class="profile-stat-label">在職年資</div>
+            </div>
+          </div>
+          <div class="profile-divider"></div>
+          <div style="width:100%;text-align:left">
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:6px">最後登入</div>
+            <div style="font-size:12px;color:var(--gray-600)">2026/06/25 08:34<br>Chrome・Mac</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側 -->
+      <div class="right-col">
+
+        <!-- 個人資料 -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">👤 個人資料</div>
+            <button class="btn btn-ghost btn-sm" id="edit-btn" onclick="toggleEdit()">✏️ 編輯</button>
+          </div>
+          <div class="section-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>姓名</label>
+                <input class="form-control" id="f-name" value="林美惠" readonly>
+              </div>
+              <div class="form-group">
+                <label>職稱</label>
+                <input class="form-control" id="f-title" value="個案管理師" readonly>
+              </div>
+              <div class="form-group">
+                <label>所屬單位</label>
+                <input class="form-control" value="復健科" readonly>
+                <div class="readonly-hint">由系統管理員設定，不可自行修改</div>
+              </div>
+              <div class="form-group">
+                <label>角色</label>
+                <input class="form-control" id="f-role" value="個管師" readonly>
+                <div class="readonly-hint">由系統管理員設定，不可自行修改</div>
+              </div>
+              <div class="form-group">
+                <label>電子郵件</label>
+                <input class="form-control" id="f-email" value="lin.meihui@yuankuo.com.tw" readonly>
+              </div>
+              <div class="form-group">
+                <label>電話號碼</label>
+                <input class="form-control" id="f-phone" value="0912-345-678" readonly>
+              </div>
+            </div>
+            <div class="form-actions hidden" id="edit-actions">
+              <button class="btn btn-secondary btn-sm" onclick="cancelEdit()">取消</button>
+              <button class="btn btn-primary btn-sm" onclick="saveEdit()">儲存變更</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 通知設定 -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">🔔 通知設定</div>
+            <span style="font-size:11px;color:var(--gray-400)">系統內推播</span>
+          </div>
+          <div class="section-body">
+            <div class="notif-group" id="notif-settings">
+              <!-- 由 JS 渲染 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 安全與登入 -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">🔒 安全與登入</div>
+          </div>
+          <div class="section-body">
+            <!-- 密碼變更 -->
+            <div style="margin-bottom:20px">
+              <div style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:12px">密碼變更</div>
+              <div class="pwd-row">
+                <div class="form-group">
+                  <label>目前密碼</label>
+                  <input class="form-control" type="password" placeholder="輸入目前密碼" id="pwd-current">
+                </div>
+                <div class="form-group">
+                  <label>新密碼</label>
+                  <input class="form-control" type="password" placeholder="至少 8 個字元" id="pwd-new" oninput="checkPwd(this.value)">
+                  <div class="pwd-strength">
+                    <div class="pwd-bar" id="pb1"></div>
+                    <div class="pwd-bar" id="pb2"></div>
+                    <div class="pwd-bar" id="pb3"></div>
+                    <div class="pwd-bar" id="pb4"></div>
+                  </div>
+                  <div style="font-size:10px;color:var(--gray-400);margin-top:2px" id="pwd-hint">需包含大小寫字母與數字</div>
+                </div>
+                <div class="form-group">
+                  <label>確認新密碼</label>
+                  <input class="form-control" type="password" placeholder="再次輸入新密碼" id="pwd-confirm">
+                </div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;margin-top:10px">
+                <button class="btn btn-primary btn-sm" onclick="alert('密碼已更新')">更新密碼</button>
+              </div>
+            </div>
+
+            <!-- 登入裝置 -->
+            <div style="border-top:1px solid var(--gray-100);padding-top:16px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div style="font-size:12px;font-weight:700;color:var(--gray-600)">登入裝置紀錄</div>
+                <button class="btn btn-danger btn-sm" onclick="openModal('modal-logout-all')">全部登出</button>
+              </div>
+              <div class="device-list">
+                <div class="device-item current">
+                  <div class="device-left">
+                    <div class="device-icon">💻</div>
+                    <div>
+                      <div class="device-name">Chrome・MacBook Pro</div>
+                      <div class="device-meta">台灣・2026/06/25 08:34 登入</div>
+                    </div>
+                  </div>
+                  <span class="device-current-badge">目前裝置</span>
+                </div>
+                <div class="device-item">
+                  <div class="device-left">
+                    <div class="device-icon">📱</div>
+                    <div>
+                      <div class="device-name">Safari・iPhone 15</div>
+                      <div class="device-meta">台灣・2026/06/24 18:10 登入</div>
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" onclick="alert('已登出此裝置')">登出</button>
+                </div>
+                <div class="device-item">
+                  <div class="device-left">
+                    <div class="device-icon">💻</div>
+                    <div>
+                      <div class="device-name">Chrome・Windows PC（復健室電腦）</div>
+                      <div class="device-meta">台灣・2026/06/23 14:20 登入</div>
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" onclick="alert('已登出此裝置')">登出</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal：全部登出確認 -->
+<div id="modal-logout-all" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔒 確認全部登出</div>
+      <button class="modal-close" onclick="closeModal('modal-logout-all')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:13px;color:var(--gray-600);line-height:1.7">將登出所有裝置（包含目前裝置），需重新登入。確定繼續嗎？</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-logout-all')">取消</button>
+      <button class="btn btn-danger" onclick="closeModal('modal-logout-all');alert('已全部登出')">確認登出</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 角色資料 ──
+const ROLES = {
+  mgr:  {name:'林美惠', label:'個案管理師', dept:'復健科', av:'av-mgr', ch:'林', role:'個管師', email:'lin.meihui@yuankuo.com.tw', phone:'0912-345-678', stat:24, statLabel:'管理個案'},
+  sup:  {name:'王大明', label:'復健主管', dept:'復健科', av:'av-sup', ch:'王', role:'復健主管', email:'wang.daming@yuankuo.com.tw', phone:'0923-456-789', stat:12, statLabel:'管理治療師'},
+  pt:   {name:'黃志豪', label:'PT（物理治療師）', dept:'復健科', av:'av-pt', ch:'黃', role:'復健治療師', email:'huang.zhihao@yuankuo.com.tw', phone:'0934-567-890', stat:8, statLabel:'負責個案'},
+  ot:   {name:'李佳穎', label:'OT（職能治療師）', dept:'復健科', av:'av-ot', ch:'李', role:'復健治療師', email:'lee.jiaying@yuankuo.com.tw', phone:'0945-678-901', stat:6, statLabel:'負責個案'},
+  st:   {name:'吳怡君', label:'ST（語言治療師）', dept:'復健科', av:'av-st', ch:'吳', role:'復健治療師', email:'wu.yijun@yuankuo.com.tw', phone:'0956-789-012', stat:4, statLabel:'負責個案'},
+  nur:  {name:'陳玉玲', label:'護理師', dept:'護理部', av:'av-nur', ch:'陳', role:'護理師', email:'chen.yuling@yuankuo.com.tw', phone:'0967-890-123', stat:15, statLabel:'病房個案'},
+  doc:  {name:'張宗達', label:'醫師', dept:'復健科', av:'av-doc', ch:'張', role:'醫師', email:'chang.zongda@yuankuo.com.tw', phone:'0978-901-234', stat:5, statLabel:'PAC 個案'},
+  pha:  {name:'林建志', label:'藥師', dept:'藥劑科', av:'av-pha', ch:'林', role:'藥師', email:'lin.jianzhi@yuankuo.com.tw', phone:'0989-012-345', stat:3, statLabel:'本月評估'},
+  nut:  {name:'周雅玲', label:'營養師', dept:'營養科', av:'av-nut', ch:'周', role:'營養師', email:'chou.yaling@yuankuo.com.tw', phone:'0990-123-456', stat:3, statLabel:'本月評估'},
+  adm:  {name:'蔡書明', label:'行政', dept:'行政部', av:'av-adm', ch:'蔡', role:'行政', email:'tsai.shuming@yuankuo.com.tw', phone:'0901-234-567', stat:8, statLabel:'待批價'},
+};
+
+// ── 通知設定（各角色） ──
+const NOTIF_SETTINGS = {
+  mgr: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'展延截止提醒',desc:'個案展延日期前 N 天提醒（由期限設定決定）',on:true},
+      {id:'n2',label:'新轉介待收案判斷',desc:'新個案轉介進來，待我判斷是否符合收案條件',on:true},
+      {id:'n3',label:'評估量表逾期提醒',desc:'治療師有評估表逾期未填',on:true},
+      {id:'n4',label:'待審核：評估修改申請',desc:'復健主管已審核，送我最終審核',on:true},
+      {id:'n5',label:'待審核：居家批價',desc:'復健主管已審核批價，送我審核後轉行政',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n6',label:'展延通過通知',desc:'健保署回覆展延通過',on:true},
+      {id:'n7',label:'展延失敗通知',desc:'健保署回覆展延失敗',on:true},
+      {id:'n8',label:'個案入院確認',desc:'行政完成建檔，個案正式入院',on:false},
+    ]},
+  ],
+  sup: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'待審核：評估修改申請',desc:'治療師送出修改申請，待我初審',on:true},
+      {id:'n2',label:'待審核：換班申請',desc:'治療師送出換班申請',on:true},
+      {id:'n3',label:'待審核：居家批價',desc:'治療師確認批價，待我審核後送個管師',on:true},
+      {id:'n4',label:'治療師評估逾期提醒',desc:'我管理的治療師有評估表逾期',on:true},
+      {id:'n5',label:'居家個案待發佈',desc:'個管師建立新居家個案，待我發佈報名',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n6',label:'審核結果通知',desc:'個管師對我送出的申請核准或拒絕',on:true},
+      {id:'n7',label:'展延通過通知',desc:'個管師轉發展延通過結果',on:false},
+    ]},
+  ],
+  pt: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有評估量表應填日期即將到來',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期未填',on:true},
+      {id:'n3',label:'新居家個案可報名',desc:'有新居家個案開放報名',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n4',label:'修改申請核准通知',desc:'復健主管或個管師核准我的修改申請',on:true},
+      {id:'n5',label:'修改申請拒絕通知',desc:'修改申請被拒絕',on:true},
+      {id:'n6',label:'居家抽籤結果',desc:'居家個案報名抽籤結果出爐',on:true},
+      {id:'n7',label:'展延通過通知',desc:'個管師轉發展延通過，療程可繼續',on:false},
+    ]},
+  ],
+  ot: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有評估量表應填日期即將到來',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期未填',on:true},
+      {id:'n3',label:'新居家個案可報名',desc:'有新居家個案開放報名',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n4',label:'修改申請核准通知',desc:'修改申請已通過',on:true},
+      {id:'n5',label:'修改申請拒絕通知',desc:'修改申請被拒絕',on:true},
+      {id:'n6',label:'居家抽籤結果',desc:'居家個案報名抽籤結果出爐',on:true},
+      {id:'n7',label:'展延通過通知',desc:'療程可繼續',on:false},
+    ]},
+  ],
+  st: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有評估量表應填日期即將到來',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期未填',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n3',label:'修改申請核准通知',desc:'修改申請已通過',on:true},
+      {id:'n4',label:'修改申請拒絕通知',desc:'修改申請被拒絕',on:true},
+      {id:'n5',label:'展延通過通知',desc:'療程可繼續',on:false},
+    ]},
+  ],
+  nur: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有護理評估量表應填',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期',on:true},
+      {id:'n3',label:'PAC 收案判斷委託',desc:'個管師委託我協助判斷是否符合收案條件',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n4',label:'今日入院通知',desc:'今日有新個案入院，病房請準備',on:true},
+      {id:'n5',label:'今日出院通知',desc:'今日有個案出院',on:false},
+    ]},
+  ],
+  doc: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'PAC 收案判斷委託',desc:'個管師委託我判斷個案是否符合 PAC 條件',on:true},
+      {id:'n2',label:'醫囑待填寫',desc:'個案確認為 PAC，請提供復健治療方向醫囑',on:true},
+      {id:'n3',label:'評估待填提醒',desc:'有醫師評估量表應填',on:true},
+      {id:'n4',label:'評估逾期提醒',desc:'有評估量表已逾期',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n5',label:'居家 PAC 交接提醒',desc:'居家醫療首次訪視後，提醒與 PAC 團隊交接',on:true},
+    ]},
+  ],
+  pha: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有藥師評估量表應填',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n3',label:'評估送出確認',desc:'評估量表送出後收到系統確認通知',on:false},
+    ]},
+  ],
+  nut: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'評估待填提醒',desc:'有營養師評估量表應填',on:true},
+      {id:'n2',label:'評估逾期提醒',desc:'有評估量表已逾期',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n3',label:'評估送出確認',desc:'評估量表送出後收到系統確認通知',on:false},
+    ]},
+  ],
+  adm: [
+    {section:'需要我處理', items:[
+      {id:'n1',label:'今日入院待建檔通知',desc:'今日有新個案入院，需於當日至杏翔系統建檔',on:true},
+      {id:'n2',label:'居家批價待處理通知',desc:'個管師審核通過，需當日完成批價',on:true},
+    ]},
+    {section:'狀態更新', items:[
+      {id:'n3',label:'月初獎金結算提醒',desc:'每月初提醒處理上月已結案個案的費用結算',on:true},
+      {id:'n4',label:'個案出院確認',desc:'個案正式出院，可進行後續結算',on:false},
+    ]},
+  ],
+};
+
+let currentRole = 'mgr';
+let isEditing = false;
+
+function renderNotifSettings(role) {
+  const settings = NOTIF_SETTINGS[role] || [];
+  let html = '';
+  settings.forEach(group => {
+    html += `<div class="notif-section-label">${group.section}</div>`;
+    group.items.forEach(item => {
+      html += `
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">${item.label}</div>
+            <div class="toggle-desc">${item.desc}</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" ${item.on ? 'checked' : ''} onchange="this.checked">
+            <span class="slider"></span>
+          </label>
+        </div>`;
+    });
+  });
+  document.getElementById('notif-settings').innerHTML = html;
+}
+
+function switchRole(role) {
+  currentRole = role;
+  const cfg = ROLES[role];
+
+  // sidebar
+  document.getElementById('user-av').textContent = cfg.ch;
+  document.getElementById('user-av').className = 'user-avatar ' + cfg.av;
+  document.getElementById('user-name').textContent = cfg.name;
+  document.getElementById('user-role-label').textContent = cfg.label;
+
+  // profile card
+  const avLg = document.getElementById('profile-av-lg');
+  avLg.textContent = cfg.ch;
+  avLg.className = 'profile-avatar-lg ' + cfg.av;
+  document.getElementById('profile-name').textContent = cfg.name;
+  document.getElementById('profile-dept').textContent = cfg.dept + '・員郭醫院';
+  document.getElementById('profile-role-badge').textContent = '🔒 ' + cfg.role;
+  document.getElementById('profile-stat-val').textContent = cfg.stat;
+  document.getElementById('profile-stat-label').textContent = cfg.statLabel;
+
+  // form fields
+  document.getElementById('f-name').value = cfg.name;
+  document.getElementById('f-title').value = cfg.label;
+  document.getElementById('f-role').value = cfg.role;
+  document.getElementById('f-email').value = cfg.email;
+  document.getElementById('f-phone').value = cfg.phone;
+
+  // cancel any editing
+  cancelEdit();
+
+  // notif
+  renderNotifSettings(role);
+}
+
+function toggleEdit() {
+  isEditing = !isEditing;
+  const fields = ['f-name','f-title','f-email','f-phone'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if(['f-title','f-role'].includes(id)) return;
+    el.readOnly = !isEditing;
+  });
+  document.getElementById('edit-btn').textContent = isEditing ? '取消' : '✏️ 編輯';
+  document.getElementById('edit-actions').classList.toggle('hidden', !isEditing);
+}
+
+function cancelEdit() {
+  isEditing = false;
+  const cfg = ROLES[currentRole];
+  document.getElementById('f-name').value = cfg.name;
+  document.getElementById('f-email').value = cfg.email;
+  document.getElementById('f-phone').value = cfg.phone;
+  ['f-name','f-email','f-phone'].forEach(id => document.getElementById(id).readOnly = true);
+  document.getElementById('edit-btn').textContent = '✏️ 編輯';
+  document.getElementById('edit-actions').classList.add('hidden');
+}
+
+function saveEdit() {
+  alert('個人資料已儲存');
+  cancelEdit();
+}
+
+function checkPwd(val) {
+  const bars = [document.getElementById('pb1'),document.getElementById('pb2'),document.getElementById('pb3'),document.getElementById('pb4')];
+  const hint = document.getElementById('pwd-hint');
+  bars.forEach(b=>{ b.className='pwd-bar'; });
+  if(!val){ hint.textContent='需包含大小寫字母與數字'; return; }
+  let score = 0;
+  if(val.length>=8) score++;
+  if(/[A-Z]/.test(val)) score++;
+  if(/[0-9]/.test(val)) score++;
+  if(/[^A-Za-z0-9]/.test(val)) score++;
+  const cls = score<=1?'weak':score<=2?'medium':'strong';
+  const labels = {weak:'弱',medium:'普通',strong:'強'};
+  for(let i=0;i<score;i++) bars[i].className='pwd-bar filled '+cls;
+  hint.textContent = '密碼強度：' + labels[cls];
+  hint.style.color = score<=1?'var(--red)':score<=2?'var(--amber)':'var(--green)';
+}
+
+function openModal(id){ document.getElementById(id).classList.remove('hidden') }
+function closeModal(id){ document.getElementById(id).classList.add('hidden') }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden')}));
+
+// Init
+renderNotifSettings('mgr');
+</script>
+</body>
+</html>
