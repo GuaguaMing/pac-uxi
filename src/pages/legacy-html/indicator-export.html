@@ -1,230 +1,1134 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAC 指標匯出</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#2563EB;--blue-light:#EFF6FF;--blue-mid:#BFDBFE;--blue-dark:#1E40AF;
-  --gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;
-  --gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--gray-900:#0F172A;
-  --green:#16A34A;--green-light:#DCFCE7;
-  --amber:#D97706;--amber-light:#FEF3C7;
-  --red:#DC2626;--red-light:#FEE2E2;
-  --purple:#7C3AED;--purple-light:#EDE9FE;
-  --teal:#0D9488;--teal-light:#CCFBF1;
-  --white:#FFFFFF
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--gray-50);color:var(--gray-900);height:100vh;display:flex;overflow:hidden;font-size:14px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAC 指標匯出</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-/* Sidebar */
-.sidebar{width:192px;min-width:192px;background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column}
-.sidebar-logo{padding:16px 16px 13px;border-bottom:1px solid var(--gray-200)}
-.logo-text{font-size:14px;font-weight:700;color:var(--blue)}
-.logo-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
-.sidebar-nav{padding:6px 0;flex:1}
-.nav-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--gray-500);border-left:3px solid transparent;cursor:default}
-.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:600;border-left-color:var(--blue)}
-.nav-item.disabled{opacity:.38;cursor:not-allowed}
-.sidebar-user{margin-top: auto;padding:11px 14px;border-top:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
-.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--blue-mid);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-.user-name{font-size:12px;font-weight:600;color:var(--gray-700)}
-.user-role{font-size:11px;color:var(--gray-400)}
+    :root {
+      --blue: #2563EB;
+      --blue-light: #EFF6FF;
+      --blue-mid: #BFDBFE;
+      --blue-dark: #1E40AF;
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-900: #0F172A;
+      --green: #16A34A;
+      --green-light: #DCFCE7;
+      --amber: #D97706;
+      --amber-light: #FEF3C7;
+      --red: #DC2626;
+      --red-light: #FEE2E2;
+      --purple: #7C3AED;
+      --purple-light: #EDE9FE;
+      --teal: #0D9488;
+      --teal-light: #CCFBF1;
+      --white: #FFFFFF
+    }
 
-/* Main */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.breadcrumb{font-size:12px;color:var(--gray-500)}
-.content{flex:1;overflow-y:auto;padding:20px}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+      font-size: 14px
+    }
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
-.btn-primary{background:var(--blue);color:var(--white)}.btn-primary:hover{background:var(--blue-dark)}
-.btn-secondary{background:var(--white);color:var(--gray-700);border:1px solid var(--gray-300)}.btn-secondary:hover{background:var(--gray-50)}
-.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--blue-mid)}.btn-ghost:hover{background:var(--blue-light)}
-.btn-teal{background:var(--white);color:var(--teal);border:1px solid #99F6E4}.btn-teal:hover{background:var(--teal-light)}
-.btn-sm{padding:5px 10px;font-size:12px}.btn-xs{padding:3px 8px;font-size:11px}
+    /* Sidebar */
+    .sidebar {
+      width: 192px;
+      min-width: 192px;
+      background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column
+    }
 
-/* Badges */
-.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:600}
-.badge-blue{background:var(--blue-light);color:var(--blue)}
-.badge-green{background:var(--green-light);color:var(--green)}
-.badge-amber{background:var(--amber-light);color:var(--amber)}
-.badge-gray{background:var(--gray-100);color:var(--gray-500)}
-.badge-red{background:var(--red-light);color:var(--red)}
-.badge-purple{background:var(--purple-light);color:var(--purple)}
-.badge-teal{background:var(--teal-light);color:var(--teal)}
+    .sidebar-logo {
+      padding: 16px 16px 13px;
+      border-bottom: 1px solid var(--gray-200)
+    }
 
-/* Tabs */
-.tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:16px}
-.tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+    .logo-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue)
+    }
 
-/* Page header */
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.page-title{font-size:18px;font-weight:700}
-.page-subtitle{font-size:12px;color:var(--gray-500);margin-top:3px}
+    .logo-sub {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2px
+    }
 
-/* Filter card */
-.filter-card{background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:16px 20px;margin-bottom:16px}
-.filter-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.filter-card-title{font-size:13px;font-weight:600;color:var(--gray-700)}
-.filter-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
-.filter-group{display:flex;flex-direction:column;gap:5px}
-.filter-label{font-size:11px;font-weight:500;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em}
-.filter-control{padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;color:var(--gray-800);background:var(--white);outline:none;min-width:130px}
-.filter-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
-select.filter-control{cursor:pointer}
-.filter-sep{font-size:13px;color:var(--gray-400);padding-bottom:7px}
-.filter-result{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-100)}
-.filter-result-text{font-size:13px;color:var(--gray-600)}
-.filter-result-count{font-size:20px;font-weight:700;color:var(--blue)}
+    .sidebar-nav {
+      padding: 6px 0;
+      flex: 1
+    }
 
-/* Indicator grid */
-.indicator-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.indicator-card{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:14px;cursor:pointer;transition:all .15s}
-.indicator-card:hover{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
-.indicator-name{font-size:12px;color:var(--gray-600);margin-bottom:8px;line-height:1.4}
-.indicator-value{font-size:22px;font-weight:700;color:var(--gray-900);margin-bottom:6px}
-.indicator-value span{font-size:13px;font-weight:400;color:var(--gray-500)}
-.indicator-progress{height:4px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-bottom:6px}
-.indicator-progress-bar{height:100%;border-radius:999px;background:var(--blue)}
-.indicator-tracking{font-size:11px;color:var(--gray-400)}
-.indicator-card.complete .indicator-value{color:var(--green)}
-.indicator-card.complete{border-color:#BBF7D0}
-.indicator-card.pending .indicator-value{color:var(--amber)}
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      color: var(--gray-500);
+      border-left: 3px solid transparent;
+      cursor: default
+    }
 
-/* Section */
-.section-card{background:var(--white);border:1px solid var(--gray-200);border-radius:10px;margin-bottom:16px;overflow:hidden}
-.sc-header{padding:11px 17px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;background:var(--gray-50)}
-.sc-title{font-size:13px;font-weight:600;color:var(--gray-700)}
-.sc-body{padding:0}
+    .nav-item.active {
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 600;
+      border-left-color: var(--blue)
+    }
 
-/* Case tracking table */
-.tracking-table{width:100%;border-collapse:collapse;font-size:12px}
-.tracking-table th{text-align:left;padding:8px 10px;background:var(--gray-50);color:var(--gray-500);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--gray-200);white-space:nowrap}
-.tracking-table td{padding:9px 10px;border-bottom:1px solid var(--gray-100);color:var(--gray-700);vertical-align:middle}
-.tracking-table tr:last-child td{border-bottom:none}
-.tracking-table tr:hover td{background:var(--gray-50)}
-.tracking-table th.sticky-col,.tracking-table td.sticky-col{position:sticky;left:0;z-index:2;background:var(--white)}
-.tracking-table th.sticky-col{background:var(--gray-50)}
+    .nav-item.disabled {
+      opacity: .38;
+      cursor: not-allowed
+    }
 
-/* Tracking status */
-.track-status{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;border:none}
-.track-status.done{background:var(--green-light);color:var(--green)}
-.track-status.pending{background:var(--amber-light);color:var(--amber)}
-.track-status.failed{background:var(--gray-100);color:var(--gray-500)}
-.track-status.not-started{background:var(--gray-100);color:var(--gray-400)}
+    .sidebar-user {
+      margin-top: auto;
+      padding: 11px 14px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
 
-/* Yes/No toggle */
-.yn-toggle{display:inline-flex;border:1px solid var(--gray-200);border-radius:6px;overflow:hidden}
-.yn-btn{padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;background:var(--white);border:none;color:var(--gray-400)}
-.yn-btn.yes.active{background:var(--red-light);color:var(--red)}
-.yn-btn.no.active{background:var(--green-light);color:var(--green)}
-.yn-btn:hover:not(.active){background:var(--gray-50)}
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--blue-mid);
+      color: var(--blue-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700
+    }
 
-/* Table scroll wrapper */
-.table-scroll{overflow-x:auto;max-height:420px;overflow-y:auto}
+    .user-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-700)
+    }
 
-/* Contact chip */
-.contact-chip{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--gray-600);background:var(--gray-100);padding:2px 6px;border-radius:4px;white-space:nowrap}
+    .user-role {
+      font-size: 11px;
+      color: var(--gray-400)
+    }
 
-/* Disposition tag */
-.disp-tag{display:inline-flex;align-items:center;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
-.disp-home{background:var(--teal-light);color:var(--teal)}
-.disp-ltc{background:var(--purple-light);color:var(--purple)}
-.disp-sw{background:var(--amber-light);color:var(--amber)}
-.disp-none{background:var(--gray-100);color:var(--gray-400)}
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
 
-/* Note input inline */
-.note-input{width:100%;padding:4px 7px;border:1px solid var(--gray-200);border-radius:5px;font-size:11px;color:var(--gray-700);background:var(--white);outline:none;min-width:120px}
-.note-input:focus{border-color:var(--blue)}
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 20px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0
+    }
 
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
-.modal{background:var(--white);border-radius:12px;width:560px;max-width:92vw;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.15)}
-.modal-lg{width:720px}
-.modal-xl{width:880px}
-.modal-sm{width:420px}
-.modal-header{padding:16px 20px 13px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.modal-title{font-size:15px;font-weight:700}
-.modal-close{width:25px;height:25px;border-radius:5px;border:none;background:var(--gray-100);color:var(--gray-500);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:var(--gray-200)}
-.modal-body{padding:16px 20px;overflow-y:auto;flex:1}
-.modal-footer{padding:13px 20px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:7px;flex-shrink:0}
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--gray-500)
+    }
 
-/* Form */
-.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.form-group label{font-size:12px;font-weight:500;color:var(--gray-600)}
-.form-control{padding:7px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;color:var(--gray-800);background:var(--white);outline:none}
-.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
-select.form-control{cursor:pointer}
-textarea.form-control{resize:vertical;min-height:70px}
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px
+    }
 
-/* Field manager */
-.field-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.field-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px;background:var(--white)}
-.field-item.system{background:var(--gray-50)}
-.field-drag{color:var(--gray-300);cursor:grab;font-size:14px}
-.field-name{flex:1;font-size:13px;color:var(--gray-700);font-weight:500}
-.field-type{font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:2px 6px;border-radius:4px}
-.field-badge-sys{font-size:10px;color:var(--blue);background:var(--blue-light);padding:2px 6px;border-radius:4px;font-weight:600}
-.field-toggle{width:36px;height:20px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background .15s}
-.field-toggle.on{background:var(--blue)}
-.field-toggle.off{background:var(--gray-300)}
-.field-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:white;top:3px;transition:left .15s}
-.field-toggle.on::after{left:19px}
-.field-toggle.off::after{left:3px}
-.field-delete{color:var(--gray-300);cursor:pointer;font-size:14px;border:none;background:none;padding:2px}
-.field-delete:hover{color:var(--red)}
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap
+    }
 
-/* Indicator detail */
-.indicator-detail-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100)}
-.indicator-detail-row:last-child{border-bottom:none}
-.indicator-detail-name{font-size:13px;color:var(--gray-700)}
-.indicator-detail-val{font-size:15px;font-weight:700;color:var(--blue)}
-.indicator-formula{font-size:11px;color:var(--gray-400);margin-top:2px}
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white)
+    }
 
-/* Export preview */
-.export-section{margin-bottom:16px}
-.export-section-title{font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.export-section-title::after{content:'';flex:1;height:1px;background:var(--gray-200)}
-.export-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.export-check-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--gray-200);border-radius:6px;cursor:pointer;font-size:12px}
-.export-check-item input{accent-color:var(--blue)}
-.export-check-item:hover{background:var(--gray-50)}
+    .btn-primary:hover {
+      background: var(--blue-dark)
+    }
 
-.info-note{font-size:12px;padding:10px 12px;border-radius:6px;margin-bottom:12px}
-.info-note.blue{background:var(--blue-light);color:var(--blue-dark)}
-.info-note.amber{background:var(--amber-light);color:var(--amber)}
+    .btn-secondary {
+      background: var(--white);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300)
+    }
 
-.divider{height:1px;background:var(--gray-100);margin:13px 0}
-.hidden{display:none!important}
-.mt-10{margin-top:10px}
-/* Expandable case list */
-.case-track-list{display:flex;flex-direction:column}
-.case-track-item{border-bottom:1px solid var(--gray-100)}
-.case-track-item:last-child{border-bottom:none}
-.case-track-row{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;transition:background .12s}
-.case-track-row:hover{background:var(--gray-50)}
-.case-track-expand-btn{width:20px;height:20px;border-radius:4px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-400);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .15s}
-.case-track-expand-btn.open{background:var(--blue-light);border-color:var(--blue-mid);color:var(--blue)}
-.case-track-name{font-size:13px;font-weight:600;color:var(--gray-900);min-width:60px}
-.case-track-meta{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap}
-.case-track-detail{background:var(--gray-50);border-top:1px solid var(--gray-100);padding:16px 20px 16px 46px}
-.case-track-contact{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.case-track-questions{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.case-track-q{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--white);border:1px solid var(--gray-200);border-radius:7px}
-.case-track-q-label{font-size:12px;color:var(--gray-700)}
-.case-track-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--gray-200)}
-</style>
+    .btn-secondary:hover {
+      background: var(--gray-50)
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--blue);
+      border: 1px solid var(--blue-mid)
+    }
+
+    .btn-ghost:hover {
+      background: var(--blue-light)
+    }
+
+    .btn-teal {
+      background: var(--white);
+      color: var(--teal);
+      border: 1px solid #99F6E4
+    }
+
+    .btn-teal:hover {
+      background: var(--teal-light)
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px
+    }
+
+    .btn-xs {
+      padding: 3px 8px;
+      font-size: 11px
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .badge-blue {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    .badge-green {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .badge-amber {
+      background: var(--amber-light);
+      color: var(--amber)
+    }
+
+    .badge-gray {
+      background: var(--gray-100);
+      color: var(--gray-500)
+    }
+
+    .badge-red {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .badge-purple {
+      background: var(--purple-light);
+      color: var(--purple)
+    }
+
+    .badge-teal {
+      background: var(--teal-light);
+      color: var(--teal)
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 16px
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px
+    }
+
+    .tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue)
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px
+    }
+
+    .page-title {
+      font-size: 18px;
+      font-weight: 700
+    }
+
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 3px
+    }
+
+    /* Filter card */
+    .filter-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 16px
+    }
+
+    .filter-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px
+    }
+
+    .filter-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700)
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .filter-control {
+      padding: 6px 10px;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--gray-800);
+      background: var(--white);
+      outline: none;
+      min-width: 130px
+    }
+
+    .filter-control:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-light)
+    }
+
+    select.filter-control {
+      cursor: pointer
+    }
+
+    .filter-sep {
+      font-size: 13px;
+      color: var(--gray-400);
+      padding-bottom: 7px
+    }
+
+    .filter-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--gray-100)
+    }
+
+    .filter-result-text {
+      font-size: 13px;
+      color: var(--gray-600)
+    }
+
+    .filter-result-count {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue)
+    }
+
+    /* Indicator grid */
+    .indicator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px
+    }
+
+    .indicator-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .indicator-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-light)
+    }
+
+    .indicator-name {
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      line-height: 1.4
+    }
+
+    .indicator-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 6px
+    }
+
+    .indicator-value span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray-500)
+    }
+
+    .indicator-progress {
+      height: 4px;
+      background: var(--gray-100);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 6px
+    }
+
+    .indicator-progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue)
+    }
+
+    .indicator-tracking {
+      font-size: 11px;
+      color: var(--gray-400)
+    }
+
+    .indicator-card.complete .indicator-value {
+      color: var(--green)
+    }
+
+    .indicator-card.complete {
+      border-color: #BBF7D0
+    }
+
+    .indicator-card.pending .indicator-value {
+      color: var(--amber)
+    }
+
+    /* Section */
+    .section-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden
+    }
+
+    .sc-header {
+      padding: 11px 17px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gray-50)
+    }
+
+    .sc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700)
+    }
+
+    .sc-body {
+      padding: 0
+    }
+
+    /* Case tracking table */
+    .tracking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px
+    }
+
+    .tracking-table th {
+      text-align: left;
+      padding: 8px 10px;
+      background: var(--gray-50);
+      color: var(--gray-500);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap
+    }
+
+    .tracking-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+      vertical-align: middle
+    }
+
+    .tracking-table tr:last-child td {
+      border-bottom: none
+    }
+
+    .tracking-table tr:hover td {
+      background: var(--gray-50)
+    }
+
+    .tracking-table th.sticky-col,
+    .tracking-table td.sticky-col {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--white)
+    }
+
+    .tracking-table th.sticky-col {
+      background: var(--gray-50)
+    }
+
+    /* Tracking status */
+    .track-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none
+    }
+
+    .track-status.done {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .track-status.pending {
+      background: var(--amber-light);
+      color: var(--amber)
+    }
+
+    .track-status.failed {
+      background: var(--gray-100);
+      color: var(--gray-500)
+    }
+
+    .track-status.not-started {
+      background: var(--gray-100);
+      color: var(--gray-400)
+    }
+
+    /* Yes/No toggle */
+    .yn-toggle {
+      display: inline-flex;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      overflow: hidden
+    }
+
+    .yn-btn {
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--white);
+      border: none;
+      color: var(--gray-400)
+    }
+
+    .yn-btn.yes.active {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .yn-btn.no.active {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .yn-btn:hover:not(.active) {
+      background: var(--gray-50)
+    }
+
+    /* Table scroll wrapper */
+    .table-scroll {
+      overflow-x: auto;
+      max-height: 420px;
+      overflow-y: auto
+    }
+
+    /* Contact chip */
+    .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: var(--gray-600);
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap
+    }
+
+    /* Disposition tag */
+    .disp-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600
+    }
+
+    .disp-home {
+      background: var(--teal-light);
+      color: var(--teal)
+    }
+
+    .disp-ltc {
+      background: var(--purple-light);
+      color: var(--purple)
+    }
+
+    .disp-sw {
+      background: var(--amber-light);
+      color: var(--amber)
+    }
+
+    .disp-none {
+      background: var(--gray-100);
+      color: var(--gray-400)
+    }
+
+    /* Note input inline */
+    .note-input {
+      width: 100%;
+      padding: 4px 7px;
+      border: 1px solid var(--gray-200);
+      border-radius: 5px;
+      font-size: 11px;
+      color: var(--gray-700);
+      background: var(--white);
+      outline: none;
+      min-width: 120px
+    }
+
+    .note-input:focus {
+      border-color: var(--blue)
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(2px)
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 12px;
+      width: 560px;
+      max-width: 92vw;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .15)
+    }
+
+    .modal-lg {
+      width: 720px
+    }
+
+    .modal-xl {
+      width: 880px
+    }
+
+    .modal-sm {
+      width: 420px
+    }
+
+    .modal-header {
+      padding: 16px 20px 13px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .modal-close {
+      width: 25px;
+      height: 25px;
+      border-radius: 5px;
+      border: none;
+      background: var(--gray-100);
+      color: var(--gray-500);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal-close:hover {
+      background: var(--gray-200)
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      flex: 1
+    }
+
+    .modal-footer {
+      padding: 13px 20px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      flex-shrink: 0
+    }
+
+    /* Form */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 13px
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-600)
+    }
+
+    .form-control {
+      padding: 7px 10px;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--gray-800);
+      background: var(--white);
+      outline: none
+    }
+
+    .form-control:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-light)
+    }
+
+    select.form-control {
+      cursor: pointer
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 70px
+    }
+
+    /* Field manager */
+    .field-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px
+    }
+
+    .field-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 7px;
+      background: var(--white)
+    }
+
+    .field-item.system {
+      background: var(--gray-50)
+    }
+
+    .field-drag {
+      color: var(--gray-300);
+      cursor: grab;
+      font-size: 14px
+    }
+
+    .field-name {
+      flex: 1;
+      font-size: 13px;
+      color: var(--gray-700);
+      font-weight: 500
+    }
+
+    .field-type {
+      font-size: 11px;
+      color: var(--gray-400);
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    .field-badge-sys {
+      font-size: 10px;
+      color: var(--blue);
+      background: var(--blue-light);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600
+    }
+
+    .field-toggle {
+      width: 36px;
+      height: 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background .15s
+    }
+
+    .field-toggle.on {
+      background: var(--blue)
+    }
+
+    .field-toggle.off {
+      background: var(--gray-300)
+    }
+
+    .field-toggle::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: white;
+      top: 3px;
+      transition: left .15s
+    }
+
+    .field-toggle.on::after {
+      left: 19px
+    }
+
+    .field-toggle.off::after {
+      left: 3px
+    }
+
+    .field-delete {
+      color: var(--gray-300);
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+      background: none;
+      padding: 2px
+    }
+
+    .field-delete:hover {
+      color: var(--red)
+    }
+
+    /* Indicator detail */
+    .indicator-detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .indicator-detail-row:last-child {
+      border-bottom: none
+    }
+
+    .indicator-detail-name {
+      font-size: 13px;
+      color: var(--gray-700)
+    }
+
+    .indicator-detail-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue)
+    }
+
+    .indicator-formula {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2px
+    }
+
+    /* Export preview */
+    .export-section {
+      margin-bottom: 16px
+    }
+
+    .export-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .export-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200)
+    }
+
+    .export-check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px
+    }
+
+    .export-check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px
+    }
+
+    .export-check-item input {
+      accent-color: var(--blue)
+    }
+
+    .export-check-item:hover {
+      background: var(--gray-50)
+    }
+
+    .info-note {
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px
+    }
+
+    .info-note.blue {
+      background: var(--blue-light);
+      color: var(--blue-dark)
+    }
+
+    .info-note.amber {
+      background: var(--amber-light);
+      color: var(--amber)
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--gray-100);
+      margin: 13px 0
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .mt-10 {
+      margin-top: 10px
+    }
+
+    /* Expandable case list */
+    .case-track-list {
+      display: flex;
+      flex-direction: column
+    }
+
+    .case-track-item {
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .case-track-item:last-child {
+      border-bottom: none
+    }
+
+    .case-track-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      cursor: pointer;
+      transition: background .12s
+    }
+
+    .case-track-row:hover {
+      background: var(--gray-50)
+    }
+
+    .case-track-expand-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      color: var(--gray-400);
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .case-track-expand-btn.open {
+      background: var(--blue-light);
+      border-color: var(--blue-mid);
+      color: var(--blue)
+    }
+
+    .case-track-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-900);
+      min-width: 60px
+    }
+
+    .case-track-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      flex-wrap: wrap
+    }
+
+    .case-track-detail {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-100);
+      padding: 16px 20px 16px 46px
+    }
+
+    .case-track-contact {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap
+    }
+
+    .case-track-questions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px
+    }
+
+    .case-track-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 7px
+    }
+
+    .case-track-q-label {
+      font-size: 12px;
+      color: var(--gray-700)
+    }
+
+    .case-track-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-200)
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- SIDEBAR -->
-<!--
+  <!-- SIDEBAR -->
+  <!--
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-text">PAC 管理系統</div>
@@ -240,7 +1144,6 @@ textarea.form-control{resize:vertical;min-height:70px}
     <div class="nav-item disabled">💪 復健紀錄</div>
     <div class="nav-item active">📤 指標匯出</div>
   </nav>
--->
   <div class="sidebar-user">
     <div class="user-avatar">林</div>
     <div>
@@ -249,968 +1152,1194 @@ textarea.form-control{resize:vertical;min-height:70px}
     </div>
   </div>
 </aside>
+-->
 
-<!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <div class="breadcrumb">指標匯出</div>
-    <div style="font-size:11px;color:var(--gray-400)">2026/06/23</div>
-  </div>
-  <div class="content">
-
-    <div class="page-header">
-      <div>
-        <div class="page-title">指標匯出</div>
-        <div class="page-subtitle">篩選結案個案・填寫追蹤資料・產出成果指標</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary btn-sm" onclick="openModal('modal-manage-fields')">⚙ 管理追蹤欄位</button>
-        <button class="btn btn-teal btn-sm" onclick="openModal('modal-export')">📤 匯出報告</button>
-      </div>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="breadcrumb">指標匯出</div>
+      <div style="font-size:11px;color:var(--gray-400)">2026/06/23</div>
     </div>
+    <div class="content">
 
-    <!-- 主要 tabs -->
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab(this,'nhia')">健保署指標</div>
-      <div class="tab" onclick="switchTab(this,'internal')">院內指標</div>
-    </div>
-
-    <!-- ════ 健保署指標 tab ════ -->
-    <div id="tab-nhia">
-
-      <!-- 篩選區 -->
-      <div class="filter-card">
-        <div class="filter-card-header">
-          <div class="filter-card-title">篩選條件</div>
-          <button class="btn btn-secondary btn-xs" onclick="openModal('modal-manage-filters')">⚙ 管理篩選條件</button>
+      <div class="page-header">
+        <div>
+          <div class="page-title">指標匯出</div>
+          <div class="page-subtitle">篩選結案個案・填寫追蹤資料・產出成果指標</div>
         </div>
-        <div class="filter-row">
-          <div class="filter-group">
-            <div class="filter-label">統計年度</div>
-            <select class="filter-control">
-              <option>2025 年</option>
-              <option selected>2026 年</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">月份區間（起）</div>
-            <select class="filter-control">
-              <option>1 月</option>
-              <option selected>2 月</option>
-              <option>3 月</option>
-              <option>4 月</option>
-              <option>5 月</option>
-              <option>6 月</option>
-              <option>7 月</option>
-              <option>8 月</option>
-              <option>9 月</option>
-              <option>10 月</option>
-              <option>11 月</option>
-              <option>12 月</option>
-            </select>
-          </div>
-          <div class="filter-sep">～</div>
-          <div class="filter-group">
-            <div class="filter-label">月份區間（迄）</div>
-            <select class="filter-control">
-              <option>1 月</option>
-              <option>2 月</option>
-              <option>3 月</option>
-              <option>4 月</option>
-              <option>5 月</option>
-              <option selected>6 月</option>
-              <option>7 月</option>
-              <option>8 月</option>
-              <option>9 月</option>
-              <option>10 月</option>
-              <option>11 月</option>
-              <option>12 月</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">結案類型</div>
-            <select class="filter-control">
-              <option>全部結案</option>
-              <option selected>PAC 成功結案</option>
-              <option>PAC 不成功結案</option>
-              <option>一般個案（非PAC）</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">疾病別</div>
-            <select class="filter-control">
-              <option selected>全部</option>
-              <option>CVA（腦中風）</option>
-              <option>骨科</option>
-              <option>COPD</option>
-              <option>心衰竭</option>
-              <option>脊髓損傷</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">照護模式</div>
-            <select class="filter-control">
-              <option selected>全部</option>
-              <option>住院</option>
-              <option>日照</option>
-              <option>居家</option>
-            </select>
-          </div>
-          <div>
-            <button class="btn btn-primary btn-sm" style="margin-top:20px">套用篩選</button>
-          </div>
-        </div>
-        <div class="filter-result">
-          <div class="filter-result-text">符合條件個案：</div>
-          <div class="filter-result-count">47</div>
-          <div class="filter-result-text">人・追蹤完成</div>
-          <div class="filter-result-count" style="color:var(--green)">31</div>
-          <div class="filter-result-text">人・未追蹤</div>
-          <div class="filter-result-count" style="color:var(--amber)">16</div>
-          <div class="filter-result-text">人</div>
-        </div>
-      </div>
-
-      <!-- 指標總覽 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:13px;font-weight:600;color:var(--gray-700)">指標計算結果 <span style="font-size:11px;font-weight:400;color:var(--gray-400)">· 點擊卡片查看計算明細</span></div>
-        <div class="info-note blue" style="margin-bottom:0;padding:6px 12px;font-size:11px">⚠️ 尚有 16 位個案未完成追蹤，指標數值為目前已追蹤資料的初步計算結果</div>
-      </div>
-      <div class="indicator-grid">
-        <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">一年內死亡率</div>
-          <div class="indicator-value">4.8 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:100%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 31 人（可計算）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">30日內急診率</div>
-          <div class="indicator-value">12.9 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">14日內再入院率</div>
-          <div class="indicator-value">6.5 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">30日內再入院率</div>
-          <div class="indicator-value">9.7 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">個案之功能進步情形</div>
-          <div class="indicator-value">72.3 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">從系統量表自動計算</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">管路移除率</div>
-          <div class="indicator-value">85.2 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">非計畫性管路滑脫率</div>
-          <div class="indicator-value">2.1 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">醫學中心轉至PAC醫院比率</div>
-          <div class="indicator-value">68.1 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">從系統資料自動計算</div>
-        </div>
-        <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">心衰竭治療指引用藥率</div>
-          <div class="indicator-value">91.7 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:66%"></div></div>
-          <div class="indicator-tracking">僅限心衰竭個案（n=12）</div>
-        </div>
-      </div>
-
-      <!-- 個案追蹤清單 -->
-      <div class="section-card">
-        <div class="sc-header">
-          <div class="sc-title">個案追蹤清單</div>
-          <div style="display:flex;gap:7px;align-items:center">
-            <span style="font-size:11px;color:var(--gray-400)">依結案日排序・點列展開填寫追蹤資料</span>
-            <button class="btn btn-secondary btn-xs">追蹤狀態 ▾</button>
-          </div>
-        </div>
-        <div class="sc-body">
-          <div class="case-track-list">
-
-            <!-- 列標題 -->
-            <div style="display:flex;align-items:center;gap:10px;padding:7px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200)">
-              <div style="width:20px;flex-shrink:0"></div>
-              <div style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;min-width:60px">姓名</div>
-              <div style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;flex:1;display:flex;gap:24px">
-                <span style="min-width:80px">疾病別</span>
-                <span style="min-width:70px">模式</span>
-                <span style="min-width:70px">開案日</span>
-                <span style="min-width:70px">結案日</span>
-                <span style="min-width:70px">距結案</span>
-                <span style="min-width:80px">結案後處置</span>
-              </div>
-              <div style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;min-width:80px">追蹤狀態</div>
-            </div>
-
-            <!-- 個案 1：已追蹤・展開示意 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t1')">
-                <button class="case-track-expand-btn open" id="tb1">▼</button>
-                <div class="case-track-name">李文雄</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-blue" style="font-size:10px">COPD</span>
-                  <span class="case-track-tag">🏥 住院</span>
-                  <span class="case-track-tag">開案 06/10</span>
-                  <span class="case-track-tag">結案 07/05/2025</span>
-                  <span class="case-track-tag">353 天</span>
-                  <span class="disp-tag disp-home">居家醫療</span>
-                </div>
-                <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
-              </div>
-              <div id="t1" class="case-track-detail">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0923-456-789</span>
-                  <span class="contact-chip">💬 家屬 李小華 0934-111-222</span>
-                </div>
-                <div class="case-track-questions">
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">出院後30日內是否有急診？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes active">是</button><button class="yn-btn no">否</button></div>
-                  </div>
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">出院後30日內是否有再入院？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div>
-                  </div>
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">出院後14日內是否有再入院？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div>
-                  </div>
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">出院後一年內是否有死亡？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div>
-                  </div>
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">管路是否移除？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes active">是</button><button class="yn-btn no">否</button></div>
-                  </div>
-                  <div class="case-track-q">
-                    <span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
-                    <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div>
-                  </div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" value="家屬說出院後有一次急診，已返家休養">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/15・林美惠</span>
-                  <button class="btn btn-secondary btn-sm">重新填寫</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 個案 2：已追蹤・收合 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t2')">
-                <button class="case-track-expand-btn" id="tb2">▶</button>
-                <div class="case-track-name">鄭大偉</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-purple" style="font-size:10px">骨科</span>
-                  <span class="case-track-tag">🏥 住院</span>
-                  <span class="case-track-tag">開案 05/28</span>
-                  <span class="case-track-tag">結案 07/12/2025</span>
-                  <span class="case-track-tag">346 天</span>
-                  <span class="disp-tag disp-ltc">長照</span>
-                </div>
-                <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
-              </div>
-              <div id="t2" class="case-track-detail hidden">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0912-345-678</span>
-                  <span class="contact-chip">💬 家屬 鄭小姐 0923-222-333</span>
-                </div>
-                <div class="case-track-questions">
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span><div class="yn-toggle"><button class="yn-btn yes active">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" placeholder="點擊輸入備註…">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/16・林美惠</span>
-                  <button class="btn btn-secondary btn-sm">重新填寫</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 個案 3：已追蹤・收合 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t3')">
-                <button class="case-track-expand-btn" id="tb3">▶</button>
-                <div class="case-track-name">吳麗珠</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-amber" style="font-size:10px">CVA</span>
-                  <span class="case-track-tag">☀️ 日照</span>
-                  <span class="case-track-tag">開案 06/05</span>
-                  <span class="case-track-tag">結案 08/20/2025</span>
-                  <span class="case-track-tag">307 天</span>
-                  <span class="disp-tag disp-sw">社工轉介</span>
-                </div>
-                <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
-              </div>
-              <div id="t3" class="case-track-detail hidden">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0934-567-890</span>
-                  <span class="contact-chip">💬 家屬 吳先生 0945-333-444</span>
-                </div>
-                <div class="case-track-questions">
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span><div class="yn-toggle"><button class="yn-btn yes active">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no active">否</button></div></div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" placeholder="點擊輸入備註…">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/18・林美惠</span>
-                  <button class="btn btn-secondary btn-sm">重新填寫</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 個案 4：待追蹤 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t4')">
-                <button class="case-track-expand-btn" id="tb4">▶</button>
-                <div class="case-track-name">陳志明</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-amber" style="font-size:10px">CVA</span>
-                  <span class="case-track-tag">🏥 住院</span>
-                  <span class="case-track-tag">開案 06/27</span>
-                  <span class="case-track-tag">結案 09/05/2025</span>
-                  <span class="case-track-tag">291 天</span>
-                  <span class="disp-tag disp-none">無</span>
-                </div>
-                <button class="track-status pending" onclick="event.stopPropagation()">⏳ 待追蹤</button>
-              </div>
-              <div id="t4" class="case-track-detail hidden">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0912-345-678</span>
-                  <span class="contact-chip">💬 家屬 陳小明 0923-456-789</span>
-                </div>
-                <div class="case-track-questions">
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" placeholder="點擊輸入備註…">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">尚未追蹤</span>
-                  <button class="btn btn-primary btn-sm" onclick="markDone('t4','tb4')">✓ 標記為已追蹤</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 個案 5：無法聯繫 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t5')">
-                <button class="case-track-expand-btn" id="tb5">▶</button>
-                <div class="case-track-name">黃建國</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-teal" style="font-size:10px">脊髓損傷</span>
-                  <span class="case-track-tag">🏡 居家</span>
-                  <span class="case-track-tag">開案 07/15</span>
-                  <span class="case-track-tag">結案 10/20/2025</span>
-                  <span class="case-track-tag">246 天</span>
-                  <span class="disp-tag disp-home">居家醫療</span>
-                </div>
-                <button class="track-status failed" onclick="event.stopPropagation()">✕ 無法聯繫</button>
-              </div>
-              <div id="t5" class="case-track-detail hidden">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0934-567-890</span>
-                  <span class="contact-chip">💬 家屬 黃太太 0945-678-901</span>
-                </div>
-                <div class="info-note amber" style="margin-bottom:12px">電話多次無人接聽，已寄掛號信。</div>
-                <div class="case-track-questions">
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" value="電話多次無人接聽，已寄掛號信">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">最後嘗試聯繫：2026/01/20</span>
-                  <button class="btn btn-primary btn-sm" onclick="markDone('t5','tb5')">✓ 標記為已追蹤</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- 個案 6：未追蹤 -->
-            <div class="case-track-item">
-              <div class="case-track-row" onclick="toggleTrack('t6')">
-                <button class="case-track-expand-btn" id="tb6">▶</button>
-                <div class="case-track-name">王淑芬</div>
-                <div class="case-track-meta">
-                  <span class="badge badge-purple" style="font-size:10px">骨科</span>
-                  <span class="case-track-tag">☀️ 日照</span>
-                  <span class="case-track-tag">開案 07/01</span>
-                  <span class="case-track-tag">結案 09/15/2025</span>
-                  <span class="case-track-tag">281 天</span>
-                  <span class="disp-tag disp-none">無</span>
-                </div>
-                <button class="track-status not-started" onclick="event.stopPropagation()">— 未追蹤</button>
-              </div>
-              <div id="t6" class="case-track-detail hidden">
-                <div class="case-track-contact">
-                  <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
-                  <span class="contact-chip">📞 個案 0923-456-789</span>
-                  <span class="contact-chip">💬 家屬 王小華 0934-789-012</span>
-                </div>
-                <div class="case-track-questions">
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                  <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span><div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div></div>
-                </div>
-                <div class="form-group" style="margin-bottom:12px">
-                  <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
-                  <input class="note-input" style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px" placeholder="點擊輸入備註…">
-                </div>
-                <div class="case-track-footer">
-                  <span style="font-size:11px;color:var(--gray-400)">尚未追蹤</span>
-                  <button class="btn btn-primary btn-sm" onclick="markDone('t6','tb6')">✓ 標記為已追蹤</button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div><!-- /tab-nhia -->
-
-    <!-- ════ 院內指標 tab ════ -->
-    <div id="tab-internal" class="hidden">
-
-      <div class="filter-card">
-        <div class="filter-card-header">
-          <div class="filter-card-title">篩選條件</div>
-        </div>
-        <div class="filter-row">
-          <div class="filter-group">
-            <div class="filter-label">統計年度</div>
-            <select class="filter-control"><option>2025 年</option><option selected>2026 年</option></select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">月份區間（起）</div>
-            <select class="filter-control">
-              <option selected>1 月</option>
-              <option>2 月</option><option>3 月</option><option>4 月</option><option>5 月</option><option>6 月</option>
-            </select>
-          </div>
-          <div class="filter-sep">～</div>
-          <div class="filter-group">
-            <div class="filter-label">月份區間（迄）</div>
-            <select class="filter-control">
-              <option>1 月</option><option>2 月</option><option>3 月</option><option>4 月</option><option>5 月</option>
-              <option selected>6 月</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">疾病別</div>
-            <select class="filter-control"><option selected>全部</option><option>CVA</option><option>骨科</option><option>COPD</option></select>
-          </div>
-          <div class="filter-group">
-            <div class="filter-label">照護模式</div>
-            <select class="filter-control"><option selected>全部</option><option>住院</option><option>日照</option><option>居家</option></select>
-          </div>
-          <div><button class="btn btn-primary btn-sm" style="margin-top:20px">套用篩選</button></div>
-        </div>
-        <div class="filter-result">
-          <div class="filter-result-text">符合個案：</div>
-          <div class="filter-result-count">89</div>
-          <div class="filter-result-text">人（含進行中個案）</div>
-        </div>
-      </div>
-
-      <!-- 院內指標勾選 -->
-      <div class="section-card" style="margin-bottom:16px">
-        <div class="sc-header">
-          <div class="sc-title">選擇要顯示的指標</div>
-          <span style="font-size:11px;color:var(--gray-400)">可依需求自由勾選</span>
-        </div>
-        <div class="sc-body" style="padding:16px">
-          <div class="export-check-grid">
-            <label class="export-check-item"><input type="checkbox" checked> 各疾病別個案數量</label>
-            <label class="export-check-item"><input type="checkbox" checked> 各照護模式比例（住院/日照/居家）</label>
-            <label class="export-check-item"><input type="checkbox" checked> 平均照護天數</label>
-            <label class="export-check-item"><input type="checkbox" checked> 展延成功率</label>
-            <label class="export-check-item"><input type="checkbox"> 平均巴氏量表進步分數</label>
-            <label class="export-check-item"><input type="checkbox"> 轉介來源分佈</label>
-            <label class="export-check-item"><input type="checkbox"> 結案後服務轉介比例</label>
-            <label class="export-check-item"><input type="checkbox"> 各月份收案趨勢</label>
-            <label class="export-check-item"><input type="checkbox"> 30日內再入院率</label>
-            <label class="export-check-item"><input type="checkbox"> 一年內死亡率</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- 院內指標結果 -->
-      <div class="indicator-grid">
-        <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">各疾病別個案數</div>
-          <div class="indicator-value">89 <span>人</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:100%"></div></div>
-          <div class="indicator-tracking">CVA 34・骨科 28・COPD 15・其他 12</div>
-        </div>
-        <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">各照護模式比例</div>
-          <div class="indicator-value">住院 <span>62%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:100%"></div></div>
-          <div class="indicator-tracking">日照 28%・居家 10%</div>
-        </div>
-        <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">平均照護天數</div>
-          <div class="indicator-value">38.2 <span>天</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:100%"></div></div>
-          <div class="indicator-tracking">住院 42天・日照 35天・居家 28天</div>
-        </div>
-        <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
-          <div class="indicator-name">展延成功率</div>
-          <div class="indicator-value">78.4 <span>%</span></div>
-          <div class="indicator-progress"><div class="indicator-progress-bar" style="width:100%"></div></div>
-          <div class="indicator-tracking">申請 51 件・通過 40 件</div>
-        </div>
-      </div>
-    </div><!-- /tab-internal -->
-
-  </div><!-- /content -->
-</div><!-- /main -->
-
-
-<!-- ══ MODALS ══ -->
-
-<!-- 指標明細 -->
-<div id="modal-indicator-detail" class="modal-overlay hidden">
-  <div class="modal modal-lg">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title">📊 30日內急診率・計算明細</div>
-        <div style="font-size:12px;color:var(--gray-500);margin-top:2px">2026年 2–6月・PAC成功結案・全疾病別・全模式</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('modal-indicator-detail')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-        <div style="background:var(--blue-light);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-size:11px;color:var(--blue-dark);margin-bottom:4px">分母（已追蹤個案）</div>
-          <div style="font-size:28px;font-weight:700;color:var(--blue)">31</div>
-        </div>
-        <div style="background:var(--red-light);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-size:11px;color:var(--red);margin-bottom:4px">分子（出院後30日內急診）</div>
-          <div style="font-size:28px;font-weight:700;color:var(--red)">4</div>
-        </div>
-        <div style="background:var(--amber-light);border-radius:8px;padding:14px;text-align:center">
-          <div style="font-size:11px;color:var(--amber);margin-bottom:4px">目前計算結果</div>
-          <div style="font-size:28px;font-weight:700;color:var(--amber)">12.9%</div>
-        </div>
-      </div>
-      <div class="info-note amber">⚠️ 尚有 16 人未完成追蹤，最終數值待全數追蹤後才準確。</div>
-      <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">分子個案列表（出院後30日內有急診）</div>
-      <table class="tracking-table" style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden">
-        <thead>
-          <tr>
-            <th>姓名</th><th>疾病別</th><th>模式</th><th>結案日</th><th>急診日期</th><th>備註</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>李文雄</strong></td><td>COPD</td><td>住院</td><td>07/05</td><td>07/18</td><td>肺炎急性惡化</td></tr>
-          <tr><td><strong>蔡美玲</strong></td><td>帕金森氏症</td><td>日照</td><td>08/30</td><td>09/10</td><td>跌倒骨折</td></tr>
-          <tr><td><strong>許○○</strong></td><td>心衰竭</td><td>住院</td><td>07/01</td><td>07/25</td><td>心衰竭加重</td></tr>
-          <tr><td><strong>謝○○</strong></td><td>骨科</td><td>住院</td><td>07/03</td><td>07/20</td><td>傷口感染</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-indicator-detail')">關閉</button>
-      <button class="btn btn-primary">匯出此指標明細</button>
-    </div>
-  </div>
-</div>
-
-<!-- 記錄追蹤 -->
-<div id="modal-log-track" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">📞 記錄追蹤結果・陳志明</div>
-      <button class="modal-close" onclick="closeModal('modal-log-track')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="info-note blue">個案電話：0912-345-678　家屬（陳小明）：0923-111-222</div>
-      <div class="form-group">
-        <label>追蹤狀態</label>
-        <select class="form-control">
-          <option>已成功聯繫</option>
-          <option>無法聯繫（持續嘗試）</option>
-          <option>無法聯繫（放棄）</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>追蹤日期</label>
-        <input class="form-control" type="date" value="2026-06-23">
-      </div>
-      <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">追蹤問題填寫</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">出院後30日內是否有急診？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">出院後30日內是否有再入院？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">出院後14日內是否有再入院？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">出院後一年內是否有死亡？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">管路是否移除？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
-          <span style="font-size:13px;color:var(--gray-700)">是否有非計畫性管路滑脫？</span>
-          <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>備註</label>
-        <textarea class="form-control" placeholder="填寫追蹤過程或其他備注…"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-log-track')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-log-track')">儲存追蹤結果</button>
-    </div>
-  </div>
-</div>
-
-<!-- 管理追蹤欄位 -->
-<div id="modal-manage-fields" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">⚙ 管理追蹤欄位</div>
-      <button class="modal-close" onclick="closeModal('modal-manage-fields')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="info-note blue">系統欄位（藍色）為固定欄位，不可刪除。自訂欄位可新增、停用或刪除。</div>
-      <div class="field-list">
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">出院後30日內是否有急診？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">出院後30日內是否有再入院？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">出院後14日內是否有再入院？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">出院後一年內是否有死亡？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">管路是否移除？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">是否有非計畫性管路滑脫？</span>
-          <span class="field-type">是/否</span>
-          <span class="field-badge-sys">健保署</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">出院後是否有使用心衰竭治療指引用藥？</span>
-          <span class="field-type">是/否</span>
-          <button class="field-toggle on"></button>
-          <button class="field-delete">🗑</button>
-        </div>
-        <div class="field-item">
-          <span class="field-drag">⠿</span>
-          <span class="field-name">個案目前生活自理狀況（自填）</span>
-          <span class="field-type">文字</span>
-          <button class="field-toggle off"></button>
-          <button class="field-delete">🗑</button>
-        </div>
-      </div>
-      <div style="border:1px dashed var(--gray-300);border-radius:7px;padding:14px">
-        <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:10px">新增追蹤欄位</div>
-        <div style="display:flex;gap:8px;align-items:flex-end">
-          <div class="form-group" style="flex:1;margin-bottom:0">
-            <label>欄位名稱</label>
-            <input class="form-control" placeholder="例：出院後是否回診復健？">
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label>類型</label>
-            <select class="form-control" style="min-width:100px">
-              <option>是/否</option>
-              <option>文字</option>
-              <option>數字</option>
-            </select>
-          </div>
-          <button class="btn btn-primary btn-sm" style="flex-shrink:0">新增</button>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-manage-fields')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-manage-fields')">儲存設定</button>
-    </div>
-  </div>
-</div>
-
-<!-- 管理篩選條件 -->
-<div id="modal-manage-filters" class="modal-overlay hidden">
-  <div class="modal modal-sm">
-    <div class="modal-header">
-      <div class="modal-title">⚙ 管理篩選條件</div>
-      <button class="modal-close" onclick="closeModal('modal-manage-filters')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="info-note amber">當健保署政策更新時，可在此新增或調整篩選條件。</div>
-      <div class="field-list">
-        <div class="field-item system">
-          <span class="field-name">統計年度</span>
-          <span class="field-badge-sys">必填</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-name">月份區間</span>
-          <span class="field-badge-sys">必填</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item system">
-          <span class="field-name">結案類型</span>
-          <span class="field-badge-sys">必填</span>
-          <button class="field-toggle on"></button>
-        </div>
-        <div class="field-item">
-          <span class="field-name">疾病別</span>
-          <button class="field-toggle on"></button>
-          <button class="field-delete">🗑</button>
-        </div>
-        <div class="field-item">
-          <span class="field-name">照護模式</span>
-          <button class="field-toggle on"></button>
-          <button class="field-delete">🗑</button>
-        </div>
-        <div class="field-item">
-          <span class="field-name">負責個管師</span>
-          <button class="field-toggle off"></button>
-          <button class="field-delete">🗑</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <input class="form-control" placeholder="新增篩選條件名稱…" style="flex:1">
-        <button class="btn btn-primary btn-sm">新增</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-manage-filters')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-manage-filters')">儲存</button>
-    </div>
-  </div>
-</div>
-
-<!-- 匯出報告 -->
-<div id="modal-export" class="modal-overlay hidden">
-  <div class="modal modal-lg">
-    <div class="modal-header">
-      <div class="modal-title">📤 匯出成果報告</div>
-      <button class="modal-close" onclick="closeModal('modal-export')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="info-note amber">⚠️ 目前尚有 16 位個案未完成追蹤，建議追蹤完畢後再匯出，以確保數值準確。</div>
-
-      <div class="export-section">
-        <div class="export-section-title">匯出類型</div>
-        <div style="display:flex;gap:10px;margin-bottom:4px">
-          <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:10px 14px;border:1px solid var(--gray-200);border-radius:7px;flex:1">
-            <input type="radio" name="export-type" checked style="accent-color:var(--blue)">
-            <div>
-              <div style="font-weight:600">健保署版本</div>
-              <div style="font-size:11px;color:var(--gray-400);margin-top:2px">固定格式，含全部9項品質指標</div>
-            </div>
-          </label>
-          <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:10px 14px;border:1px solid var(--gray-200);border-radius:7px;flex:1">
-            <input type="radio" name="export-type" style="accent-color:var(--blue)">
-            <div>
-              <div style="font-weight:600">院內版本</div>
-              <div style="font-size:11px;color:var(--gray-400);margin-top:2px">自選指標，用於宣傳、演講或成果報告</div>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <div class="export-section">
-        <div class="export-section-title">匯出格式</div>
         <div style="display:flex;gap:8px">
-          <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="export-fmt" checked style="accent-color:var(--blue)"> Word (.docx)</label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="export-fmt" style="accent-color:var(--blue)"> PDF</label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="export-fmt" style="accent-color:var(--blue)"> Excel (.xlsx)</label>
+          <button class="btn btn-secondary btn-sm" onclick="openModal('modal-manage-fields')">⚙ 管理追蹤欄位</button>
+          <button class="btn btn-teal btn-sm" onclick="openModal('modal-export')">📤 匯出報告</button>
         </div>
       </div>
 
-      <div class="export-section">
-        <div class="export-section-title">報告內容預覽</div>
-        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:16px">
-          <div style="font-size:13px;font-weight:700;text-align:center;margin-bottom:12px;color:var(--gray-700)">全民健康保險急性後期整合照護計劃・成果報告書</div>
-          <div style="font-size:11px;color:var(--gray-500);text-align:center;margin-bottom:14px">統計期間：2026年2月～6月　員郭醫院　個管師：林美惠</div>
-          <div class="divider" style="margin:10px 0"></div>
-          <div class="indicator-detail-row">
-            <div><div class="indicator-detail-name">一年內死亡率</div><div class="indicator-formula">4 / 31 已追蹤個案</div></div>
-            <div class="indicator-detail-val">4.8%</div>
+      <!-- 主要 tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'nhia')">健保署指標</div>
+        <div class="tab" onclick="switchTab(this,'internal')">院內指標</div>
+      </div>
+
+      <!-- ════ 健保署指標 tab ════ -->
+      <div id="tab-nhia">
+
+        <!-- 篩選區 -->
+        <div class="filter-card">
+          <div class="filter-card-header">
+            <div class="filter-card-title">篩選條件</div>
+            <button class="btn btn-secondary btn-xs" onclick="openModal('modal-manage-filters')">⚙ 管理篩選條件</button>
           </div>
-          <div class="indicator-detail-row">
-            <div><div class="indicator-detail-name">30日內急診率</div><div class="indicator-formula">4 / 31 已追蹤個案（待完成 16 人）</div></div>
-            <div class="indicator-detail-val" style="color:var(--amber)">12.9% ⚠️</div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <div class="filter-label">統計年度</div>
+              <select class="filter-control">
+                <option>2025 年</option>
+                <option selected>2026 年</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">月份區間（起）</div>
+              <select class="filter-control">
+                <option>1 月</option>
+                <option selected>2 月</option>
+                <option>3 月</option>
+                <option>4 月</option>
+                <option>5 月</option>
+                <option>6 月</option>
+                <option>7 月</option>
+                <option>8 月</option>
+                <option>9 月</option>
+                <option>10 月</option>
+                <option>11 月</option>
+                <option>12 月</option>
+              </select>
+            </div>
+            <div class="filter-sep">～</div>
+            <div class="filter-group">
+              <div class="filter-label">月份區間（迄）</div>
+              <select class="filter-control">
+                <option>1 月</option>
+                <option>2 月</option>
+                <option>3 月</option>
+                <option>4 月</option>
+                <option>5 月</option>
+                <option selected>6 月</option>
+                <option>7 月</option>
+                <option>8 月</option>
+                <option>9 月</option>
+                <option>10 月</option>
+                <option>11 月</option>
+                <option>12 月</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">結案類型</div>
+              <select class="filter-control">
+                <option>全部結案</option>
+                <option selected>PAC 成功結案</option>
+                <option>PAC 不成功結案</option>
+                <option>一般個案（非PAC）</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">疾病別</div>
+              <select class="filter-control">
+                <option selected>全部</option>
+                <option>CVA（腦中風）</option>
+                <option>骨科</option>
+                <option>COPD</option>
+                <option>心衰竭</option>
+                <option>脊髓損傷</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">照護模式</div>
+              <select class="filter-control">
+                <option selected>全部</option>
+                <option>住院</option>
+                <option>日照</option>
+                <option>居家</option>
+              </select>
+            </div>
+            <div>
+              <button class="btn btn-primary btn-sm" style="margin-top:20px">套用篩選</button>
+            </div>
           </div>
-          <div class="indicator-detail-row">
-            <div><div class="indicator-detail-name">14日內再入院率</div><div class="indicator-formula">2 / 31 已追蹤個案</div></div>
-            <div class="indicator-detail-val" style="color:var(--amber)">6.5% ⚠️</div>
-          </div>
-          <div class="indicator-detail-row">
-            <div><div class="indicator-detail-name">30日內再入院率</div><div class="indicator-formula">3 / 31 已追蹤個案</div></div>
-            <div class="indicator-detail-val" style="color:var(--amber)">9.7% ⚠️</div>
-          </div>
-          <div class="indicator-detail-row">
-            <div><div class="indicator-detail-name">個案之功能進步情形</div><div class="indicator-formula">從系統量表自動計算</div></div>
-            <div class="indicator-detail-val">72.3%</div>
+          <div class="filter-result">
+            <div class="filter-result-text">符合條件個案：</div>
+            <div class="filter-result-count">47</div>
+            <div class="filter-result-text">人・追蹤完成</div>
+            <div class="filter-result-count" style="color:var(--green)">31</div>
+            <div class="filter-result-text">人・未追蹤</div>
+            <div class="filter-result-count" style="color:var(--amber)">16</div>
+            <div class="filter-result-text">人</div>
           </div>
         </div>
+
+        <!-- 指標總覽 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:600;color:var(--gray-700)">指標計算結果 <span
+              style="font-size:11px;font-weight:400;color:var(--gray-400)">· 點擊卡片查看計算明細</span></div>
+          <div class="info-note blue" style="margin-bottom:0;padding:6px 12px;font-size:11px">⚠️ 尚有 16
+            位個案未完成追蹤，指標數值為目前已追蹤資料的初步計算結果</div>
+        </div>
+        <div class="indicator-grid">
+          <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">一年內死亡率</div>
+            <div class="indicator-value">4.8 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:100%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 31 人（可計算）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">30日內急診率</div>
+            <div class="indicator-value">12.9 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">14日內再入院率</div>
+            <div class="indicator-value">6.5 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">30日內再入院率</div>
+            <div class="indicator-value">9.7 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">個案之功能進步情形</div>
+            <div class="indicator-value">72.3 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">從系統量表自動計算</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">管路移除率</div>
+            <div class="indicator-value">85.2 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">非計畫性管路滑脫率</div>
+            <div class="indicator-value">2.1 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">已追蹤 31 / 47 人（待完成）</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">醫學中心轉至PAC醫院比率</div>
+            <div class="indicator-value">68.1 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">從系統資料自動計算</div>
+          </div>
+          <div class="indicator-card pending" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">心衰竭治療指引用藥率</div>
+            <div class="indicator-value">91.7 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:66%"></div>
+            </div>
+            <div class="indicator-tracking">僅限心衰竭個案（n=12）</div>
+          </div>
+        </div>
+
+        <!-- 個案追蹤清單 -->
+        <div class="section-card">
+          <div class="sc-header">
+            <div class="sc-title">個案追蹤清單</div>
+            <div style="display:flex;gap:7px;align-items:center">
+              <span style="font-size:11px;color:var(--gray-400)">依結案日排序・點列展開填寫追蹤資料</span>
+              <button class="btn btn-secondary btn-xs">追蹤狀態 ▾</button>
+            </div>
+          </div>
+          <div class="sc-body">
+            <div class="case-track-list">
+
+              <!-- 列標題 -->
+              <div
+                style="display:flex;align-items:center;gap:10px;padding:7px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200)">
+                <div style="width:20px;flex-shrink:0"></div>
+                <div
+                  style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;min-width:60px">
+                  姓名</div>
+                <div
+                  style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;flex:1;display:flex;gap:24px">
+                  <span style="min-width:80px">疾病別</span>
+                  <span style="min-width:70px">模式</span>
+                  <span style="min-width:70px">開案日</span>
+                  <span style="min-width:70px">結案日</span>
+                  <span style="min-width:70px">距結案</span>
+                  <span style="min-width:80px">結案後處置</span>
+                </div>
+                <div
+                  style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;min-width:80px">
+                  追蹤狀態</div>
+              </div>
+
+              <!-- 個案 1：已追蹤・展開示意 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t1')">
+                  <button class="case-track-expand-btn open" id="tb1">▼</button>
+                  <div class="case-track-name">李文雄</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-blue" style="font-size:10px">COPD</span>
+                    <span class="case-track-tag">🏥 住院</span>
+                    <span class="case-track-tag">開案 06/10</span>
+                    <span class="case-track-tag">結案 07/05/2025</span>
+                    <span class="case-track-tag">353 天</span>
+                    <span class="disp-tag disp-home">居家醫療</span>
+                  </div>
+                  <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
+                </div>
+                <div id="t1" class="case-track-detail">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0923-456-789</span>
+                    <span class="contact-chip">💬 家屬 李小華 0934-111-222</span>
+                  </div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes active">是</button><button
+                          class="yn-btn no">否</button></div>
+                    </div>
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes active">是</button><button
+                          class="yn-btn no">否</button></div>
+                    </div>
+                    <div class="case-track-q">
+                      <span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      value="家屬說出院後有一次急診，已返家休養">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/15・林美惠</span>
+                    <button class="btn btn-secondary btn-sm">重新填寫</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 個案 2：已追蹤・收合 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t2')">
+                  <button class="case-track-expand-btn" id="tb2">▶</button>
+                  <div class="case-track-name">鄭大偉</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-purple" style="font-size:10px">骨科</span>
+                    <span class="case-track-tag">🏥 住院</span>
+                    <span class="case-track-tag">開案 05/28</span>
+                    <span class="case-track-tag">結案 07/12/2025</span>
+                    <span class="case-track-tag">346 天</span>
+                    <span class="disp-tag disp-ltc">長照</span>
+                  </div>
+                  <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
+                </div>
+                <div id="t2" class="case-track-detail hidden">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0912-345-678</span>
+                    <span class="contact-chip">💬 家屬 鄭小姐 0923-222-333</span>
+                  </div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes active">是</button><button
+                          class="yn-btn no">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      placeholder="點擊輸入備註…">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/16・林美惠</span>
+                    <button class="btn btn-secondary btn-sm">重新填寫</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 個案 3：已追蹤・收合 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t3')">
+                  <button class="case-track-expand-btn" id="tb3">▶</button>
+                  <div class="case-track-name">吳麗珠</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-amber" style="font-size:10px">CVA</span>
+                    <span class="case-track-tag">☀️ 日照</span>
+                    <span class="case-track-tag">開案 06/05</span>
+                    <span class="case-track-tag">結案 08/20/2025</span>
+                    <span class="case-track-tag">307 天</span>
+                    <span class="disp-tag disp-sw">社工轉介</span>
+                  </div>
+                  <button class="track-status done" onclick="event.stopPropagation()">✓ 已追蹤</button>
+                </div>
+                <div id="t3" class="case-track-detail hidden">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0934-567-890</span>
+                    <span class="contact-chip">💬 家屬 吳先生 0945-333-444</span>
+                  </div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes active">是</button><button
+                          class="yn-btn no">否</button></div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button
+                          class="yn-btn no active">否</button></div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      placeholder="點擊輸入備註…">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">最後追蹤：2026/01/18・林美惠</span>
+                    <button class="btn btn-secondary btn-sm">重新填寫</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 個案 4：待追蹤 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t4')">
+                  <button class="case-track-expand-btn" id="tb4">▶</button>
+                  <div class="case-track-name">陳志明</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-amber" style="font-size:10px">CVA</span>
+                    <span class="case-track-tag">🏥 住院</span>
+                    <span class="case-track-tag">開案 06/27</span>
+                    <span class="case-track-tag">結案 09/05/2025</span>
+                    <span class="case-track-tag">291 天</span>
+                    <span class="disp-tag disp-none">無</span>
+                  </div>
+                  <button class="track-status pending" onclick="event.stopPropagation()">⏳ 待追蹤</button>
+                </div>
+                <div id="t4" class="case-track-detail hidden">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0912-345-678</span>
+                    <span class="contact-chip">💬 家屬 陳小明 0923-456-789</span>
+                  </div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      placeholder="點擊輸入備註…">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">尚未追蹤</span>
+                    <button class="btn btn-primary btn-sm" onclick="markDone('t4','tb4')">✓ 標記為已追蹤</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 個案 5：無法聯繫 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t5')">
+                  <button class="case-track-expand-btn" id="tb5">▶</button>
+                  <div class="case-track-name">黃建國</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-teal" style="font-size:10px">脊髓損傷</span>
+                    <span class="case-track-tag">🏡 居家</span>
+                    <span class="case-track-tag">開案 07/15</span>
+                    <span class="case-track-tag">結案 10/20/2025</span>
+                    <span class="case-track-tag">246 天</span>
+                    <span class="disp-tag disp-home">居家醫療</span>
+                  </div>
+                  <button class="track-status failed" onclick="event.stopPropagation()">✕ 無法聯繫</button>
+                </div>
+                <div id="t5" class="case-track-detail hidden">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0934-567-890</span>
+                    <span class="contact-chip">💬 家屬 黃太太 0945-678-901</span>
+                  </div>
+                  <div class="info-note amber" style="margin-bottom:12px">電話多次無人接聽，已寄掛號信。</div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      value="電話多次無人接聽，已寄掛號信">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">最後嘗試聯繫：2026/01/20</span>
+                    <button class="btn btn-primary btn-sm" onclick="markDone('t5','tb5')">✓ 標記為已追蹤</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 個案 6：未追蹤 -->
+              <div class="case-track-item">
+                <div class="case-track-row" onclick="toggleTrack('t6')">
+                  <button class="case-track-expand-btn" id="tb6">▶</button>
+                  <div class="case-track-name">王淑芬</div>
+                  <div class="case-track-meta">
+                    <span class="badge badge-purple" style="font-size:10px">骨科</span>
+                    <span class="case-track-tag">☀️ 日照</span>
+                    <span class="case-track-tag">開案 07/01</span>
+                    <span class="case-track-tag">結案 09/15/2025</span>
+                    <span class="case-track-tag">281 天</span>
+                    <span class="disp-tag disp-none">無</span>
+                  </div>
+                  <button class="track-status not-started" onclick="event.stopPropagation()">— 未追蹤</button>
+                </div>
+                <div id="t6" class="case-track-detail hidden">
+                  <div class="case-track-contact">
+                    <span style="font-size:12px;color:var(--gray-500)">聯絡方式：</span>
+                    <span class="contact-chip">📞 個案 0923-456-789</span>
+                    <span class="contact-chip">💬 家屬 王小華 0934-789-012</span>
+                  </div>
+                  <div class="case-track-questions">
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有急診？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後30日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後14日內是否有再入院？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">出院後一年內是否有死亡？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">管路是否移除？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                    <div class="case-track-q"><span class="case-track-q-label">是否有非計畫性管路滑脫？</span>
+                      <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-bottom:12px">
+                    <label style="font-size:12px;font-weight:500;color:var(--gray-600)">備註</label>
+                    <input class="note-input"
+                      style="width:100%;padding:7px 10px;border:1px solid var(--gray-200);border-radius:6px"
+                      placeholder="點擊輸入備註…">
+                  </div>
+                  <div class="case-track-footer">
+                    <span style="font-size:11px;color:var(--gray-400)">尚未追蹤</span>
+                    <button class="btn btn-primary btn-sm" onclick="markDone('t6','tb6')">✓ 標記為已追蹤</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div><!-- /tab-nhia -->
+
+      <!-- ════ 院內指標 tab ════ -->
+      <div id="tab-internal" class="hidden">
+
+        <div class="filter-card">
+          <div class="filter-card-header">
+            <div class="filter-card-title">篩選條件</div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <div class="filter-label">統計年度</div>
+              <select class="filter-control">
+                <option>2025 年</option>
+                <option selected>2026 年</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">月份區間（起）</div>
+              <select class="filter-control">
+                <option selected>1 月</option>
+                <option>2 月</option>
+                <option>3 月</option>
+                <option>4 月</option>
+                <option>5 月</option>
+                <option>6 月</option>
+              </select>
+            </div>
+            <div class="filter-sep">～</div>
+            <div class="filter-group">
+              <div class="filter-label">月份區間（迄）</div>
+              <select class="filter-control">
+                <option>1 月</option>
+                <option>2 月</option>
+                <option>3 月</option>
+                <option>4 月</option>
+                <option>5 月</option>
+                <option selected>6 月</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">疾病別</div>
+              <select class="filter-control">
+                <option selected>全部</option>
+                <option>CVA</option>
+                <option>骨科</option>
+                <option>COPD</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">照護模式</div>
+              <select class="filter-control">
+                <option selected>全部</option>
+                <option>住院</option>
+                <option>日照</option>
+                <option>居家</option>
+              </select>
+            </div>
+            <div><button class="btn btn-primary btn-sm" style="margin-top:20px">套用篩選</button></div>
+          </div>
+          <div class="filter-result">
+            <div class="filter-result-text">符合個案：</div>
+            <div class="filter-result-count">89</div>
+            <div class="filter-result-text">人（含進行中個案）</div>
+          </div>
+        </div>
+
+        <!-- 院內指標勾選 -->
+        <div class="section-card" style="margin-bottom:16px">
+          <div class="sc-header">
+            <div class="sc-title">選擇要顯示的指標</div>
+            <span style="font-size:11px;color:var(--gray-400)">可依需求自由勾選</span>
+          </div>
+          <div class="sc-body" style="padding:16px">
+            <div class="export-check-grid">
+              <label class="export-check-item"><input type="checkbox" checked> 各疾病別個案數量</label>
+              <label class="export-check-item"><input type="checkbox" checked> 各照護模式比例（住院/日照/居家）</label>
+              <label class="export-check-item"><input type="checkbox" checked> 平均照護天數</label>
+              <label class="export-check-item"><input type="checkbox" checked> 展延成功率</label>
+              <label class="export-check-item"><input type="checkbox"> 平均巴氏量表進步分數</label>
+              <label class="export-check-item"><input type="checkbox"> 轉介來源分佈</label>
+              <label class="export-check-item"><input type="checkbox"> 結案後服務轉介比例</label>
+              <label class="export-check-item"><input type="checkbox"> 各月份收案趨勢</label>
+              <label class="export-check-item"><input type="checkbox"> 30日內再入院率</label>
+              <label class="export-check-item"><input type="checkbox"> 一年內死亡率</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 院內指標結果 -->
+        <div class="indicator-grid">
+          <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">各疾病別個案數</div>
+            <div class="indicator-value">89 <span>人</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:100%"></div>
+            </div>
+            <div class="indicator-tracking">CVA 34・骨科 28・COPD 15・其他 12</div>
+          </div>
+          <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">各照護模式比例</div>
+            <div class="indicator-value">住院 <span>62%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:100%"></div>
+            </div>
+            <div class="indicator-tracking">日照 28%・居家 10%</div>
+          </div>
+          <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">平均照護天數</div>
+            <div class="indicator-value">38.2 <span>天</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:100%"></div>
+            </div>
+            <div class="indicator-tracking">住院 42天・日照 35天・居家 28天</div>
+          </div>
+          <div class="indicator-card complete" onclick="openModal('modal-indicator-detail')">
+            <div class="indicator-name">展延成功率</div>
+            <div class="indicator-value">78.4 <span>%</span></div>
+            <div class="indicator-progress">
+              <div class="indicator-progress-bar" style="width:100%"></div>
+            </div>
+            <div class="indicator-tracking">申請 51 件・通過 40 件</div>
+          </div>
+        </div>
+      </div><!-- /tab-internal -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+
+  <!-- ══ MODALS ══ -->
+
+  <!-- 指標明細 -->
+  <div id="modal-indicator-detail" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">📊 30日內急診率・計算明細</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-top:2px">2026年 2–6月・PAC成功結案・全疾病別・全模式</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-indicator-detail')">✕</button>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-export')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-export')">確認匯出</button>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+          <div style="background:var(--blue-light);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:11px;color:var(--blue-dark);margin-bottom:4px">分母（已追蹤個案）</div>
+            <div style="font-size:28px;font-weight:700;color:var(--blue)">31</div>
+          </div>
+          <div style="background:var(--red-light);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:11px;color:var(--red);margin-bottom:4px">分子（出院後30日內急診）</div>
+            <div style="font-size:28px;font-weight:700;color:var(--red)">4</div>
+          </div>
+          <div style="background:var(--amber-light);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:11px;color:var(--amber);margin-bottom:4px">目前計算結果</div>
+            <div style="font-size:28px;font-weight:700;color:var(--amber)">12.9%</div>
+          </div>
+        </div>
+        <div class="info-note amber">⚠️ 尚有 16 人未完成追蹤，最終數值待全數追蹤後才準確。</div>
+        <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">分子個案列表（出院後30日內有急診）</div>
+        <table class="tracking-table" style="border:1px solid var(--gray-200);border-radius:8px;overflow:hidden">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>疾病別</th>
+              <th>模式</th>
+              <th>結案日</th>
+              <th>急診日期</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>李文雄</strong></td>
+              <td>COPD</td>
+              <td>住院</td>
+              <td>07/05</td>
+              <td>07/18</td>
+              <td>肺炎急性惡化</td>
+            </tr>
+            <tr>
+              <td><strong>蔡美玲</strong></td>
+              <td>帕金森氏症</td>
+              <td>日照</td>
+              <td>08/30</td>
+              <td>09/10</td>
+              <td>跌倒骨折</td>
+            </tr>
+            <tr>
+              <td><strong>許○○</strong></td>
+              <td>心衰竭</td>
+              <td>住院</td>
+              <td>07/01</td>
+              <td>07/25</td>
+              <td>心衰竭加重</td>
+            </tr>
+            <tr>
+              <td><strong>謝○○</strong></td>
+              <td>骨科</td>
+              <td>住院</td>
+              <td>07/03</td>
+              <td>07/20</td>
+              <td>傷口感染</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-indicator-detail')">關閉</button>
+        <button class="btn btn-primary">匯出此指標明細</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-function toggleTrack(id){
-  const detail=document.getElementById(id);
-  const num=id.replace('t','');
-  const btn=document.getElementById('tb'+num);
-  const isHidden=detail.classList.contains('hidden');
-  detail.classList.toggle('hidden',!isHidden);
-  btn.textContent=isHidden?'▼':'▶';
-  btn.classList.toggle('open',isHidden);
-}
+  <!-- 記錄追蹤 -->
+  <div id="modal-log-track" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">📞 記錄追蹤結果・陳志明</div>
+        <button class="modal-close" onclick="closeModal('modal-log-track')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note blue">個案電話：0912-345-678　家屬（陳小明）：0923-111-222</div>
+        <div class="form-group">
+          <label>追蹤狀態</label>
+          <select class="form-control">
+            <option>已成功聯繫</option>
+            <option>無法聯繫（持續嘗試）</option>
+            <option>無法聯繫（放棄）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>追蹤日期</label>
+          <input class="form-control" type="date" value="2026-06-23">
+        </div>
+        <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">追蹤問題填寫</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">出院後30日內是否有急診？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">出院後30日內是否有再入院？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">出院後14日內是否有再入院？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">出院後一年內是否有死亡？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">管路是否移除？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--gray-200);border-radius:7px">
+            <span style="font-size:13px;color:var(--gray-700)">是否有非計畫性管路滑脫？</span>
+            <div class="yn-toggle"><button class="yn-btn yes">是</button><button class="yn-btn no">否</button></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>備註</label>
+          <textarea class="form-control" placeholder="填寫追蹤過程或其他備注…"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-log-track')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-log-track')">儲存追蹤結果</button>
+      </div>
+    </div>
+  </div>
 
-function markDone(detailId,btnId){
-  // Find the track-status button in this item
-  const detail=document.getElementById(detailId);
-  const item=detail.parentElement;
-  const statusBtn=item.querySelector('.track-status');
-  statusBtn.className='track-status done';
-  statusBtn.textContent='✓ 已追蹤';
-  // Update footer
-  const footer=detail.querySelector('.case-track-footer');
-  const today=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'/');
-  footer.querySelector('span').textContent='最後追蹤：'+today+'・林美惠';
-  footer.querySelector('button').outerHTML='<button class="btn btn-secondary btn-sm">重新填寫</button>';
-}
+  <!-- 管理追蹤欄位 -->
+  <div id="modal-manage-fields" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">⚙ 管理追蹤欄位</div>
+        <button class="modal-close" onclick="closeModal('modal-manage-fields')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note blue">系統欄位（藍色）為固定欄位，不可刪除。自訂欄位可新增、停用或刪除。</div>
+        <div class="field-list">
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">出院後30日內是否有急診？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">出院後30日內是否有再入院？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">出院後14日內是否有再入院？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">出院後一年內是否有死亡？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">管路是否移除？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">是否有非計畫性管路滑脫？</span>
+            <span class="field-type">是/否</span>
+            <span class="field-badge-sys">健保署</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">出院後是否有使用心衰竭治療指引用藥？</span>
+            <span class="field-type">是/否</span>
+            <button class="field-toggle on"></button>
+            <button class="field-delete">🗑</button>
+          </div>
+          <div class="field-item">
+            <span class="field-drag">⠿</span>
+            <span class="field-name">個案目前生活自理狀況（自填）</span>
+            <span class="field-type">文字</span>
+            <button class="field-toggle off"></button>
+            <button class="field-delete">🗑</button>
+          </div>
+        </div>
+        <div style="border:1px dashed var(--gray-300);border-radius:7px;padding:14px">
+          <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:10px">新增追蹤欄位</div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <div class="form-group" style="flex:1;margin-bottom:0">
+              <label>欄位名稱</label>
+              <input class="form-control" placeholder="例：出院後是否回診復健？">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label>類型</label>
+              <select class="form-control" style="min-width:100px">
+                <option>是/否</option>
+                <option>文字</option>
+                <option>數字</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" style="flex-shrink:0">新增</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-manage-fields')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-manage-fields')">儲存設定</button>
+      </div>
+    </div>
+  </div>
 
-function switchTab(el,tab){
-  document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-nhia').classList.toggle('hidden',tab!=='nhia');
-  document.getElementById('tab-internal').classList.toggle('hidden',tab!=='internal');
-}
+  <!-- 管理篩選條件 -->
+  <div id="modal-manage-filters" class="modal-overlay hidden">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <div class="modal-title">⚙ 管理篩選條件</div>
+        <button class="modal-close" onclick="closeModal('modal-manage-filters')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note amber">當健保署政策更新時，可在此新增或調整篩選條件。</div>
+        <div class="field-list">
+          <div class="field-item system">
+            <span class="field-name">統計年度</span>
+            <span class="field-badge-sys">必填</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-name">月份區間</span>
+            <span class="field-badge-sys">必填</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item system">
+            <span class="field-name">結案類型</span>
+            <span class="field-badge-sys">必填</span>
+            <button class="field-toggle on"></button>
+          </div>
+          <div class="field-item">
+            <span class="field-name">疾病別</span>
+            <button class="field-toggle on"></button>
+            <button class="field-delete">🗑</button>
+          </div>
+          <div class="field-item">
+            <span class="field-name">照護模式</span>
+            <button class="field-toggle on"></button>
+            <button class="field-delete">🗑</button>
+          </div>
+          <div class="field-item">
+            <span class="field-name">負責個管師</span>
+            <button class="field-toggle off"></button>
+            <button class="field-delete">🗑</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <input class="form-control" placeholder="新增篩選條件名稱…" style="flex:1">
+          <button class="btn btn-primary btn-sm">新增</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-manage-filters')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-manage-filters')">儲存</button>
+      </div>
+    </div>
+  </div>
 
-function openModal(id){document.getElementById(id).classList.remove('hidden')}
-function closeModal(id){document.getElementById(id).classList.add('hidden')}
+  <!-- 匯出報告 -->
+  <div id="modal-export" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">📤 匯出成果報告</div>
+        <button class="modal-close" onclick="closeModal('modal-export')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note amber">⚠️ 目前尚有 16 位個案未完成追蹤，建議追蹤完畢後再匯出，以確保數值準確。</div>
 
-document.querySelectorAll('.modal-overlay').forEach(o=>{
-  o.addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden')});
-});
+        <div class="export-section">
+          <div class="export-section-title">匯出類型</div>
+          <div style="display:flex;gap:10px;margin-bottom:4px">
+            <label
+              style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:10px 14px;border:1px solid var(--gray-200);border-radius:7px;flex:1">
+              <input type="radio" name="export-type" checked style="accent-color:var(--blue)">
+              <div>
+                <div style="font-weight:600">健保署版本</div>
+                <div style="font-size:11px;color:var(--gray-400);margin-top:2px">固定格式，含全部9項品質指標</div>
+              </div>
+            </label>
+            <label
+              style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:10px 14px;border:1px solid var(--gray-200);border-radius:7px;flex:1">
+              <input type="radio" name="export-type" style="accent-color:var(--blue)">
+              <div>
+                <div style="font-weight:600">院內版本</div>
+                <div style="font-size:11px;color:var(--gray-400);margin-top:2px">自選指標，用於宣傳、演講或成果報告</div>
+              </div>
+            </label>
+          </div>
+        </div>
 
-// Yes/No toggle
-document.querySelectorAll('.yn-toggle').forEach(toggle=>{
-  toggle.querySelectorAll('.yn-btn').forEach(btn=>{
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
-      toggle.querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('active'));
-      this.classList.add('active');
+        <div class="export-section">
+          <div class="export-section-title">匯出格式</div>
+          <div style="display:flex;gap:8px">
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
+                name="export-fmt" checked style="accent-color:var(--blue)"> Word (.docx)</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
+                name="export-fmt" style="accent-color:var(--blue)"> PDF</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
+                name="export-fmt" style="accent-color:var(--blue)"> Excel (.xlsx)</label>
+          </div>
+        </div>
+
+        <div class="export-section">
+          <div class="export-section-title">報告內容預覽</div>
+          <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:16px">
+            <div style="font-size:13px;font-weight:700;text-align:center;margin-bottom:12px;color:var(--gray-700)">
+              全民健康保險急性後期整合照護計劃・成果報告書</div>
+            <div style="font-size:11px;color:var(--gray-500);text-align:center;margin-bottom:14px">
+              統計期間：2026年2月～6月　員郭醫院　個管師：林美惠</div>
+            <div class="divider" style="margin:10px 0"></div>
+            <div class="indicator-detail-row">
+              <div>
+                <div class="indicator-detail-name">一年內死亡率</div>
+                <div class="indicator-formula">4 / 31 已追蹤個案</div>
+              </div>
+              <div class="indicator-detail-val">4.8%</div>
+            </div>
+            <div class="indicator-detail-row">
+              <div>
+                <div class="indicator-detail-name">30日內急診率</div>
+                <div class="indicator-formula">4 / 31 已追蹤個案（待完成 16 人）</div>
+              </div>
+              <div class="indicator-detail-val" style="color:var(--amber)">12.9% ⚠️</div>
+            </div>
+            <div class="indicator-detail-row">
+              <div>
+                <div class="indicator-detail-name">14日內再入院率</div>
+                <div class="indicator-formula">2 / 31 已追蹤個案</div>
+              </div>
+              <div class="indicator-detail-val" style="color:var(--amber)">6.5% ⚠️</div>
+            </div>
+            <div class="indicator-detail-row">
+              <div>
+                <div class="indicator-detail-name">30日內再入院率</div>
+                <div class="indicator-formula">3 / 31 已追蹤個案</div>
+              </div>
+              <div class="indicator-detail-val" style="color:var(--amber)">9.7% ⚠️</div>
+            </div>
+            <div class="indicator-detail-row">
+              <div>
+                <div class="indicator-detail-name">個案之功能進步情形</div>
+                <div class="indicator-formula">從系統量表自動計算</div>
+              </div>
+              <div class="indicator-detail-val">72.3%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-export')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('modal-export')">確認匯出</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTrack(id) {
+      const detail = document.getElementById(id);
+      const num = id.replace('t', '');
+      const btn = document.getElementById('tb' + num);
+      const isHidden = detail.classList.contains('hidden');
+      detail.classList.toggle('hidden', !isHidden);
+      btn.textContent = isHidden ? '▼' : '▶';
+      btn.classList.toggle('open', isHidden);
+    }
+
+    function markDone(detailId, btnId) {
+      // Find the track-status button in this item
+      const detail = document.getElementById(detailId);
+      const item = detail.parentElement;
+      const statusBtn = item.querySelector('.track-status');
+      statusBtn.className = 'track-status done';
+      statusBtn.textContent = '✓ 已追蹤';
+      // Update footer
+      const footer = detail.querySelector('.case-track-footer');
+      const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+      footer.querySelector('span').textContent = '最後追蹤：' + today + '・林美惠';
+      footer.querySelector('button').outerHTML = '<button class="btn btn-secondary btn-sm">重新填寫</button>';
+    }
+
+    function switchTab(el, tab) {
+      document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-nhia').classList.toggle('hidden', tab !== 'nhia');
+      document.getElementById('tab-internal').classList.toggle('hidden', tab !== 'internal');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden') }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden') }
+
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      o.addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden') });
     });
-  });
-});
 
-// Field toggle
-document.querySelectorAll('.field-toggle').forEach(btn=>{
-  btn.addEventListener('click',function(){
-    this.classList.toggle('on');
-    this.classList.toggle('off');
-  });
-});
-</script>
+    // Yes/No toggle
+    document.querySelectorAll('.yn-toggle').forEach(toggle => {
+      toggle.querySelectorAll('.yn-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggle.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+
+    // Field toggle
+    document.querySelectorAll('.field-toggle').forEach(btn => {
+      btn.addEventListener('click', function () {
+        this.classList.toggle('on');
+        this.classList.toggle('off');
+      });
+    });
+  </script>
 </body>
+
 </html>

@@ -26,8 +26,8 @@ export function RoleSwitcher() {
   return (
     <div className="role-switcher-container" ref={panelRef}>
       {/* Floating Action Button */}
-      <button 
-        className={`fab-role-button active-role-${currentRole}`} 
+      <button
+        className={`fab-role-button active-role-${currentRole}`}
         onClick={togglePanel}
         aria-label="切換角色"
         type="button"
