@@ -23,9 +23,12 @@ export function AppSidebar() {
         ))}
       </nav>
 
+      {/*
+
       <button className="map-toggle" type="button" onClick={toggleMap}>
         {showMap ? '隱藏拆解清單' : '查看拆解清單'}
       </button>
+      */}
     </aside>
   );
 }
