@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { usePageContext } from '../context/PageContext';
 
 // Helper to map React roles to legacy page roles
 function getMappedRole(pageId, role) {
   if (pageId === 'rehab-scheduling') {
-    return (role === 'mgr' || role === 'sup') ? 'manager' : 'therapist';
+    return role; // Return raw role code (e.g. 'sup', 'pt', 'ot', 'st', 'mgr', 'nur', etc.)
   }
   if (pageId === 'home-care-scheduling') {
     if (role === 'mgr') return 'case';
@@ -15,7 +15,20 @@ function getMappedRole(pageId, role) {
 }
 
 export function LegacyPageFrame({ page, title }) {
-  const { currentRole } = usePageContext();
+  const { currentRole, setActiveId } = usePageContext();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.switchLegacyPage = (pageId) => {
+        setActiveId(pageId);
+      };
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        delete window.switchLegacyPage;
+      }
+    };
+  }, [setActiveId]);
 
   const processedHtml = useMemo(() => {
     if (!page.html) return page.html;
@@ -55,4 +68,5 @@ export function LegacyPageFrame({ page, title }) {
     </section>
   );
 }
+
 

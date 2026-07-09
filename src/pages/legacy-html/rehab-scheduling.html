@@ -134,7 +134,7 @@ select.filter-control{padding:5px 10px;border:1px solid var(--gray-300);border-r
 
 /* ── Unified center modal overlay (used for both day list, detail, and register) ── */
 .day-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
-.detail-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:105;backdrop-filter:blur(2px)}
+.detail-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:110;backdrop-filter:blur(2px)}
 
 /* Drawer is now a centred modal panel (no slide-in) */
 .drawer-overlay{display:none!important}
@@ -153,7 +153,7 @@ select.filter-control{padding:5px 10px;border:1px solid var(--gray-300);border-r
 .summary-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:7px;padding:12px;font-size:12px;line-height:1.8;color:var(--gray-700)}
 
 /* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter:blur(2px)}
 .modal{background:var(--white);border-radius:12px;width:520px;max-width:92vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.15)}
 .modal-lg{width:640px}
 .modal-header{padding:16px 20px 13px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
@@ -539,7 +539,7 @@ textarea.form-control{resize:vertical;min-height:70px}
   </div>
 
   <!-- ══ DETAIL MODAL：院內個案 ══ -->
-  <div id="drawer-overlay-inpatient" class="detail-modal-overlay hidden" onclick="if(event.target===this)closeDrawer('inpatient')">
+  <div id="drawer-overlay-inpatient" class="detail-modal-overlay hidden">
   <div id="drawer-inpatient" class="drawer">
     <div class="drawer-header">
       <div>
@@ -581,20 +581,20 @@ textarea.form-control{resize:vertical;min-height:70px}
       <div id="manager-actions" class="drawer-section">
         <div class="drawer-section-title">操作（復健主管）</div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="closeDrawer('inpatient');openModal('modal-edit-schedule')">&#9999;&#65039; 編輯排班</button>
-          <button class="btn btn-danger btn-sm" onclick="closeDrawer('inpatient')">&#10060; 取消排班</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); closeDrawer('inpatient'); openModal('modal-edit-schedule')">&#9999;&#65039; 編輯排班</button>
+          <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); closeDrawer('inpatient')">&#10060; 取消排班</button>
         </div>
       </div>
       <div id="therapist-actions" class="drawer-section hidden">
         <div class="drawer-section-title">操作（治療師）</div>
-        <button class="btn btn-secondary btn-sm" onclick="closeDrawer('inpatient');openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
+        <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); closeDrawer('inpatient'); openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
       </div>
     </div>
   </div>
   </div>
 
   <!-- ══ DETAIL MODAL：居家個案 ══ -->
-  <div id="drawer-overlay-home" class="detail-modal-overlay hidden" onclick="if(event.target===this)closeDrawer('home')">
+  <div id="drawer-overlay-home" class="detail-modal-overlay hidden">
   <div id="drawer-home" class="drawer">
     <div class="drawer-header">
       <div>
@@ -644,19 +644,13 @@ textarea.form-control{resize:vertical;min-height:70px}
         <div class="summary-box" id="home-det-summary2">物理治療：每週 3 次，每次 50 分鐘。著重轉位訓練、呼吸肌強化、下肢被動活動。如遇呼吸困難立即停止並通報個管師。</div>
       </div>
       <div class="divider"></div>
-      <div id="home-manager-actions" class="drawer-section">
-        <div class="drawer-section-title">操作（復健主管）</div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="closeDrawer('home');openModal('modal-edit-schedule')">&#9999;&#65039; 編輯排班</button>
-          <button class="btn btn-danger btn-sm" onclick="closeDrawer('home')">&#10060; 取消排班</button>
-        </div>
-      </div>
-      <div id="home-therapist-actions" class="drawer-section hidden">
-        <div class="drawer-section-title">操作（治療師）</div>
-        <button class="btn btn-secondary btn-sm" onclick="closeDrawer('home');openModal('modal-swap')">↔ 申請換班 / 代班</button>
+      <div id="home-actions" class="drawer-section">
+        <div class="drawer-section-title">操作</div>
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); localStorage.setItem('hc_target',JSON.stringify({name:document.getElementById('home-det-name').textContent})); closeDrawer('home'); window.parent.switchLegacyPage('home-care-scheduling')">🔍 查看居家個案詳情</button>
       </div>
     </div>
   </div>
+  </div><!-- /drawer-overlay-home -->
 
 
 <!-- ══ MODALS ══ -->
@@ -728,44 +722,46 @@ textarea.form-control{resize:vertical;min-height:70px}
   </div>
 </div>
 
-<!-- 編輯班表（主管）-->
+<!-- 編輯排班（主管）-->
 <div id="modal-edit-schedule" class="modal-overlay hidden">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">✏️ 編輯班表</div><button class="modal-close" onclick="closeModal('modal-edit-schedule')">✕</button></div>
+    <div class="modal-header">
+      <div class="modal-title">✏️ 編輯排班</div>
+      <button class="modal-close" onclick="closeModal('modal-edit-schedule')">&#10005;</button>
+    </div>
     <div class="modal-body">
-      <div class="info-note blue">目前排班：黃志豪（PT）・鄭大偉・2026/06/23 09:00</div>
+      <div class="info-note blue">原排班：2026/06/23 09:00・個案 鄭大偉</div>
+      <div class="form-group">
+        <label>申請類型</label>
+        <div style="display:flex;gap:10px">
+          <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="edit-type" checked style="accent-color:var(--blue)"> 換班（更換日期/時段）</label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="edit-type" style="accent-color:var(--blue)"> 代班（找人代替）</label>
+        </div>
+      </div>
       <div class="form-grid">
         <div class="form-group">
-          <label>更換治療師</label>
-          <select class="form-control">
-            <option>黃志豪（PT）</option>
-            <option>陳建宏（PT）</option>
-            <option>李佳穎（OT）</option>
-          </select>
+          <label>更換至日期 <span class="required">*</span></label>
+          <input class="form-control" type="date">
         </div>
         <div class="form-group">
-          <label>更換日期</label>
-          <input class="form-control" type="date" value="2026-06-23">
-        </div>
-        <div class="form-group">
-          <label>更換時段</label>
+          <label>更換至時段 <span class="required">*</span></label>
           <select class="form-control">
+            <option>08:00 – 08:50</option>
             <option>09:00 – 09:50</option>
-            <option>09:30 – 10:20</option>
             <option>10:00 – 10:50</option>
             <option>14:00 – 14:50</option>
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label>備註</label>
-        <textarea class="form-control" placeholder="備註修改原因…"></textarea>
+        <label>換 / 代 班事由 <span class="required">*</span></label>
+        <textarea class="form-control" placeholder="請說明換班或代班的原因…"></textarea>
       </div>
+      <div class="info-note amber">申請送出後需等待復健主管審核，審核通過後班表才會更新。</div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="closeModal('modal-edit-schedule')">取消排班</button>
       <button class="btn btn-secondary" onclick="closeModal('modal-edit-schedule')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-edit-schedule')">儲存變更</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-edit-schedule')">送出申請</button>
     </div>
   </div>
 </div>
@@ -903,21 +899,11 @@ textarea.form-control{resize:vertical;min-height:70px}
       <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary1">脊髓損傷（C4-C5），不完全損傷（ASIA B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
       <div class="drawer-section-title">醫囑</div>
       <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary2">PT：每週 3 次，每次 50 分鐘。著重轉位訓練、呼吸肌強化、下肢被動活動。<br>OT：每週 3 次，每次 50 分鐘。上肢功能訓練、日常生活輔具評估。</div>
-      <div class="drawer-section-title">選擇可前往的時段</div>
-      <div class="time-slot-grid">
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週一 午休</div>
-        <div class="time-slot selected" onclick="this.classList.toggle('selected')">週三 下班後</div>
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週四 午休</div>
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週五 下班後</div>
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週六 上午</div>
-        <div class="time-slot taken">週日（不排）</div>
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週二 下班後</div>
-        <div class="time-slot" onclick="this.classList.toggle('selected')">週五 午休</div>
-      </div>
+
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-register')">取消</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-register')">確認報名</button>
+      <button class="btn btn-primary" onclick="event.stopPropagation(); localStorage.setItem('hc_target',JSON.stringify({name:document.getElementById('reg-det-name').textContent})); closeModal('modal-register'); window.parent.switchLegacyPage('home-care-scheduling')">🔍 查看居家個案詳情</button>
     </div>
   </div>
 </div>
@@ -950,16 +936,14 @@ const schedules = [
   // 6-6
   { date: '6-6', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '08:00', type: 'pac-in' },
   { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '黃○○', time: '09:30', type: 'nonpac-in' },
-  { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '10:00', type: 'open' }, // 可報名
+  { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '趙美惠', time: '10:00', type: 'open' }, // 可報名
+  { date: '6-6', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '18:00', type: 'pac-home' }, // 挪移至週六
+  { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' }, // 挪移至週六
 
-  // 6-7
-  { date: '6-7', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '18:00', type: 'pac-home' }, // 下班後
-  { date: '6-7', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' }, // 下班後
-
-  // 6-8
-  { date: '6-8', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-  { date: '6-8', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-  { date: '6-8', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '10:00', type: 'open' }, // 可報名
+  // 6-14 (原最左欄挪移至最右欄)
+  { date: '6-14', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
+  { date: '6-14', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
+  { date: '6-14', therapist: '張雅玲', therapistType: 'OT', patient: '謝俊男', time: '10:00', type: 'open' }, // 可報名
 
   // 6-9
   { date: '6-9', therapist: '黃志豪', therapistType: 'PT', patient: '吳麗珠', time: '08:30', type: 'pac-in' },
@@ -992,15 +976,13 @@ const schedules = [
 
   // 6-13
   { date: '6-13', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
-  { date: '6-13', therapist: '李佳穎', therapistType: 'OT', patient: '陳志明', time: '10:00', type: 'open' },
+  { date: '6-13', therapist: '李佳穎', therapistType: 'OT', patient: '林○峰', time: '10:00', type: 'open' },
+  { date: '6-13', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' }, // 挪移至週六
+  { date: '6-13', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:30', type: 'pac-home' }, // 挪移至週六
 
-  // 6-14
-  { date: '6-14', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
-  { date: '6-14', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:30', type: 'pac-home' },
-
-  // 6-15
-  { date: '6-15', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '08:00', type: 'pac-in' },
-  { date: '6-15', therapist: '李佳穎', therapistType: 'OT', patient: '李文雄', time: '09:30', type: 'pac-in' },
+  // 6-21 (原最左欄挪移至最右欄)
+  { date: '6-21', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '08:00', type: 'pac-in' },
+  { date: '6-21', therapist: '李佳穎', therapistType: 'OT', patient: '李文雄', time: '09:30', type: 'pac-in' },
 
   // 6-16
   { date: '6-16', therapist: '黃志豪', therapistType: 'PT', patient: '陳志明', time: '08:00', type: 'pac-in' },
@@ -1027,14 +1009,12 @@ const schedules = [
   // 6-20
   { date: '6-20', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
   { date: '6-20', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' },
+  { date: '6-20', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' }, // 挪移至週六
+  { date: '6-20', therapist: '李佳穎', therapistType: 'OT', patient: '黃建國', time: '18:30', type: 'pac-home' }, // 挪移至週六
 
-  // 6-21
-  { date: '6-21', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' },
-  { date: '6-21', therapist: '李佳穎', therapistType: 'OT', patient: '黃建國', time: '18:30', type: 'pac-home' },
-
-  // 6-22
-  { date: '6-22', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-  { date: '6-22', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '09:30', type: 'pac-in' },
+  // 6-28 (原最左欄挪移至最右欄)
+  { date: '6-28', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
+  { date: '6-28', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '09:30', type: 'pac-in' },
 
   // 6-23 (Today)
   { date: '6-23', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
@@ -1062,12 +1042,10 @@ const schedules = [
   // 6-27
   { date: '6-27', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
   { date: '6-27', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' },
+  { date: '6-27', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' }, // 挪移至週六
 
-  // 6-28
-  { date: '6-28', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' },
-
-  // 6-29
-  { date: '6-29', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
+  // 7-5 (原最左欄挪移至最右欄)
+  { date: '7-5', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
 
   // 6-30
   { date: '6-30', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
@@ -1110,9 +1088,21 @@ function getScheduleDetails(item) {
   } else if (item.patient.includes('志明')) {
     age = '47'; gender = '男'; disease = '腦出血後遺症'; physician = '王醫師（復健科）';
     summary = '加強軀幹穩定度、步態對稱性調整與精細動作協調練習。';
-  } else if (item.patient.includes('蔡')) {
-    age = '74'; gender = '女'; disease = '退化性肢體關節炎'; physician = '鄭醫師（復健科）';
-    summary = '雙膝關節物理治療，包括熱敷、電療、肌力訓練與日常關節保養衛教。';
+  } else if (item.patient.includes('趙美惠') || item.patient.includes('美惠')) {
+    age = '63'; gender = '女'; disease = '骨科（右側全膝關節置換術後）'; physician = '陳醫師（骨科）';
+    summary = '術後膝關節活動度訓練、下肢肌力強化、步態訓練及居家無障礙環境評估。';
+    address = '台北市文山區木柵路三段88號（距醫院約 6.3 km）';
+    phone = '0923-456-789'; contact = '女兒趙小姐 0912-234-567';
+  } else if (item.patient.includes('謝俊男') || item.patient.includes('俊男')) {
+    age = '58'; gender = '男'; disease = 'CVA（腦梗塞・右側偏癱）'; physician = '林醫師（復健科）';
+    summary = '右側上下肢功能誘發，著重步態對稱性訓練、精細動作協調及語言溝通促進。';
+    address = '新北市新莊區思源路215號（距醫院約 9.1 km）';
+    phone = '0934-678-901'; contact = '太太謝太太 0945-789-012';
+  } else if (item.patient.includes('林○峰') || item.patient.includes('○峰')) {
+    age = '70'; gender = '男'; disease = 'COPD（慢性阻塞性肺病）'; physician = '劉醫師（胸腔內科）';
+    summary = '呼吸肌訓練、步行耐力提升及排痰技巧指導，配合家庭氧療評估。';
+    address = '台北市內湖區成功路五段320號（距醫院約 7.4 km）';
+    phone = '0956-789-012'; contact = '兒子林先生 0967-890-123';
   }
   
   return {
@@ -1253,14 +1243,17 @@ function toggleTypeFilter(type) {
 
 function switchRole(role) {
   currentRole = role;
-  document.getElementById('btn-manager').classList.toggle('active', role === 'manager');
-  document.getElementById('btn-therapist').classList.toggle('active', role === 'therapist');
+  const isSupervisor = (role === 'sup' || role === 'manager');
+  const btnManager = document.getElementById('btn-manager');
+  if (btnManager) btnManager.classList.toggle('active', isSupervisor);
+  const btnTherapist = document.getElementById('btn-therapist');
+  if (btnTherapist) btnTherapist.classList.toggle('active', !isSupervisor);
 
   const allChk = document.getElementById('chk-therapist-all');
   const chks = document.querySelectorAll('.chk-therapist');
   const dropdownBtn = document.getElementById('therapist-dropdown-btn');
 
-  if (role === 'manager') {
+  if (isSupervisor) {
     document.getElementById('user-avatar').className = 'user-avatar manager';
     document.getElementById('user-avatar').textContent = '王';
     document.getElementById('user-name').textContent = '王復健主管';
@@ -1307,15 +1300,24 @@ function switchRole(role) {
 }
 
 function updateDrawerActionsForRole(role) {
-  const isManager = (role === 'manager');
-  ['manager-actions', 'home-manager-actions'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hidden', !isManager);
-  });
-  ['therapist-actions', 'home-therapist-actions'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hidden', isManager);
-  });
+  const isSupervisor = (role === 'sup' || role === 'manager');
+  const isTherapist = (role === 'pt' || role === 'ot' || role === 'st' || role === 'therapist');
+
+  // 1. Header buttons
+  const approvalBadge = document.getElementById('approval-badge');
+  if (approvalBadge) {
+    approvalBadge.classList.toggle('hidden', !isSupervisor);
+  }
+  const btnAddSchedule = document.getElementById('btn-add-schedule');
+  if (btnAddSchedule) {
+    btnAddSchedule.classList.toggle('hidden', !isSupervisor);
+  }
+
+  // 2. Inpatient detail actions
+  const mgrActions = document.getElementById('manager-actions');
+  const thActions = document.getElementById('therapist-actions');
+  if (mgrActions) mgrActions.classList.toggle('hidden', !isSupervisor);
+  if (thActions) thActions.classList.toggle('hidden', !isTherapist);
 }
 
 function switchView(el, view) {
@@ -1612,15 +1614,15 @@ function renderWeekView() {
   if (!tabsContainer) return;
   tabsContainer.innerHTML = '';
   
-  // Mon 6/22 to Sun 6/28
+  // Sun 6/22 to Sat 6/28 (Visual shift per user mental model)
   const weekdays = [
-    { label: '週一 6/22', value: '6-22' },
-    { label: '週二 6/23', value: '6-23' },
-    { label: '週三 6/24', value: '6-24' },
-    { label: '週四 6/25', value: '6-25' },
-    { label: '週五 6/26', value: '6-26' },
-    { label: '週六 6/27', value: '6-27' },
-    { label: '週日 6/28', value: '6-28' }
+    { label: '週日 6/22', value: '6-22' },
+    { label: '週一 6/23', value: '6-23' },
+    { label: '週二 6/24', value: '6-24' },
+    { label: '週三 6/25', value: '6-25' },
+    { label: '週四 6/26', value: '6-26' },
+    { label: '週五 6/27', value: '6-27' },
+    { label: '週六 6/28', value: '6-28' }
   ];
   
   weekdays.forEach(day => {
@@ -1739,10 +1741,15 @@ window.showWeekItem = function(item) {
 };
 
 // Drawer controls (now uses centered modal overlay)
+// ── Close everything helper ──
+function closeAllOverlays() {
+  document.querySelectorAll('.day-modal-overlay, .detail-modal-overlay, .modal-overlay')
+    .forEach(el => el.classList.add('hidden'));
+}
+
+// Drawer controls
 function openDrawer(type) {
-  // First close day modal
-  closeDayModal();
-  // Show the detail-modal-overlay which wraps the drawer panel
+  closeAllOverlays();
   document.getElementById('drawer-overlay-' + type).classList.remove('hidden');
 }
 
@@ -1751,16 +1758,34 @@ function closeDrawer(type) {
 }
 
 function openModal(id) {
-  document.getElementById(id).classList.remove('hidden');
+  // Close all drawers first, then show the target modal
+  document.querySelectorAll('.detail-modal-overlay').forEach(el => el.classList.add('hidden'));
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('hidden');
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.add('hidden');
+  const el = document.getElementById(id);
+  if (el) el.classList.add('hidden');
 }
 
-// Global modal background click handler
-document.querySelectorAll('.modal-overlay, .day-modal-overlay').forEach(o => {
-  o.addEventListener('click', function (e) {
+// Backdrop click: close day-modal on outside click
+document.querySelectorAll('.day-modal-overlay').forEach(o => {
+  o.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.add('hidden');
+  });
+});
+
+// Backdrop click: close detail drawers on outside click
+document.querySelectorAll('.detail-modal-overlay').forEach(o => {
+  o.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.add('hidden');
+  });
+});
+
+// Backdrop click: close modals on outside click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', function(e) {
     if (e.target === this) this.classList.add('hidden');
   });
 });
@@ -1784,8 +1809,11 @@ function initPage() {
   updateDrawerActionsForRole(currentRole);
   renderCalendar();
   // also update the btn active states
-  document.getElementById('btn-manager').classList.toggle('active', currentRole === 'manager');
-  document.getElementById('btn-therapist').classList.toggle('active', currentRole === 'therapist');
+  const isSupervisor = (currentRole === 'sup' || currentRole === 'manager');
+  const btnManager = document.getElementById('btn-manager');
+  if (btnManager) btnManager.classList.toggle('active', isSupervisor);
+  const btnTherapist = document.getElementById('btn-therapist');
+  if (btnTherapist) btnTherapist.classList.toggle('active', !isSupervisor);
 }
 
 document.addEventListener('DOMContentLoaded', initPage);

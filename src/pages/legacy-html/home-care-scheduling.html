@@ -1186,11 +1186,12 @@
   <div class="main">
     <div class="topbar">
       <div class="breadcrumb">居家排班管理</div>
-      <div class="topbar-right">
+      <div class="topbar-right" style="display:flex;gap:8px;align-items:center">
         <span style="font-size:11px;color:var(--gray-400)">2026/06/23</span>
-        <div id="btn-publish-wrap" class="hidden">
-          <button class="btn btn-primary btn-sm" onclick="openModal('modal-publish')">＋ 發布居家個案</button>
+        <div id="btn-add-case-wrap" class="hidden">
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-case')">＋ 新增個案</button>
         </div>
+
         <div id="btn-bonus-wrap">
           <button class="btn btn-secondary btn-sm" onclick="switchToBonus()">💰 獎金明細</button>
         </div>
@@ -1208,29 +1209,7 @@
           <button class="btn btn-secondary btn-sm">📤 匯出</button>
         </div>
 
-        <!-- 統計摘要 -->
-        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-          <div
-            style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 16px;min-width:90px">
-            <div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em">執行中</div>
-            <div style="font-size:22px;font-weight:700;color:var(--green)">4</div>
-          </div>
-          <div
-            style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 16px;min-width:90px">
-            <div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em">待批價</div>
-            <div style="font-size:22px;font-weight:700;color:var(--amber)">2</div>
-          </div>
-          <div
-            style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 16px;min-width:90px">
-            <div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em">準備展延</div>
-            <div style="font-size:22px;font-weight:700;color:var(--blue)">1</div>
-          </div>
-          <div
-            style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 16px;min-width:90px">
-            <div style="font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em">可發佈</div>
-            <div style="font-size:22px;font-weight:700;color:var(--gray-500)">2</div>
-          </div>
-        </div>
+
 
         <div class="toolbar">
           <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" placeholder="搜尋個案姓名…"></div>
@@ -1255,13 +1234,15 @@
         </div>
 
         <div class="tabs">
-          <div class="tab active" onclick="switchCaseTab(this,'all')">全部 <span class="badge badge-gray"
-              style="margin-left:4px">7</span></div>
-          <div class="tab" onclick="switchCaseTab(this,'active')">執行中 <span class="badge badge-green"
-              style="margin-left:4px">4</span></div>
-          <div class="tab" onclick="switchCaseTab(this,'billing')">待批價 <span class="badge badge-amber"
-              style="margin-left:4px">2</span></div>
-          <div class="tab" onclick="switchCaseTab(this,'ending')">即將結案 <span class="badge badge-blue"
+          <div class="tab active" onclick="switchCaseTab(this,'all')">全部 <span id="badge-all" class="badge badge-gray"
+              style="margin-left:4px">11</span></div>
+          <div class="tab" onclick="switchCaseTab(this,'active')">執行中 <span id="badge-active" class="badge badge-green"
+              style="margin-left:4px">5</span></div>
+          <div class="tab" onclick="switchCaseTab(this,'open')">可報名 <span id="badge-open" class="badge badge-amber"
+              style="margin-left:4px">3</span></div>
+          <div class="tab" onclick="switchCaseTab(this,'billing')">待批價 <span id="badge-billing"
+              class="badge badge-amber" style="margin-left:4px">2</span></div>
+          <div class="tab" onclick="switchCaseTab(this,'ending')">即將結案 <span id="badge-ending" class="badge badge-blue"
               style="margin-left:4px">1</span></div>
         </div>
 
@@ -1487,6 +1468,129 @@
                   <div class="quota-bar-mini">
                     <div class="quota-fill-mini ot-fill" style="width:100%"></div>
                   </div><span class="quota-text-mini">18/18</span>
+                </div>
+              </div>
+              <div class="case-card-right">
+                <button class="btn btn-ghost btn-xs" style="font-size:11px">🔍 查看詳情</button>
+              </div>
+            </div>
+          </div>
+          <!-- 個案9：執行中（李文雄）-->
+          <div class="case-card" data-status="active" id="case-card-李文雄">
+            <div class="case-card-header" onclick="toggleCase('c9')">
+              <div style="flex:1">
+                <div class="case-name">李文雄</div>
+                <div class="case-meta">
+                  <span class="case-meta-item">COPD（慢性阻塞性胺病）</span>
+                  <span class="case-meta-item">台北市中山區・3.5km</span>
+                  <span class="case-meta-item">開案 2026/06/01</span>
+                  <span class="case-meta-item">第 4 週</span>
+                </div>
+              </div>
+              <div class="case-card-badges">
+                <span class="badge badge-green">執行中</span>
+                <span class="badge badge-gray" style="font-size:10px">批價 ✓</span>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--blue)">PT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini pt-fill" style="width:100%"></div>
+                  </div><span class="quota-text-mini">3/3</span>
+                </div>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--green)">ST</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini st-fill" style="width:100%"></div>
+                  </div><span class="quota-text-mini">1/1</span>
+                </div>
+              </div>
+              <div class="case-card-right">
+                <button class="btn btn-danger btn-xs"
+                  onclick="event.stopPropagation();openModal('modal-suspend')">暫停</button>
+                <button class="btn btn-ghost btn-xs" style="font-size:11px">🔍 查看詳情</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 個案10：可報名（趙美惠）-->
+          <div class="case-card" data-status="open" id="case-card-趙美惠">
+            <div class="case-card-header" onclick="toggleCase('c10')">
+              <div style="flex:1">
+                <div class="case-name">趙美惠</div>
+                <div class="case-meta">
+                  <span class="case-meta-item">骨科（右側全膝關節置換術後）</span>
+                  <span class="case-meta-item">台北市文山區・6.3km</span>
+                  <span class="case-meta-item">報名截止 06/24 12:00</span>
+                </div>
+              </div>
+              <div class="case-card-badges">
+                <span class="badge badge-amber">可報名</span>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--blue)">PT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini pt-fill" style="width:33%"></div>
+                  </div><span class="quota-text-mini">1/3</span>
+                </div>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--purple)">OT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini ot-fill" style="width:0%"></div>
+                  </div><span class="quota-text-mini">0/3</span>
+                </div>
+              </div>
+              <div class="case-card-right">
+                <button class="btn btn-ghost btn-xs" style="font-size:11px">🔍 查看詳情</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 個案11：可報名（謝俊男）-->
+          <div class="case-card" data-status="open" id="case-card-謝俊男">
+            <div class="case-card-header" onclick="toggleCase('c11')">
+              <div style="flex:1">
+                <div class="case-name">謝俊男</div>
+                <div class="case-meta">
+                  <span class="case-meta-item">CVA（腦梗塞・右側偏癱）</span>
+                  <span class="case-meta-item">新北市新莊區・9.1km</span>
+                  <span class="case-meta-item">報名截止 06/24 12:00</span>
+                </div>
+              </div>
+              <div class="case-card-badges">
+                <span class="badge badge-amber">可報名</span>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--blue)">PT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini pt-fill" style="width:0%"></div>
+                  </div><span class="quota-text-mini">0/3</span>
+                </div>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--purple)">OT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini ot-fill" style="width:33%"></div>
+                  </div><span class="quota-text-mini">1/3</span>
+                </div>
+              </div>
+              <div class="case-card-right">
+                <button class="btn btn-ghost btn-xs" style="font-size:11px">🔍 查看詳情</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 個案12：可報名（林○峰）-->
+          <div class="case-card" data-status="open" id="case-card-林○峰">
+            <div class="case-card-header" onclick="toggleCase('c12')">
+              <div style="flex:1">
+                <div class="case-name">林○峰</div>
+                <div class="case-meta">
+                  <span class="case-meta-item">COPD（慢性阻塞性胺病）</span>
+                  <span class="case-meta-item">台北市內湖區・7.4km</span>
+                  <span class="case-meta-item">報名截止 06/24 12:00</span>
+                </div>
+              </div>
+              <div class="case-card-badges">
+                <span class="badge badge-amber">可報名</span>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--blue)">PT</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini pt-fill" style="width:0%"></div>
+                  </div><span class="quota-text-mini">0/3</span>
+                </div>
+                <div class="quota-mini"><span class="quota-label-mini" style="color:var(--green)">ST</span>
+                  <div class="quota-bar-mini">
+                    <div class="quota-fill-mini st-fill" style="width:0%"></div>
+                  </div><span class="quota-text-mini">0/2</span>
                 </div>
               </div>
               <div class="case-card-right">
@@ -2000,17 +2104,24 @@
           <div style="position:absolute;top:8px;left:10px;font-size:10px;color:var(--gray-400)">地圖示意</div>
         </div>
         <div class="detail-section-title">病摘摘要</div>
-        <div class="summary-box" style="margin-bottom:12px">脊髓損傷（C4-C5），不完全損傷（ASIA B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
+        <div class="summary-box" style="margin-bottom:12px">脊髓損傷（C4-C5），不完全損傷（ASIA
+          B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
         <div class="detail-section-title">醫囑方向</div>
-        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。著重轉位訓練、呼吸肌強化。OT：每週 3 次，每次 50 分鐘。上肢功能訓練、日常生活輔具評估。</div>
+        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。著重轉位訓練、呼吸肌強化。OT：每週 3 次，每次 50
+          分鐘。上肢功能訓練、日常生活輔具評估。</div>
         <div class="divider"></div>
         <div class="detail-section-title" style="margin-bottom:8px">治療師排班時段</div>
         <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
-          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong style="color:var(--blue)">陳建宏 PT</strong><br>週三・下班後</div>
-          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong style="color:var(--blue)">黃志豪 PT</strong><br>週五・下班後</div>
-          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong style="color:var(--blue)">王復健主管 PT</strong><br>週六・上午</div>
-          <div style="background:var(--purple-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong style="color:var(--purple)">李佳穎 OT</strong><br>週二・午休</div>
-          <div style="background:var(--purple-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong style="color:var(--purple)">張雅玲 OT</strong><br>週四・下班後</div>
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">陳建宏 PT</strong><br>週三・下班後</div>
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">黃志豪 PT</strong><br>週五・下班後</div>
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">王復健主管 PT</strong><br>週六・上午</div>
+          <div style="background:var(--purple-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--purple)">李佳穎 OT</strong><br>週二・午休</div>
+          <div style="background:var(--purple-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--purple)">張雅玲 OT</strong><br>週四・下班後</div>
         </div>
         <div class="divider"></div>
         <div class="detail-section-title">治療執行紀錄</div>
@@ -2032,9 +2143,18 @@
         <div class="billing-box">
           <div class="billing-title"><span>批價資訊</span><span class="badge badge-green">已批價</span></div>
           <table class="billing-table">
-            <tr><td>預收金額（第一次收取）</td><td>NT$ 3,000</td></tr>
-            <tr><td>健保費用（已執行 4 次 × NT$ 500）</td><td>NT$ 2,000</td></tr>
-            <tr><td>交通費（8.2 km × 4 次 × NT$ 10/km）</td><td>NT$ 328</td></tr>
+            <tr>
+              <td>預收金額（第一次收取）</td>
+              <td>NT$ 3,000</td>
+            </tr>
+            <tr>
+              <td>健保費用（已執行 4 次 × NT$ 500）</td>
+              <td>NT$ 2,000</td>
+            </tr>
+            <tr>
+              <td>交通費（8.2 km × 4 次 × NT$ 10/km）</td>
+              <td>NT$ 328</td>
+            </tr>
           </table>
           <div class="billing-total"><span>實際費用合計</span><span style="color:var(--blue)">NT$ 2,328</span></div>
           <div class="billing-refund">💰 應退還家屬：NT$ 672</div>
@@ -2074,9 +2194,18 @@
         <div class="billing-box">
           <div class="billing-title"><span>批價資訊</span><span class="badge badge-amber">待批價</span></div>
           <table class="billing-table">
-            <tr><td>預收金額（第一次收取）</td><td>NT$ 4,000</td></tr>
-            <tr><td>健保費用（已執行 18 次 × NT$ 500）</td><td>NT$ 9,000</td></tr>
-            <tr><td>交通費（12.5 km × 18 次 × NT$ 10/km）</td><td>NT$ 2,250</td></tr>
+            <tr>
+              <td>預收金額（第一次收取）</td>
+              <td>NT$ 4,000</td>
+            </tr>
+            <tr>
+              <td>健保費用（已執行 18 次 × NT$ 500）</td>
+              <td>NT$ 9,000</td>
+            </tr>
+            <tr>
+              <td>交通費（12.5 km × 18 次 × NT$ 10/km）</td>
+              <td>NT$ 2,250</td>
+            </tr>
           </table>
           <div class="billing-total"><span>實際費用合計</span><span style="color:var(--blue)">NT$ 11,250</span></div>
           <div class="billing-charge">⚠️ 家屬需補繳：NT$ 7,250</div>
@@ -2143,7 +2272,10 @@
         <div class="billing-box">
           <div class="billing-title"><span>批價資訊</span><span class="badge badge-green">已批價</span></div>
           <table class="billing-table">
-            <tr><td>實際費用合計</td><td>NT$ 3,820</td></tr>
+            <tr>
+              <td>實際費用合計</td>
+              <td>NT$ 3,820</td>
+            </tr>
           </table>
         </div>
       </div>
@@ -2231,8 +2363,14 @@
         <div class="billing-box">
           <div class="billing-title"><span>批價資訊</span><span class="badge badge-amber">待批價</span></div>
           <table class="billing-table">
-            <tr><td>預收金額</td><td>NT$ 3,000</td></tr>
-            <tr><td>健保與交通費實際合計</td><td>NT$ 10,800</td></tr>
+            <tr>
+              <td>預收金額</td>
+              <td>NT$ 3,000</td>
+            </tr>
+            <tr>
+              <td>健保與交通費實際合計</td>
+              <td>NT$ 10,800</td>
+            </tr>
           </table>
           <div class="billing-charge">⚠️ 家屬需補繳：NT$ 7,800</div>
           <button class="btn btn-primary btn-sm" style="width:100%;margin-top:10px;justify-content:center"
@@ -2241,6 +2379,243 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-detail-c7')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 個管師：李文雄詳情 (c9) -->
+  <div id="modal-detail-c9" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">🏡 李文雄・居家復健詳情</div>
+        <button class="modal-close" onclick="closeModal('modal-detail-c9')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-section-title">個案基本資料</div>
+        <div class="info-row">
+          <div class="info-item"><label>姓名</label><span>李文雄</span></div>
+          <div class="info-item"><label>年齡／性別</label><span>72歲 男</span></div>
+          <div class="info-item"><label>疾病別</label><span>COPD（慢性阻塞性胺病）</span></div>
+          <div class="info-item"><label>個案電話</label><span>0912-345-678</span></div>
+          <div class="info-item"><label>家屬聯絡</label><span>児子 0922-333-444</span></div>
+          <div class="info-item"><label>地址</label><span>台北市中山區吉林路88號（距醫院約 3.5 km）</span></div>
+        </div>
+        <div class="fake-map" style="margin-bottom:12px">
+          <div class="fake-map-road h" style="top:50%"></div>
+          <div class="fake-map-road v" style="left:40%"></div>
+          <div class="map-pin-home" style="top:30%;left:55%">📍</div>
+          <div class="map-pin-hospital" style="top:60%;left:25%">🏥</div>
+          <div class="map-distance">距醫院 3.5 km</div>
+          <div style="position:absolute;top:8px;left:10px;font-size:10px;color:var(--gray-400)">地圖示意</div>
+        </div>
+        <div class="detail-section-title">病摘摘要</div>
+        <div class="summary-box" style="margin-bottom:12px">COPD
+          於本院住院復健完成，目前進入居家階段。呼吸功能案引，需加強呼吸肌訓練、步行耐力及排痰技巧指導。注意：若血氧濓度下降 90% 即停止並提醒。01 。</div>
+        <div class="detail-section-title">醫囁方向</div>
+        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。著重呼吸肌訓練、步行耐力提升及排痰技巧指導。<br>ST：每週 1 次，每次 40
+          分鐘。吠嚥功能訓練、溝通能力評估。</div>
+        <div class="divider"></div>
+        <div class="detail-section-title" style="margin-bottom:8px">治療師排班時段</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">黃志豪 PT</strong><br>週一・上午</div>
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">李佳穎 OT→ST</strong><br>週三・下班後</div>
+          <div style="background:var(--blue-light);border-radius:6px;padding:7px 11px;font-size:11px"><strong
+              style="color:var(--blue)">吴怡君 ST</strong><br>週五・上午</div>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-section-title">治療執行紀錄</div>
+        <div class="treatment-log">
+          <div class="treatment-row uploaded">
+            <span class="treatment-date">06/16 週一</span>
+            <span class="treatment-therapist">黃志豪 <span class="th-tag th-pt">PT</span></span>
+            <span class="treatment-time">09:00 – 09:50</span>
+            <span class="badge badge-blue" style="font-size:10px">已簽到・已上傳</span>
+          </div>
+          <div class="treatment-row uploaded">
+            <span class="treatment-date">06/18 週三</span>
+            <span class="treatment-therapist">李佳穎 <span class="th-tag th-ot">ST</span></span>
+            <span class="treatment-time">17:30 – 18:10</span>
+            <span class="badge badge-blue" style="font-size:10px">已簽到・已上傳</span>
+          </div>
+          <div class="treatment-row signed">
+            <span class="treatment-date">06/20 週五</span>
+            <span class="treatment-therapist">吴怡君 <span class="th-tag th-st">ST</span></span>
+            <span class="treatment-time">09:00 – 09:40</span>
+            <span class="badge badge-green" style="font-size:10px">已簽到・待上傳</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="billing-box">
+          <div class="billing-title"><span>批價資訊</span><span class="badge badge-green">已批價</span></div>
+          <table class="billing-table">
+            <tr>
+              <td>預收金額（第一次收取）</td>
+              <td>NT$ 3,000</td>
+            </tr>
+            <tr>
+              <td>健保費用（已執行 3 次 × NT$ 500）</td>
+              <td>NT$ 1,500</td>
+            </tr>
+            <tr>
+              <td>交通費（3.5 km × 3 次 × NT$ 10/km）</td>
+              <td>NT$ 105</td>
+            </tr>
+          </table>
+          <div class="billing-total"><span>實際費用合計</span><span style="color:var(--blue)">NT$ 1,605</span></div>
+          <div class="billing-refund">💰 應退還家屬：NT$ 1,395</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-detail-c9')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 個管師：趙美惠詳情 (c10) 可報名 -->
+  <div id="modal-detail-c10" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">🏡 趙美惠・居家復健報名詳情</div>
+        <button class="modal-close" onclick="closeModal('modal-detail-c10')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note amber" style="margin-bottom:12px">📌 此個案屬「可報名」狀態，報名截止日期：2026/06/24 12:00。治療師尚可報名。</div>
+        <div class="detail-section-title">個案基本資料</div>
+        <div class="info-row">
+          <div class="info-item"><label>姓名</label><span>趙美惠</span></div>
+          <div class="info-item"><label>年齡／性別</label><span>63歲 女</span></div>
+          <div class="info-item"><label>疾病別</label><span>骨科（右側全膝關節置換術後）</span></div>
+          <div class="info-item"><label>個案電話</label><span>0923-456-789</span></div>
+          <div class="info-item"><label>家屬聯絡</label><span>女兒趙小姐 0912-234-567</span></div>
+          <div class="info-item"><label>地址</label><span>台北市文山區木柵路三段88號（距醫院約 6.3 km）</span></div>
+        </div>
+        <div class="fake-map" style="margin-bottom:12px">
+          <div class="fake-map-road h" style="top:45%"></div>
+          <div class="fake-map-road v" style="left:55%"></div>
+          <div class="map-pin-home" style="top:25%;left:65%">📍</div>
+          <div class="map-pin-hospital" style="top:60%;left:30%">🏥</div>
+          <div class="map-distance">距醫院 6.3 km</div>
+          <div style="position:absolute;top:8px;left:10px;font-size:10px;color:var(--gray-400)">地圖示意</div>
+        </div>
+        <div class="detail-section-title">病摘摘要</div>
+        <div class="summary-box" style="margin-bottom:12px">右側全膝關節置換術後復健須求，術後第 2 週進入居家復健。腼四頭肌力強化、膝關節活動度訓練及防跌倒指導為主要目標。
+        </div>
+        <div class="detail-section-title">醫囁方向</div>
+        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。膝關節活動度訓練、下肢肌力強化、步態訓練。<br>OT：每週 3 次，每次 50
+          分鐘。居家環境無障礙評估、日常生活自理重建。</div>
+        <div class="divider"></div>
+        <div class="detail-section-title" style="margin-bottom:8px">報名狀況</div>
+        <div class="reg-list">
+          <div class="reg-item winner"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-green">已報名</span><span style="font-size:11px;color:var(--gray-500);margin-left:8px">週六
+              上午</span></div>
+          <div class="reg-item pending"><span class="reg-name">PT 空缺 2 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+          <div class="reg-item pending"><span class="reg-name">OT 空缺 3 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-detail-c10')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 個管師：謝俊男詳情 (c11) 可報名 -->
+  <div id="modal-detail-c11" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">🏡 謝俊男・居家復健報名詳情</div>
+        <button class="modal-close" onclick="closeModal('modal-detail-c11')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note amber" style="margin-bottom:12px">📌 此個案屬「可報名」狀態，報名截止日期：2026/06/24 12:00。目前尚無治療師報名。</div>
+        <div class="detail-section-title">個案基本資料</div>
+        <div class="info-row">
+          <div class="info-item"><label>姓名</label><span>謝俊男</span></div>
+          <div class="info-item"><label>年齡／性別</label><span>58歲 男</span></div>
+          <div class="info-item"><label>疾病別</label><span>CVA（腦梗塞・右側偏癱）</span></div>
+          <div class="info-item"><label>個案電話</label><span>0934-678-901</span></div>
+          <div class="info-item"><label>家屬聯絡</label><span>太太謝太太 0945-789-012</span></div>
+          <div class="info-item"><label>地址</label><span>新北市新莊區思源路215號（距醫院約 9.1 km）</span></div>
+        </div>
+        <div class="fake-map" style="margin-bottom:12px">
+          <div class="fake-map-road h" style="top:55%"></div>
+          <div class="fake-map-road v" style="left:45%"></div>
+          <div class="map-pin-home" style="top:35%;left:70%">📍</div>
+          <div class="map-pin-hospital" style="top:65%;left:20%">🏥</div>
+          <div class="map-distance">距醫院 9.1 km</div>
+          <div style="position:absolute;top:8px;left:10px;font-size:10px;color:var(--gray-400)">地圖示意</div>
+        </div>
+        <div class="detail-section-title">病摘摘要</div>
+        <div class="summary-box" style="margin-bottom:12px">CVA 腦梗塞後右側偏癱，需復健治療。右側上下肢功能記錄區分
+          1-2/5，語言功能輕度障礌。復健目標：步態訓練、功能性体能訓練及語言訓練。</div>
+        <div class="detail-section-title">醫囁方向</div>
+        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。步態對稱性訓練、功能性体能訓練。<br>OT：每週 3 次，每次 50
+          分鐘。日常生活自理訓練、精細動作訓練。</div>
+        <div class="divider"></div>
+        <div class="detail-section-title" style="margin-bottom:8px">報名狀況</div>
+        <div class="reg-list">
+          <div class="reg-item winner"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span
+              class="badge badge-green">已報名</span><span style="font-size:11px;color:var(--gray-500);margin-left:8px">週四
+              午休</span></div>
+          <div class="reg-item pending"><span class="reg-name">PT 空缺 3 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+          <div class="reg-item pending"><span class="reg-name">OT 空缺 2 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-detail-c11')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 個管師：林○峰詳情 (c12) 可報名 -->
+  <div id="modal-detail-c12" class="modal-overlay hidden">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">🏡 林○峰・居家復健報名詳情</div>
+        <button class="modal-close" onclick="closeModal('modal-detail-c12')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-note amber" style="margin-bottom:12px">📌 此個案屬「可報名」狀態，報名截止日期：2026/06/24 12:00。目前尚無治療師報名。</div>
+        <div class="detail-section-title">個案基本資料</div>
+        <div class="info-row">
+          <div class="info-item"><label>姓名</label><span>林○峰</span></div>
+          <div class="info-item"><label>年齡／性別</label><span>70歲 男</span></div>
+          <div class="info-item"><label>疾病別</label><span>COPD（慢性阻塞性胺病）</span></div>
+          <div class="info-item"><label>個案電話</label><span>0956-789-012</span></div>
+          <div class="info-item"><label>家屬聯絡</label><span>兒子林先生 0967-890-123</span></div>
+          <div class="info-item"><label>地址</label><span>台北市內湖區成功路五段320號（距醫院約 7.4 km）</span></div>
+        </div>
+        <div class="fake-map" style="margin-bottom:12px">
+          <div class="fake-map-road h" style="top:40%"></div>
+          <div class="fake-map-road v" style="left:60%"></div>
+          <div class="map-pin-home" style="top:22%;left:72%">📍</div>
+          <div class="map-pin-hospital" style="top:55%;left:25%">🏥</div>
+          <div class="map-distance">距醫院 7.4 km</div>
+          <div style="position:absolute;top:8px;left:10px;font-size:10px;color:var(--gray-400)">地圖示意</div>
+        </div>
+        <div class="detail-section-title">病摘摘要</div>
+        <div class="summary-box" style="margin-bottom:12px">COPD 中度，倒年 FEV1
+          52%。走路耗辺晋額不良，伴輕度咯嗽。需升強呼吸功能、步行耐力及排痰技巧，配合家庭水療評估。</div>
+        <div class="detail-section-title">醫囁方向</div>
+        <div class="summary-box" style="margin-bottom:12px">PT：每週 3 次，每次 50 分鐘。呼吸肌訓練、步行耐力提升及排痰指導。<br>ST：每週 2 次，每次 40
+          分鐘。吠嚥功能訓練、呼吸活動訓練。</div>
+        <div class="divider"></div>
+        <div class="detail-section-title" style="margin-bottom:8px">報名狀況</div>
+        <div class="reg-list">
+          <div class="reg-item pending"><span class="reg-name">PT 空缺 3 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+          <div class="reg-item pending"><span class="reg-name">ST 空缺 2 名</span><span class="badge badge-gray">待報名</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-detail-c12')">關閉</button>
       </div>
     </div>
   </div>
@@ -2260,10 +2635,17 @@
         </div>
         <div class="detail-section-title" style="margin-top:12px;margin-bottom:8px">中籤治療師</div>
         <div class="reg-list">
-          <div class="reg-item winner"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span class="badge badge-green">抽中</span><span style="font-size:11px;color:var(--gray-500);margin-left:8px">週三下班後</span></div>
-          <div class="reg-item winner"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span class="badge badge-green">抽中</span><span style="font-size:11px;color:var(--gray-500);margin-left:8px">週五下班後</span></div>
-          <div class="reg-item winner"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span class="badge badge-green">抽中</span><span style="font-size:11px;color:var(--gray-500);margin-left:8px">週六上午</span></div>
-          <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span class="badge badge-gray">未抽中</span></div>
+          <div class="reg-item winner"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-green">抽中</span><span
+              style="font-size:11px;color:var(--gray-500);margin-left:8px">週三下班後</span></div>
+          <div class="reg-item winner"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-green">抽中</span><span
+              style="font-size:11px;color:var(--gray-500);margin-left:8px">週五下班後</span></div>
+          <div class="reg-item winner"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span
+              class="badge badge-green">抽中</span><span
+              style="font-size:11px;color:var(--gray-500);margin-left:8px">週六上午</span></div>
+          <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-gray">未抽中</span></div>
         </div>
       </div>
       <div class="modal-footer">
@@ -2287,7 +2669,8 @@
           <div class="info-item"><label>所需人力</label><span>PT 3人・OT 3人</span></div>
         </div>
         <div style="margin-top:12px">
-          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="closeModal('modal-detail-mc2');openModal('modal-publish')">發布報名</button>
+          <button class="btn btn-primary" style="width:100%;justify-content:center"
+            onclick="closeModal('modal-detail-mc2');openModal('modal-publish')">發布報名</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -2306,15 +2689,22 @@
       <div class="modal-body">
         <div class="detail-section-title" style="margin-bottom:8px">報名中治療師</div>
         <div class="reg-list">
-          <div class="reg-item"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">報名中</span></div>
-          <div class="reg-item"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">報名中</span></div>
-          <div class="reg-item"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span class="badge badge-amber">報名中</span></div>
-          <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">報名中（超額）</span></div>
-          <div class="reg-item"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span class="badge badge-amber">報名中</span></div>
-          <div class="reg-item"><span class="reg-name">張雅玲 <span class="th-tag th-ot">OT</span></span><span class="badge badge-amber">報名中</span></div>
+          <div class="reg-item"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-amber">報名中</span></div>
+          <div class="reg-item"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-amber">報名中</span></div>
+          <div class="reg-item"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span
+              class="badge badge-amber">報名中</span></div>
+          <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span
+              class="badge badge-amber">報名中（超額）</span></div>
+          <div class="reg-item"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span
+              class="badge badge-amber">報名中</span></div>
+          <div class="reg-item"><span class="reg-name">張雅玲 <span class="th-tag th-ot">OT</span></span><span
+              class="badge badge-amber">報名中</span></div>
         </div>
         <div style="margin-top:12px">
-          <button class="btn btn-amber" style="width:100%;justify-content:center" onclick="closeModal('modal-detail-mp1');openModal('modal-lottery')">🎲 執行抽籤</button>
+          <button class="btn btn-amber" style="width:100%;justify-content:center"
+            onclick="closeModal('modal-detail-mp1');openModal('modal-lottery')">🎲 執行抽籤</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -2355,7 +2745,8 @@
             <span class="treatment-date">06/25 週三</span>
             <span class="treatment-time">17:30 – 18:20</span>
             <span class="badge badge-amber" style="font-size:10px">即將到來</span>
-            <div class="treatment-actions"><button class="btn btn-primary btn-xs" onclick="closeModal('modal-detail-tc1');openModal('modal-checkin')">簽到</button></div>
+            <div class="treatment-actions"><button class="btn btn-primary btn-xs"
+                onclick="closeModal('modal-detail-tc1');openModal('modal-checkin')">簽到</button></div>
           </div>
         </div>
       </div>
@@ -2384,7 +2775,8 @@
             <span class="treatment-date">06/27 週五</span>
             <span class="treatment-time">18:00 – 18:50</span>
             <span class="badge badge-amber" style="font-size:10px">即將到來</span>
-            <div class="treatment-actions"><button class="btn btn-primary btn-xs" onclick="closeModal('modal-detail-tc2');openModal('modal-checkin')">簽到</button></div>
+            <div class="treatment-actions"><button class="btn btn-primary btn-xs"
+                onclick="closeModal('modal-detail-tc2');openModal('modal-checkin')">簽到</button></div>
           </div>
         </div>
       </div>
@@ -2416,7 +2808,8 @@
         </div>
         <div class="summary-box">CVA（腦中風）右側偏癱，日常生活功能恢復。</div>
         <div style="margin-top:12px">
-          <button class="btn btn-green" style="width:100%;justify-content:center" onclick="closeModal('modal-detail-to1');openModal('modal-register-therapist')">立即報名此個案</button>
+          <button class="btn btn-green" style="width:100%;justify-content:center"
+            onclick="closeModal('modal-detail-to1');openModal('modal-register-therapist')">立即報名此個案</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -2541,7 +2934,6 @@
             <div class="time-slot" onclick="this.classList.toggle('selected')">週四 下班後</div>
             <div class="time-slot selected" onclick="this.classList.toggle('selected')">週五 下班後</div>
             <div class="time-slot" onclick="this.classList.toggle('selected')">週六 上午</div>
-            <div class="time-slot taken">週日（不排）</div>
           </div>
         </div>
       </div>
@@ -2621,6 +3013,55 @@
     </div>
   </div>
 
+  <!-- 新增個案（個管師）-->
+  <div id="modal-add-case" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">🏡 新增居家個案</div>
+        <button class="modal-close" onclick="closeModal('modal-add-case')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>個案姓名 <span class="required">*</span></label>
+          <input class="form-control" type="text" id="new-case-name" placeholder="請輸入姓名，例如：李文雄">
+        </div>
+        <div class="form-group">
+          <label>疾病別 <span class="required">*</span></label>
+          <select class="form-control" id="new-case-disease">
+            <option>CVA（腦中風）</option>
+            <option>骨科（髖關節）</option>
+            <option>帕金森氏症</option>
+            <option>脊髓損傷（C4-C5）</option>
+            <option>COPD（慢性阻塞性肺病）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>地址 <span class="required">*</span></label>
+          <input class="form-control" type="text" id="new-case-address" value="台北市信義區○○路○○號（7.1 km）">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>照護狀態 <span class="required">*</span></label>
+            <select class="form-control" id="new-case-status">
+              <option value="active">執行中</option>
+              <option value="publish">可發佈</option>
+              <option value="billing">待批價</option>
+              <option value="ending">準備展延 (即將結案)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>開案日期</label>
+            <input class="form-control" type="date" id="new-case-date" value="2026-06-23">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-add-case')">取消</button>
+        <button class="btn btn-primary" onclick="submitNewCase()">確認新增</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 獎金確認（治療師）-->
   <div id="modal-bonus-confirm" class="modal-overlay hidden">
     <div class="modal modal-sm" style="width:420px">
@@ -2633,12 +3074,15 @@
         <div style="background:var(--gray-50);border-radius:8px;padding:14px;margin-bottom:12px">
           <div
             style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--gray-700)">
-            <span>總執行次數</span><span style="font-weight:600">10 次</span></div>
+            <span>總執行次數</span><span style="font-weight:600">10 次</span>
+          </div>
           <div
             style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--gray-700)">
-            <span>總公里數</span><span style="font-weight:600">65.8 km</span></div>
+            <span>總公里數</span><span style="font-weight:600">65.8 km</span>
+          </div>
           <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--blue)">
-            <span>預估總獎金</span><span>NT$ 5,658</span></div>
+            <span>預估總獎金</span><span>NT$ 5,658</span>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -2713,22 +3157,32 @@
   <script>
     let currentRole = 'case';
     let prevView = 'view-case';
+    let dynamicCaseCount = 7; // Start from 7 because we have c1 to c7 hardcoded
 
     function switchRole(role) {
       currentRole = role;
+      const btnAddCaseWrap = document.getElementById('btn-add-case-wrap');
+
+      const btnBonusWrap = document.getElementById('btn-bonus-wrap');
+
       ['case', 'manager', 'therapist'].forEach(r => {
-        document.getElementById('rbtn-' + r).classList.toggle('active', r === role);
+        const btn = document.getElementById('rbtn-' + r);
+        if (btn) btn.classList.toggle('active', r === role);
       });
       const views = ['view-case', 'view-manager', 'view-therapist', 'view-bonus'];
-      views.forEach(v => document.getElementById(v).classList.add('hidden'));
+      views.forEach(v => {
+        const el = document.getElementById(v);
+        if (el) el.classList.add('hidden');
+      });
 
       if (role === 'case') {
         document.getElementById('ua').className = 'user-avatar av-case';
         document.getElementById('ua').textContent = '林';
         document.getElementById('uname').textContent = '林美惠';
         document.getElementById('urole').textContent = '個案管理師';
-        document.getElementById('btn-publish-wrap').classList.add('hidden');
-        document.getElementById('btn-bonus-wrap').classList.remove('hidden');
+
+        if (btnAddCaseWrap) btnAddCaseWrap.classList.remove('hidden');
+        if (btnBonusWrap) btnBonusWrap.classList.remove('hidden');
         document.getElementById('view-case').classList.remove('hidden');
         prevView = 'view-case';
       } else if (role === 'manager') {
@@ -2736,8 +3190,9 @@
         document.getElementById('ua').textContent = '王';
         document.getElementById('uname').textContent = '王復健主管';
         document.getElementById('urole').textContent = '復健主管';
-        document.getElementById('btn-publish-wrap').classList.remove('hidden');
-        document.getElementById('btn-bonus-wrap').classList.remove('hidden');
+
+        if (btnAddCaseWrap) btnAddCaseWrap.classList.add('hidden');
+        if (btnBonusWrap) btnBonusWrap.classList.remove('hidden');
         document.getElementById('view-manager').classList.remove('hidden');
         prevView = 'view-manager';
       } else {
@@ -2745,15 +3200,19 @@
         document.getElementById('ua').textContent = '黃';
         document.getElementById('uname').textContent = '黃志豪';
         document.getElementById('urole').textContent = '物理治療師（PT）';
-        document.getElementById('btn-publish-wrap').classList.add('hidden');
-        document.getElementById('btn-bonus-wrap').classList.remove('hidden');
+
+        if (btnAddCaseWrap) btnAddCaseWrap.classList.add('hidden');
+        if (btnBonusWrap) btnBonusWrap.classList.remove('hidden');
         document.getElementById('view-therapist').classList.remove('hidden');
         prevView = 'view-therapist';
       }
     }
 
     function switchToBonus() {
-      ['view-case', 'view-manager', 'view-therapist'].forEach(v => document.getElementById(v).classList.add('hidden'));
+      ['view-case', 'view-manager', 'view-therapist'].forEach(v => {
+        const el = document.getElementById(v);
+        if (el) el.classList.add('hidden');
+      });
       document.getElementById('view-bonus').classList.remove('hidden');
     }
     function switchBackFromBonus() {
@@ -2762,7 +3221,24 @@
     }
 
     function toggleCase(id) {
-      openModal('modal-detail-' + id);
+      const el = document.getElementById('modal-detail-' + id);
+      if (el) {
+        openModal('modal-detail-' + id);
+      } else {
+        // Dynamic case detail alert
+        let caseName = '未知個案';
+        const cards = document.querySelectorAll('#case-list-all .case-card');
+        cards.forEach(card => {
+          const header = card.querySelector('.case-card-header');
+          if (header) {
+            const onclickAttr = header.getAttribute('onclick');
+            if (onclickAttr && onclickAttr.includes(id)) {
+              caseName = card.querySelector('.case-name').textContent;
+            }
+          }
+        });
+        alert('查看個案：' + caseName + '，此個案為動態新增案例，目前暫不提供完整歷史詳情面版。');
+      }
     }
 
     function switchCaseTab(el, tab) {
@@ -2774,11 +3250,13 @@
         const status = card.getAttribute('data-status') || '';
         if (tab === 'all') {
           card.classList.remove('hidden');
-        } else if (tab === 'active' && status.includes('active')) {
+        } else if (tab === 'active' && status === 'active') {
           card.classList.remove('hidden');
-        } else if (tab === 'billing' && status.includes('billing')) {
+        } else if (tab === 'open' && status === 'open') {
           card.classList.remove('hidden');
-        } else if (tab === 'ending' && status.includes('ending')) {
+        } else if (tab === 'billing' && status === 'billing') {
+          card.classList.remove('hidden');
+        } else if (tab === 'ending' && status === 'ending') {
           card.classList.remove('hidden');
         } else {
           card.classList.add('hidden');
@@ -2804,9 +3282,167 @@
       o.addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden') });
     });
 
-    // init
-    switchRole('case');
+    function submitNewCase() {
+      const name = document.getElementById('new-case-name').value.trim();
+      const disease = document.getElementById('new-case-disease').value;
+      const address = document.getElementById('new-case-address').value.trim();
+      const status = document.getElementById('new-case-status').value;
+      const dateVal = document.getElementById('new-case-date').value;
 
+      if (!name) {
+        alert('請輸入個案姓名');
+        return;
+      }
+
+      dynamicCaseCount++;
+      const caseId = 'c' + dynamicCaseCount;
+
+      let displayDate = dateVal;
+      if (dateVal) {
+        displayDate = dateVal.replace(/-/g, '/');
+      }
+
+      let badgeClass = 'badge-green';
+      let statusLabel = '執行中';
+      let badgeExtra = '<span class="badge badge-gray" style="font-size:10px">批價 ✓</span>';
+      let actionButtons = `
+        <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();openModal('modal-suspend')">暫停</button>
+        <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="toggleCase('${caseId}')">🔍 查看詳情</button>
+      `;
+
+      if (status === 'publish') {
+        badgeClass = 'badge-gray';
+        statusLabel = '可發佈';
+        badgeExtra = '<span style="font-size:11px;color:var(--gray-400)">尚未發布報名</span>';
+        actionButtons = `<button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="toggleCase('${caseId}')">🔍 查看詳情</button>`;
+      } else if (status === 'billing') {
+        badgeClass = 'badge-gray';
+        statusLabel = '已完案';
+        badgeExtra = '<span class="badge badge-amber" style="font-size:10px">待批價</span>';
+        actionButtons = `<button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="toggleCase('${caseId}')">🔍 查看詳情</button>`;
+      } else if (status === 'ending') {
+        badgeClass = 'badge-blue';
+        statusLabel = '準備展延';
+        badgeExtra = '<span class="badge badge-amber" style="font-size:10px">待批價</span>';
+        actionButtons = `
+          <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();openModal('modal-suspend')">暫停</button>
+          <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="toggleCase('${caseId}')">🔍 查看詳情</button>
+        `;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'case-card';
+      card.setAttribute('data-status', status);
+      card.innerHTML = `
+        <div class="case-card-header" onclick="toggleCase('${caseId}')">
+          <div style="flex:1">
+            <div class="case-name">${name}</div>
+            <div class="case-meta">
+              <span class="case-meta-item">${disease}</span>
+              <span class="case-meta-item">${address}</span>
+              <span class="case-meta-item">開案 ${displayDate}</span>
+              <span class="case-meta-item">第 1 週</span>
+            </div>
+          </div>
+          <div class="case-card-badges">
+            <span class="badge ${badgeClass}">${statusLabel}</span>
+            ${badgeExtra}
+          </div>
+          <div class="case-card-right">
+            ${actionButtons}
+          </div>
+        </div>
+      `;
+
+      const listAll = document.getElementById('case-list-all');
+      if (listAll) {
+        listAll.insertBefore(card, listAll.firstChild);
+      }
+
+      closeModal('modal-add-case');
+      document.getElementById('new-case-name').value = '';
+
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const cards = document.querySelectorAll('#case-list-all .case-card');
+      const total = cards.length;
+      let activeCount = 0;
+      let billingCount = 0;
+      let endingCount = 0;
+      let publishCount = 0;
+
+      cards.forEach(card => {
+        const status = card.getAttribute('data-status') || '';
+        if (status === 'active') activeCount++;
+        if (status === 'billing') billingCount++;
+        if (status === 'ending') endingCount++;
+        if (status === 'publish') publishCount++;
+      });
+
+      const sActive = document.getElementById('stat-active');
+      if (sActive) sActive.textContent = activeCount;
+      const sBilling = document.getElementById('stat-billing');
+      if (sBilling) sBilling.textContent = billingCount;
+      const sEnding = document.getElementById('stat-ending');
+      if (sEnding) sEnding.textContent = endingCount;
+      const sPublish = document.getElementById('stat-publish');
+      if (sPublish) sPublish.textContent = publishCount;
+
+      const bAll = document.getElementById('badge-all');
+      if (bAll) bAll.textContent = total;
+      const bActive = document.getElementById('badge-active');
+      if (bActive) bActive.textContent = activeCount;
+      const bBilling = document.getElementById('badge-billing');
+      if (bBilling) bBilling.textContent = billingCount;
+      const bEnding = document.getElementById('badge-ending');
+      if (bEnding) bEnding.textContent = endingCount;
+    }
+
+    // init
+    switchRole(currentRole);
+
+    // Highlight AND open case navigated from rehab-scheduling
+    (function () {
+      try {
+        const target = JSON.parse(localStorage.getItem('hc_target') || 'null');
+        if (!target || !target.name) return;
+        localStorage.removeItem('hc_target');
+
+        // Map case names to their caseId for toggleCase
+        const nameToId = {
+          '黃建國': 'c1', '王淑芬': 'c2', '陳志明': 'c3', '林小華': 'c4',
+          '郭大同': 'c5', '張阿玉': 'c6', '趙萬里': 'c7',
+          '李文雄': 'c9',
+          '趙美惠': 'c10', '謝俊男': 'c11', '林○峰': 'c12'
+        };
+
+        const caseId = nameToId[target.name];
+
+        // Find the matching case card
+        document.querySelectorAll('#case-list-all .case-name').forEach(el => {
+          if (el.textContent.trim() === target.name) {
+            const card = el.closest('.case-card');
+            if (!card) return;
+            // Scroll and highlight
+            setTimeout(() => {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.style.outline = '2px solid var(--blue)';
+              card.style.boxShadow = '0 0 0 4px rgba(37,99,235,0.2)';
+              setTimeout(() => {
+                card.style.outline = '';
+                card.style.boxShadow = '';
+              }, 2500);
+              // Auto-open detail modal if available
+              if (caseId) {
+                setTimeout(() => { toggleCase(caseId); }, 300);
+              }
+            }, 400);
+          }
+        });
+      } catch (e) { }
+    })();
   </script>
 </body>
 
