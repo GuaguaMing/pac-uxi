@@ -3285,7 +3285,7 @@
         }
         item.querySelector('.approval-actions').innerHTML = '';
 
-        alert(`換班申請已被拒絕，原因：${reason}\n原班表維持不變，已發送通知給申請人。\n排班管理流程結束。`);
+        alert(`換班申請已被拒絕，原因：${reason}\n已發送通知給申請人。`);
         updatePendingCount();
 
       } else if (action === '核准') {
@@ -3334,9 +3334,9 @@
       item.querySelector('.approval-actions').innerHTML = '';
 
       if (reqType === '換班') {
-        alert(`已核准換班！\n原時段已改派給 ${selectedTherapist} 並與申請人對調。\n自動發送通知給雙方治療師，班表總覽頁已更新。\n排班管理流程結束。`);
+        alert(`已核准換班！原時段已改派給 ${selectedTherapist}。\n已發送通知給治療師，班表總覽頁已更新。`);
       } else {
-        alert(`已核准代班！\n原治療師時段標記為「代班」，執行人改為 ${selectedTherapist}。\n自動發送通知給雙方治療師，班表總覽頁已更新。\n排班管理流程結束。`);
+        alert(`已核准代班！執行人改為 ${selectedTherapist}。\n已發送通知給治療師，班表總覽頁已更新。`);
       }
 
       updatePendingCount();
