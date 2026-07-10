@@ -36,20 +36,26 @@ export function AppSidebar() {
 
         {/* 導覽連結區塊 */}
         <nav className="app-nav" aria-label="PAC pages">
-          {pages.map((page) => (
-            <button
-              key={page.id}
-              className={`nav-button ${activeId === page.id ? 'active' : ''}`}
-              type="button"
-              onClick={() => {
-                setActiveId(page.id);
-                setIsOpen(false); // 點擊後自動關閉選單
-              }}
-            >
-              <span className="nav-icon">{page.icon}</span>
-              <span className="nav-label">{page.label}</span>
-            </button>
-          ))}
+          {pages.map((page) => {
+            const isDisabled = page.id !== 'rehab-scheduling' && page.id !== 'home-care-scheduling';
+            return (
+              <button
+                key={page.id}
+                className={`nav-button ${activeId === page.id ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`}
+                type="button"
+                disabled={isDisabled}
+                style={isDisabled ? { opacity: 0.38, cursor: 'not-allowed' } : {}}
+                onClick={() => {
+                  if (isDisabled) return;
+                  setActiveId(page.id);
+                  setIsOpen(false); // 點擊後自動關閉選單
+                }}
+              >
+                <span className="nav-icon">{page.icon}</span>
+                <span className="nav-label">{page.label}</span>
+              </button>
+            );
+          })}
         </nav>
       </aside>
 
