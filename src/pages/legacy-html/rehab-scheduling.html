@@ -2522,12 +2522,13 @@
       // Always use the authoritative module-level currentRole variable
       const effectiveRole = currentRole;
       const isSupervisor = (effectiveRole === 'sup' || effectiveRole === 'manager' || effectiveRole === 'mgr');
+      const canManageSchedule = (effectiveRole === 'sup' || effectiveRole === 'manager');
       const isTherapist = !isSupervisor; // any non-supervisor is a therapist
 
       // 1. Header buttons
       const approvalBadge = document.getElementById('approval-badge');
       if (approvalBadge) {
-        if (isSupervisor) approvalBadge.classList.remove('hidden');
+        if (canManageSchedule) approvalBadge.classList.remove('hidden');
         else approvalBadge.classList.add('hidden');
       }
       const myAppBadge = document.getElementById('my-application-badge');
@@ -2537,7 +2538,7 @@
       }
       const btnAddSchedule = document.getElementById('btn-add-schedule');
       if (btnAddSchedule) {
-        if (isSupervisor) btnAddSchedule.classList.remove('hidden');
+        if (canManageSchedule) btnAddSchedule.classList.remove('hidden');
         else btnAddSchedule.classList.add('hidden');
       }
 

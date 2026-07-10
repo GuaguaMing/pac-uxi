@@ -46,15 +46,21 @@ export function RoleSwitcher() {
           <div className="role-list">
             {roles.map((role) => {
               const isActive = role.code === currentRole;
+              const allowedRoles = ['mgr', 'sup', 'pt', 'ot', 'st'];
+              const isDisabled = !allowedRoles.includes(role.code);
+              
               return (
                 <button
                   key={role.code}
-                  className={`role-item ${isActive ? 'active' : ''}`}
+                  className={`role-item ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}`}
                   onClick={() => {
+                    if (isDisabled) return;
                     selectRole(role.code);
                     setIsOpen(false);
                   }}
                   type="button"
+                  disabled={isDisabled}
+                  style={isDisabled ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                 >
                   <div className={`role-item-avatar ${role.av}`}>{role.ch}</div>
                   <div className="role-item-info">
