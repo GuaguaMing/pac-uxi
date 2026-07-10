@@ -20,7 +20,7 @@ const PageContext = createContext(null);
 
 export function PageProvider({ children }) {
   const [currentRole, setCurrentRole] = useState('mgr');
-  const [activeId, setActiveId] = useState('personal-dashboard');
+  const [activeId, setActiveId] = useState('rehab-scheduling');
   const [showMap, setShowMap] = useState(false);
 
   const value = useMemo(() => {
