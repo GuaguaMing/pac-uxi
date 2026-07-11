@@ -1545,7 +1545,7 @@
           <div class="drawer-info-grid" style="margin-bottom:10px">
             <div class="drawer-field"><label>姓名</label><span id="inpatient-det-name">鄧大偉</span></div>
             <div class="drawer-field"><label>年齡／性別</label><span id="inpatient-det-age-gender">62歲 男</span></div>
-            <div class="drawer-field"><label>疾病別</label><span id="inpatient-det-disease">骨科（膈關節）</span></div>
+            <div class="drawer-field"><label>疾病別</label><span id="inpatient-det-disease">脆弱性骨折</span></div>
             <div class="drawer-field"><label>PAC 類型</label><span id="inpatient-det-pactype"><span
                   class="badge badge-blue" style="font-size:10px">PAC 住院</span></span></div>
             <div class="drawer-field"><label>入院日期</label><span id="inpatient-det-admit">2026/05/28</span></div>
@@ -1608,7 +1608,7 @@
           <div class="drawer-info-grid" style="margin-bottom:10px">
             <div class="drawer-field"><label>姓名</label><span id="home-det-name">黃建國</span></div>
             <div class="drawer-field"><label>年齡／性別</label><span id="home-det-age-gender">55歲 男</span></div>
-            <div class="drawer-field"><label>疾病別</label><span id="home-det-disease">脊髓損傷（C4-C5）</span></div>
+            <div class="drawer-field"><label>疾病別</label><span id="home-det-disease">創傷性神經損傷</span></div>
             <div class="drawer-field"><label>PAC 類型</label><span id="home-det-pactype"><span class="badge badge-green"
                   style="font-size:10px">PAC 居家</span></span></div>
             <div class="drawer-field"><label>開案日期</label><span id="home-det-startdate">2026/06/22</span></div>
@@ -1616,7 +1616,7 @@
           </div>
           <div class="drawer-field" style="margin-bottom:10px">
             <label>地址</label>
-            <span id="home-det-address">台北市中山區○○路○○號（距醫院約 8.2 km）</span>
+            <span id="home-det-address">彰化縣員林市○○路○○號（距醫院約 8.2 km）</span>
           </div>
           <div class="drawer-info-grid">
             <div class="drawer-field"><label>個案電話</label><span id="home-det-phone">0934-567-890</span></div>
@@ -1626,7 +1626,7 @@
         <div class="divider"></div>
         <div class="drawer-section">
           <div class="drawer-section-title">病摘摘要</div>
-          <div class="summary-box" id="home-det-summary1">脊髓損傷（C4-C5），不完全損傷（ASIA
+          <div class="summary-box" id="home-det-summary1">創傷性神經損傷，不完全損傷（ASIA
             B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。</div>
         </div>
         <div class="divider"></div>
@@ -1641,16 +1641,7 @@
             onclick="event.stopPropagation(); localStorage.setItem('hc_target',JSON.stringify({name:document.getElementById('home-det-name').textContent})); closeDrawer('home'); window.parent.switchLegacyPage('home-care-scheduling')">🔍
             查看居家個案詳情</button>
         </div>
-        <div id="home-manager-actions" class="drawer-section">
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm"
-              onclick="event.stopPropagation(); openEditScheduleModal()">&#9999;&#65039;
-              編輯排班</button>
-            <button class="btn btn-danger btn-sm"
-              onclick="event.stopPropagation(); if(confirm('確定要取消此排班嗎？取消後將無法復原。')) { closeDrawer('home'); alert('排班已取消，並已更新班表！'); }">&#10060;
-              取消排班</button>
-          </div>
-        </div>
+
         <div id="home-therapist-actions" class="drawer-section" style="display:none">
           <button class="btn btn-secondary btn-sm"
             onclick="event.stopPropagation(); closeDrawer('home'); openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
@@ -1695,11 +1686,11 @@
             <label>個案 <span class="required">*</span></label>
             <select class="form-control" id="add-patient" required>
               <option value="">請選擇個案</option>
-              <option>李文雄（COPD・院內）</option>
-              <option>鄭大偉（骨科・院內）</option>
-              <option>吳麗珠（CVA・院內）</option>
-              <option>黃建國（脊髓損傷・居家）</option>
-              <option>王淑芬（骨科・居家）</option>
+              <option>李文雄（腦中風(CVA)・院內）</option>
+              <option>鄭大偉（脆弱性骨折・院內）</option>
+              <option>吳麗珠（腦中風(CVA)・院內）</option>
+              <option>黃建國（創傷性神經損傷・居家）</option>
+              <option>王淑芬（脆弱性骨折・居家）</option>
             </select>
           </div>
           <div class="form-group">
@@ -1760,11 +1751,11 @@
             <label>個案 <span class="required">*</span></label>
             <select class="form-control" id="edit-patient" required>
               <option value="">請選擇個案</option>
-              <option>李文雄（COPD・院內）</option>
-              <option>鄭大偉（骨科・院內）</option>
-              <option>吳麗珠（CVA・院內）</option>
-              <option>黃建國（脊髓損傷・居家）</option>
-              <option>王淑芬（骨科・居家）</option>
+              <option>李文雄（腦中風(CVA)・院內）</option>
+              <option>鄭大偉（脆弱性骨折・院內）</option>
+              <option>吳麗珠（腦中風(CVA)・院內）</option>
+              <option>黃建國（創傷性神經損傷・居家）</option>
+              <option>王淑芬（脆弱性骨折・居家）</option>
             </select>
           </div>
           <div class="form-group">
@@ -2062,9 +2053,9 @@
               <div><span style="font-size:11px;color:var(--gray-400)">年齡／性別：</span><span style="font-size:12px"
                   id="reg-det-age-gender">55歲 男</span></div>
               <div><span style="font-size:11px;color:var(--gray-400)">疾病別：</span><span style="font-size:12px"
-                  id="reg-det-disease">脊髓損傷（C4-C5）</span></div>
+                  id="reg-det-disease">創傷性神經損傷</span></div>
               <div><span style="font-size:11px;color:var(--gray-400)">地址：</span><span style="font-size:12px"
-                  id="reg-det-address">台北市中山區（距醫院約 8.2 km）</span></div>
+                  id="reg-det-address">彰化縣大村鄉（距醫院約 8.2 km）</span></div>
               <div><span style="font-size:11px;color:var(--gray-400)">聯絡：</span><span style="font-size:12px"
                   id="reg-det-contact">0934-567-890 / 家屬黃太太</span></div>
             </div>
@@ -2098,7 +2089,7 @@
         </div>
         <div class="divider"></div>
         <div class="drawer-section-title">病摘摘要</div>
-        <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary1">脊髓損傷（C4-C5），不完全損傷（ASIA
+        <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary1">創傷性神經損傷，不完全損傷（ASIA
           B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
         <div class="drawer-section-title">醫囑</div>
         <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary2">PT：每週 3 次，每次 50
@@ -2273,45 +2264,45 @@
 
       let age = '65';
       let gender = '男';
-      let disease = '腦中風後復健';
+      let disease = '腦中風(CVA)';
       let physician = '張醫師（神經科）';
       let summary = '著重肢體肌力訓練、關節活動度與日常生活功能重建。';
-      let address = '台北市大安區新生南路二段32號（距醫院約 4.5 km）';
+      let address = '彰化縣埤頭鄉新生南路二段32號（距醫院約 4.5 km）';
       let phone = '0912-345-678';
       let contact = '兒子 0922-333-444';
 
       if (item.patient.includes('文雄')) {
-        age = '72'; gender = '男'; disease = '慢性阻塞性肺病 (COPD)'; physician = '劉醫師（胸腔內科）';
-        summary = '加強呼吸肌訓練、步行耐力訓練及呼吸排痰指導。';
+        age = '72'; gender = '男'; disease = '腦中風(CVA)'; physician = '劉醫師（神經內科）';
+        summary = '腦中風(CVA)右側偏癱，加強患側肢體肌力、關節活動度訓練及防跌倒指導。';
       } else if (item.patient.includes('大偉')) {
-        age = '62'; gender = '男'; disease = '骨科（右膝關節置換術後）'; physician = '陳醫師（骨科）';
+        age = '62'; gender = '男'; disease = '脆弱性骨折'; physician = '陳醫師（脆弱性骨折）';
         summary = '膝關節活動度訓練、大腿肌力強化及步態訓練。目標6週內脫離拐杖。';
       } else if (item.patient.includes('麗珠')) {
         age = '68'; gender = '女'; disease = '腦梗塞（左側偏癱）'; physician = '林醫師（復健科）';
         summary = '患側上肢功能誘發、站立平衡與轉位訓練，預防跌倒。';
       } else if (item.patient.includes('建國')) {
-        age = '55'; gender = '男'; disease = '脊髓損傷（C4-C5，不完全損傷）'; physician = '黃醫師（神經外科）';
-        summary = '脊髓損傷不完全癱瘓，加強雙上肢肌力與轉位技巧訓練，配合呼吸治療。';
+        age = '55'; gender = '男'; disease = '創傷性神經損傷'; physician = '黃醫師（神經外科）';
+        summary = '創傷性神經損傷不完全癱瘓，加強雙上肢肌力與轉位技巧訓練，配合呼吸治療。';
       } else if (item.patient.includes('淑芬')) {
-        age = '59'; gender = '女'; disease = '骨科（左側股骨頸骨折）'; physician = '李醫師（骨科）';
+        age = '59'; gender = '女'; disease = '脆弱性骨折'; physician = '李醫師（脆弱性骨折）';
         summary = '術後負重步態訓練、平衡功能訓練與居家生活環境無障礙評估。';
       } else if (item.patient.includes('志明')) {
         age = '47'; gender = '男'; disease = '腦出血後遺症'; physician = '王醫師（復健科）';
         summary = '加強軀幹穩定度、步態對稱性調整與精細動作協調練習。';
       } else if (item.patient.includes('趙美惠') || item.patient.includes('美惠')) {
-        age = '63'; gender = '女'; disease = '骨科（右側全膝關節置換術後）'; physician = '陳醫師（骨科）';
+        age = '63'; gender = '女'; disease = '脆弱性骨折'; physician = '陳醫師（脆弱性骨折）';
         summary = '術後膝關節活動度訓練、下肢肌力強化、步態訓練及居家無障礙環境評估。';
-        address = '台北市文山區木柵路三段88號（距醫院約 6.3 km）';
+        address = '彰化縣福興鄉木柵路三段88號（距醫院約 6.3 km）';
         phone = '0923-456-789'; contact = '女兒趙小姐 0912-234-567';
       } else if (item.patient.includes('謝俊男') || item.patient.includes('俊男')) {
-        age = '58'; gender = '男'; disease = 'CVA（腦梗塞・右側偏癱）'; physician = '林醫師（復健科）';
+        age = '58'; gender = '男'; disease = '腦中風(CVA)'; physician = '林醫師（復健科）';
         summary = '右側上下肢功能誘發，著重步態對稱性訓練、精細動作協調及語言溝通促進。';
-        address = '新北市新莊區思源路215號（距醫院約 9.1 km）';
+        address = '彰化縣大村鄉思源路215號（距醫院約 9.1 km）';
         phone = '0934-678-901'; contact = '太太謝太太 0945-789-012';
       } else if (item.patient.includes('林○峰') || item.patient.includes('○峰')) {
-        age = '70'; gender = '男'; disease = 'COPD（慢性阻塞性肺病）'; physician = '劉醫師（胸腔內科）';
+        age = '70'; gender = '男'; disease = '衰弱高齡'; physician = '劉醫師（胸腔內科）';
         summary = '呼吸肌訓練、步行耐力提升及排痰技巧指導，配合家庭氧療評估。';
-        address = '台北市內湖區成功路五段320號（距醫院約 7.4 km）';
+        address = '彰化縣和美鎮成功路五段320號（距醫院約 7.4 km）';
         phone = '0956-789-012'; contact = '兒子林先生 0967-890-123';
       }
 
