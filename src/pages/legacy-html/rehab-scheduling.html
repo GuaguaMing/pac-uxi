@@ -2512,9 +2512,9 @@
     function updateDrawerActionsForRole(role, itemTherapist) {
       // Always use the authoritative module-level currentRole variable
       const effectiveRole = currentRole;
-      const isSupervisor = (effectiveRole === 'sup' || effectiveRole === 'manager' || effectiveRole === 'mgr');
+      const isSupervisor = (effectiveRole === 'sup' || effectiveRole === 'manager');
       const canManageSchedule = (effectiveRole === 'sup' || effectiveRole === 'manager');
-      const isTherapist = !isSupervisor; // any non-supervisor is a therapist
+      const isTherapist = (effectiveRole === 'pt' || effectiveRole === 'ot' || effectiveRole === 'st' || effectiveRole === 'therapist');
 
       // 1. Header buttons
       const approvalBadge = document.getElementById('approval-badge');

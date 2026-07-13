@@ -1882,40 +1882,57 @@
           <div><strong>醫囑方向：</strong>PT：每週 3 次，每次 50 分鐘。著重右側肢體復健。</div>
         </div>
 
-        <div class="divider"></div>
-        <div class="detail-section-title">設定人力與時間</div>
-        <div
-          style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:16px">
-          <div style="flex:1;min-width:120px">
-            <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
-              PT 人數</label>
-            <select class="form-control" style="font-size:12px;padding:4px 8px">
-              <option>1 人</option>
-              <option>2 人</option>
-              <option>無</option>
-            </select>
+        <div id="c1-setup-section">
+          <div class="divider"></div>
+          <div class="detail-section-title">設定人力與時間</div>
+          <div
+            style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:16px">
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
+                PT 人數</label>
+              <select class="form-control" style="font-size:12px;padding:4px 8px">
+                <option>1 人</option>
+                <option>2 人</option>
+                <option>無</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
+                OT 人數</label>
+              <select class="form-control" style="font-size:12px;padding:4px 8px">
+                <option>1 人</option>
+                <option>2 人</option>
+                <option>無</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
+                ST 人數</label>
+              <select class="form-control" style="font-size:12px;padding:4px 8px">
+                <option>無</option>
+                <option>1 人</option>
+              </select>
+            </div>
+            <div style="flex:1.5;min-width:180px">
+              <label
+                style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">報名截止時間</label>
+              <input type="date" class="form-control" style="font-size:12px;padding:3px 8px" value="2026-06-24">
+            </div>
           </div>
-          <div style="flex:1;min-width:120px">
-            <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
-              OT 人數</label>
-            <select class="form-control" style="font-size:12px;padding:4px 8px">
-              <option>1 人</option>
-              <option>2 人</option>
-              <option>無</option>
-            </select>
-          </div>
-          <div style="flex:1;min-width:120px">
-            <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
-              ST 人數</label>
-            <select class="form-control" style="font-size:12px;padding:4px 8px">
-              <option>無</option>
-              <option>1 人</option>
-            </select>
-          </div>
-          <div style="flex:1.5;min-width:180px">
-            <label
-              style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">報名截止時間</label>
-            <input type="date" class="form-control" style="font-size:12px;padding:3px 8px" value="2026-06-24">
+        </div>
+
+        <div id="c1-notify-section" style="display:none">
+          <div class="divider"></div>
+          <div class="detail-section-title">通知主管發布</div>
+          <div
+            style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="flex:1">
+              <div style="font-weight:600;color:#1E40AF;margin-bottom:4px;font-size:13px">📢 個案已開案完成</div>
+              <div style="font-size:12px;color:#1E3A8A">此個案基本資料已建檔，可通知復健科主管進行派案及設定報名截止時間。</div>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btn-notify-sup" style="background:var(--blue);color:var(--white)" onclick="alert('已發送通知予復健主管，請靜候發布。'); this.disabled=true; this.textContent='已通知主管';">
+              🔔 通知主管發布
+            </button>
           </div>
         </div>
 
@@ -2248,7 +2265,7 @@
           <!-- 已批價列 1 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週一上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">陳建宏 PT</span> (週一上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2259,7 +2276,7 @@
           <!-- 已批價列 2 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週三下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">黃志豪 PT</span> (週三下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2270,7 +2287,7 @@
           <!-- 已批價列 3 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週五上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李建明 PT</span> (週五上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2281,7 +2298,7 @@
           <!-- 已批價列 4 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週二下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">李佳穎 OT</span> (週二下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2292,7 +2309,7 @@
           <!-- 已批價列 5 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週四下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王怡珍 OT</span> (週四下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2379,7 +2396,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">陳建宏 PT</span> (週三上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">黃志豪 PT</span> (週三上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2389,7 +2406,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">陳建宏 PT</span> (週五下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李建明 PT</span> (週五下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2413,7 +2430,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#FFFBEB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王志明 OT</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">李佳穎 OT</span>
               (週四上午)</span>
             <div style="display:flex;align-items:center;gap:6px">
               <span style="font-size:11px;color:#D97706">⚠️ 待批價</span>
@@ -2491,7 +2508,7 @@
           <!-- 已批價列 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週二上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李建明 PT</span> (週二上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2501,7 +2518,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週四下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">黃志豪 PT</span> (週四下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2511,7 +2528,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週一上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王怡珍 OT</span> (週一上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2521,7 +2538,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週三下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">李佳穎 OT</span> (週三下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2531,7 +2548,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週五上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">陳淑雅 OT</span> (週五上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2609,7 +2626,7 @@
           <!-- 已批價列 -->
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週一下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李建明 PT</span> (週一下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2619,7 +2636,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">李PT</span> (週三下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--blue)">黃志豪 PT</span> (週三下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2629,7 +2646,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週二上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王怡珍 OT</span> (週二上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2639,7 +2656,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border-bottom:1px solid #E5E7EB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">王OT</span> (週四下午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--purple)">李佳穎 OT</span> (週四下午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -2649,7 +2666,7 @@
           </div>
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB">
-            <span style="font-size:12px;font-weight:600"><span style="color:var(--green)">吳ST</span> (週五上午)</span>
+            <span style="font-size:12px;font-weight:600"><span style="color:var(--green)">吳怡君 ST</span> (週五上午)</span>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>
               <button class="btn btn-xs"
@@ -3717,6 +3734,18 @@
     function updateRBAC() {
       const role = currentRole;
 
+      // Update tab-open label based on role
+      const tabOpenEl = document.getElementById('tab-open');
+      if (tabOpenEl) {
+        const labelText = (role === 'therapist') ? '可報名' : '已發佈';
+        const badgeEl = document.getElementById('badge-open');
+        if (badgeEl) {
+          tabOpenEl.innerHTML = `${labelText} <span id="badge-open" class="tab-badge">${badgeEl.textContent}</span>`;
+        } else {
+          tabOpenEl.innerHTML = `${labelText} <span id="badge-open" class="tab-badge">0</span>`;
+        }
+      }
+
       // 1. Tabs visibility
       const allTabs = {
         'tab-all': true,
@@ -3729,11 +3758,11 @@
       };
 
       if (role === 'therapist') {
-        allTabs['tab-all'] = false;
+        allTabs['tab-all'] = true;
         allTabs['tab-publish'] = false;
         allTabs['tab-billing'] = false;
       } else if (role === 'secretary') {
-        allTabs['tab-all'] = false;
+        allTabs['tab-all'] = true;
         allTabs['tab-publish'] = false;
         allTabs['tab-open'] = false;
       }
@@ -3910,6 +3939,8 @@
       if (id === 'c1') {
         const btnPublish = modal.querySelector('.modal-footer .btn-primary');
         let infoNote = modal.querySelector('.info-note');
+        const setupSection = document.getElementById('c1-setup-section');
+        const notifySection = document.getElementById('c1-notify-section');
         if (role === 'manager') {
           if (btnPublish) {
             btnPublish.style.display = '';
@@ -3919,14 +3950,28 @@
             infoNote.innerHTML = '📌 尚未發布報名，請設定所需人力與截止時間。';
             infoNote.className = 'info-note amber';
           }
+          if (setupSection) setupSection.style.display = '';
+          if (notifySection) notifySection.style.display = 'none';
+        } else if (role === 'case') {
+          if (btnPublish) {
+            btnPublish.style.display = 'none';
+          }
+          if (infoNote) {
+            infoNote.innerHTML = '📌 尚未發布報名 (已由您開案，等待主管進行人力派案)。';
+            infoNote.className = 'info-note blue';
+          }
+          if (setupSection) setupSection.style.display = 'none';
+          if (notifySection) notifySection.style.display = '';
         } else {
           if (btnPublish) {
             btnPublish.style.display = 'none';
           }
           if (infoNote) {
-            infoNote.innerHTML = '⚠️ 尚未發布報名 (僅限復健主管可進行派案調度與設定發布)。';
+            infoNote.innerHTML = '⚠️ 尚未發布報名 (僅限復健主管與個管師可進行後續設定)。';
             infoNote.className = 'info-note red';
           }
+          if (setupSection) setupSection.style.display = 'none';
+          if (notifySection) notifySection.style.display = 'none';
         }
       }
 
@@ -4095,11 +4140,21 @@
           if (statusList.includes('publish') || (statusList.includes('billing') && !statusList.includes('active'))) {
             matchesTab = false;
           }
-          if (statusList.includes('active') || statusList.includes('billing')) {
+          if (caseName === '陳阿信') {
+            matchesTab = false;
+          }
+          if (statusList.includes('active') || statusList.includes('billing') || statusList.includes('ending') || statusList.includes('close')) {
             const assignedCases = ["吳淑珍", "李金水"];
             if (!assignedCases.includes(caseName)) {
               matchesTab = false;
             }
+          }
+        }
+
+        // Role filtering for secretary:
+        if (currentRole === 'secretary') {
+          if (statusList.includes('publish') || statusList.includes('open')) {
+            matchesTab = false;
           }
         }
 
@@ -4111,6 +4166,7 @@
       });
 
       applyRBACToOuterCards();
+      updateTotals();
     }
 
     function handleSubmitSuspend() {
@@ -4250,7 +4306,7 @@
 
     function updateTotals() {
       const cards = document.querySelectorAll('#case-list-all .case-card');
-      const total = cards.length;
+      let total = 0;
       let activeCount = 0;
       let billingCount = 0;
       let endingCount = 0;
@@ -4259,7 +4315,36 @@
       let closeCount = 0;
 
       cards.forEach(card => {
+        const caseName = card.querySelector('.case-name').textContent.trim();
         const statusList = (card.getAttribute('data-status') || '').split(' ');
+
+        // Therapist role filtering for totals:
+        if (currentRole === 'therapist') {
+          // 1. Skip publish (待發布)
+          if (statusList.includes('publish') || (statusList.includes('billing') && !statusList.includes('active'))) {
+            return;
+          }
+          // 2. Skip '陳阿信' (已發佈-無人報名)
+          if (caseName === '陳阿信') {
+            return;
+          }
+          // 3. Skip active, billing, ending, close cases if not assigned to this therapist
+          if (statusList.includes('active') || statusList.includes('billing') || statusList.includes('ending') || statusList.includes('close')) {
+            const assignedCases = ["吳淑珍", "李金水"];
+            if (!assignedCases.includes(caseName)) {
+              return;
+            }
+          }
+        }
+
+        // Secretary role filtering for totals:
+        if (currentRole === 'secretary') {
+          if (statusList.includes('publish') || statusList.includes('open')) {
+            return;
+          }
+        }
+
+        total++;
         if (statusList.includes('active')) activeCount++;
         if (statusList.includes('billing')) billingCount++;
         if (statusList.includes('ending')) endingCount++;

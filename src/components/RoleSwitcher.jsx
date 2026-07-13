@@ -48,7 +48,7 @@ export function RoleSwitcher() {
               const isActive = role.code === currentRole;
               const allowedRoles = ['mgr', 'sup', 'pt', 'ot', 'st'];
               const isDisabled = !allowedRoles.includes(role.code);
-              
+
               return (
                 <button
                   key={role.code}

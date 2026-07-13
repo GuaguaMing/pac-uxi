@@ -9,6 +9,7 @@ function getMappedRole(pageId, role) {
   if (pageId === 'home-care-scheduling') {
     if (role === 'mgr') return 'case';
     if (role === 'sup') return 'manager';
+    if (role === 'adm') return 'secretary';
     return 'therapist';
   }
   return role;
