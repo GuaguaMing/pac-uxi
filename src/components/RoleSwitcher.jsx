@@ -46,7 +46,7 @@ export function RoleSwitcher() {
           <div className="role-list">
             {roles.map((role) => {
               const isActive = role.code === currentRole;
-              const allowedRoles = ['mgr', 'sup', 'pt', 'ot', 'st'];
+              const allowedRoles = ['mgr', 'sup', 'pt', 'ot', 'st', 'adm'];
               const isDisabled = !allowedRoles.includes(role.code);
 
               return (

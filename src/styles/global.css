@@ -45,11 +45,6 @@ button {
   color: #2563eb;
 }
 
-.brand-subtitle {
-  margin-top: 3px;
-  font-size: 12px;
-  color: #64748b;
-}
 
 .app-nav {
   flex: 1;
@@ -83,17 +78,6 @@ button {
   font-weight: 700;
 }
 
-.map-toggle {
-  margin: 12px;
-  padding: 9px 12px;
-  border: 1px solid #bfdbfe;
-  border-radius: 7px;
-  background: #eff6ff;
-  color: #1d4ed8;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-}
 
 .workspace {
   flex: 1;
@@ -126,18 +110,6 @@ button {
   color: #64748b;
 }
 
-.topbar-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  color: #475569;
-  background: #f8fafc;
-  font-size: 12px;
-  font-weight: 700;
-}
 
 .decomposition-panel {
   display: grid;

@@ -8,6 +8,5 @@ export function getHtmlStats(html) {
     styles: (html.match(/<style\b/gi) || []).length,
     scripts: (html.match(/<script\b/gi) || []).length,
     functions: (html.match(/\bfunction\s+\w+/g) || []).length,
-    constants: (html.match(/\bconst\s+\w+/g) || []).length,
   };
 }

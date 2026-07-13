@@ -12,7 +12,7 @@ export const roles = [
   { code: 'doc', label: '醫師', name: '張宗達', ch: '張', av: 'av-doc', pages: ['personal-dashboard', 'assessment-forms', 'user-profile'] },
   { code: 'pha', label: '藥師', name: '林建志', ch: '林', av: 'av-pha', pages: ['personal-dashboard', 'assessment-forms', 'user-profile'] },
   { code: 'nut', label: '營養師', name: '周雅玲', ch: '周', av: 'av-nut', pages: ['personal-dashboard', 'assessment-forms', 'user-profile'] },
-  { code: 'adm', label: '行政', name: '蔡書明', ch: '蔡', av: 'av-adm', pages: ['personal-dashboard', 'user-profile'] },
+  { code: 'adm', label: '行政', name: '蔡書明', ch: '蔡', av: 'av-adm', pages: ['personal-dashboard', 'home-care-scheduling', 'user-profile'] },
   { code: 'it', label: 'IT（資訊人員）', name: '王志偉', ch: '資', av: 'av-it', pages: ['admin-settings'] },
 ];
 
@@ -41,7 +41,6 @@ export function PageProvider({ children }) {
       activePage,
       activeTitle: activePage ? getHtmlTitle(activePage.html, activePage.label) : '',
       pages: allowedPages,
-      allPages: pages,
       setActiveId,
       selectRole: (roleCode) => {
         setCurrentRole(roleCode);
