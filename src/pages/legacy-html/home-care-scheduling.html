@@ -4010,10 +4010,16 @@
         if (suspendCases.includes(caseName)) {
           const caseIdMap = { '黃建國': 'c6', '郭大同': 'c7', '王淑芬': 'c8', '李金水': 'c10' };
           const id = caseIdMap[caseName];
-          cardRight.innerHTML = `
-                <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); handleConfirmPause()">暫停</button>
-                <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('${id}')">🔍 查看詳情</button>
-              `;
+          if (caseName === '李金水' && role === 'therapist') {
+            cardRight.innerHTML = `
+                  <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('${id}')">🔍 查看詳情</button>
+                `;
+          } else {
+            cardRight.innerHTML = `
+                  <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); handleConfirmPause()">暫停</button>
+                  <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('${id}')">🔍 查看詳情</button>
+                `;
+          }
         }
 
         // Fallback for dynamically added cards
