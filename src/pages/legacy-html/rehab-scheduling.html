@@ -1571,9 +1571,14 @@
           </div>
         </div>
         <div id="therapist-actions" class="drawer-section" style="display:none">
-          <button class="btn btn-secondary btn-sm"
-            onclick="event.stopPropagation(); closeDrawer('inpatient'); openModal('modal-swap')">&#8596; 申請換班 /
-            代班</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm"
+              onclick="event.stopPropagation(); closeDrawer('inpatient'); openEditScheduleModal()">&#9999;&#65039;
+              編輯排班</button>
+            <button class="btn btn-secondary btn-sm"
+              onclick="event.stopPropagation(); closeDrawer('inpatient'); openModal('modal-swap')">&#8596; 申請換班 /
+              代班</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1625,7 +1630,7 @@
         </div>
         <div class="divider"></div>
         <div class="drawer-section">
-          <div class="drawer-section-title">病摘摘要</div>
+          <div class="drawer-section-title">病歷摘要</div>
           <div class="summary-box" id="home-det-summary1">創傷性神經損傷，不完全損傷（ASIA
             B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。</div>
         </div>
@@ -1643,8 +1648,13 @@
         </div>
 
         <div id="home-therapist-actions" class="drawer-section" style="display:none">
-          <button class="btn btn-secondary btn-sm"
-            onclick="event.stopPropagation(); closeDrawer('home'); openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm"
+              onclick="event.stopPropagation(); closeDrawer('home'); openEditScheduleModal()">&#9999;&#65039;
+              編輯排班</button>
+            <button class="btn btn-secondary btn-sm"
+              onclick="event.stopPropagation(); closeDrawer('home'); openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2088,11 +2098,11 @@
           </div>
         </div>
         <div class="divider"></div>
-        <div class="drawer-section-title">病摘摘要</div>
+        <div class="drawer-section-title">病歷摘要</div>
         <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary1">創傷性神經損傷，不完全損傷（ASIA
           B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
-        <div class="drawer-section-title">醫囑</div>
-        <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary2">PT：每週 3 次，每次 50
+        <div class="drawer-section-title" style="display: none;">醫囑</div>
+        <div class="summary-box" style="margin-bottom:14px; display: none;" id="reg-det-summary2">PT：每週 3 次，每次 50
           分鐘。著重轉位訓練、呼吸肌強化、下肢被動活動。<br>OT：每週 3 次，每次 50 分鐘。上肢功能訓練、日常生活輔具評估。</div>
 
       </div>
@@ -2481,12 +2491,26 @@
         selectedTherapists = ['all'];
         dropdownBtn.textContent = '全部治療師';
       } else {
-        // Therapist role: shows identity as 黃志豪 but STILL shows ALL schedules
-        currentLoggedInUser = '黃志豪';
-        document.getElementById('user-avatar').className = 'user-avatar';
-        document.getElementById('user-avatar').textContent = '黃';
-        document.getElementById('user-name').textContent = '黃志豪';
-        document.getElementById('user-role-label').textContent = '物理治療師（PT）';
+        // Therapist role: shows identity based on current sub-role but STILL shows ALL schedules
+        if (role === 'ot') {
+          currentLoggedInUser = '李佳穎';
+          document.getElementById('user-avatar').className = 'user-avatar';
+          document.getElementById('user-avatar').textContent = '李';
+          document.getElementById('user-name').textContent = '李佳穎';
+          document.getElementById('user-role-label').textContent = '職能治療師（OT）';
+        } else if (role === 'st') {
+          currentLoggedInUser = '吳怡君';
+          document.getElementById('user-avatar').className = 'user-avatar';
+          document.getElementById('user-avatar').textContent = '吳';
+          document.getElementById('user-name').textContent = '吳怡君';
+          document.getElementById('user-role-label').textContent = '語言治療師（ST）';
+        } else {
+          currentLoggedInUser = '黃志豪';
+          document.getElementById('user-avatar').className = 'user-avatar';
+          document.getElementById('user-avatar').textContent = '黃';
+          document.getElementById('user-name').textContent = '黃志豪';
+          document.getElementById('user-role-label').textContent = '物理治療師（PT）';
+        }
         document.getElementById('approval-badge').classList.add('hidden');
         document.getElementById('btn-add-schedule').classList.add('hidden');
 
@@ -2535,7 +2559,7 @@
 
       // Map iframe role back to actual user name for matching
       let resolvedUser = '王復健主管';
-      if (effectiveRole === 'pt') resolvedUser = '黃志豪';
+      if (effectiveRole === 'pt' || effectiveRole === 'therapist') resolvedUser = '黃志豪';
       if (effectiveRole === 'ot') resolvedUser = '李佳穎';
       if (effectiveRole === 'st') resolvedUser = '吳怡君';
 
@@ -2843,6 +2867,60 @@
       if (currentSelectedItem) {
         document.getElementById('edit-original-info').textContent = `原排班：2026年${currentSelectedItem.date.replace('-', '月')}日 ${currentSelectedItem.time}・個案 ${currentSelectedItem.patient}`;
       }
+
+      const therapistSelect = document.getElementById('edit-therapist');
+      if (therapistSelect) {
+        const isSupervisor = (currentRole === 'sup' || currentRole === 'manager');
+        if (isSupervisor) {
+          therapistSelect.disabled = false;
+          if (currentSelectedItem) {
+            therapistSelect.value = currentSelectedItem.therapist.includes('黃志豪') ? '黃志豪（PT）' :
+              currentSelectedItem.therapist.includes('陳建宏') ? '陳建宏（PT）' :
+                currentSelectedItem.therapist.includes('李佳穎') ? '李佳穎（OT）' :
+                  currentSelectedItem.therapist.includes('張雅玲') ? '張雅玲（OT）' :
+                    currentSelectedItem.therapist.includes('吳怡君') ? '吳怡君（ST）' : '';
+          }
+        } else {
+          const titleSuffix = currentLoggedInUser === '黃志豪' ? '（PT）' : (currentLoggedInUser === '李佳穎' ? '（OT）' : '（ST）');
+          therapistSelect.value = currentLoggedInUser + titleSuffix;
+          therapistSelect.disabled = true;
+        }
+      }
+
+      if (currentSelectedItem) {
+        const patientSelect = document.getElementById('edit-patient');
+        if (patientSelect) {
+          for (let opt of patientSelect.options) {
+            if (opt.text.includes(currentSelectedItem.patient)) {
+              patientSelect.value = opt.value;
+              break;
+            }
+          }
+        }
+
+        const dateInput = document.getElementById('edit-date');
+        if (dateInput) {
+          const parts = currentSelectedItem.date.split('-');
+          if (parts.length === 2) {
+            const mm = parts[0].padStart(2, '0');
+            const dd = parts[1].padStart(2, '0');
+            dateInput.value = `2026-${mm}-${dd}`;
+          } else {
+            dateInput.value = currentSelectedItem.date;
+          }
+        }
+
+        const timeSelect = document.getElementById('edit-time');
+        if (timeSelect) {
+          for (let opt of timeSelect.options) {
+            if (opt.text.includes(currentSelectedItem.time)) {
+              timeSelect.value = opt.value;
+              break;
+            }
+          }
+        }
+      }
+
       closeDrawer('inpatient');
       closeDrawer('home');
       openModal('modal-edit-schedule');
@@ -3367,15 +3445,7 @@
 
     // Initialization
     function initPage() {
-      // Set initial role UI without filtering calendar
-      updateDrawerActionsForRole(currentRole);
-      renderCalendar();
-      // also update the btn active states
-      const isSupervisor = (currentRole === 'sup' || currentRole === 'manager');
-      const btnManager = document.getElementById('btn-manager');
-      if (btnManager) btnManager.classList.toggle('active', isSupervisor);
-      const btnTherapist = document.getElementById('btn-therapist');
-      if (btnTherapist) btnTherapist.classList.toggle('active', !isSupervisor);
+      switchRole(currentRole);
     }
 
     document.addEventListener('DOMContentLoaded', initPage);

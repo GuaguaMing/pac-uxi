@@ -1234,6 +1234,165 @@
     body.role-adm .auth-secretary-only {
       display: inline-flex !important;
     }
+
+    /* Scoped styling for modal-schedule-time to display as a premium modal without Bootstrap */
+    #modal-schedule-time.modal {
+      position: fixed;
+      inset: 0 !important;
+      background: rgba(15, 23, 42, 0.6) !important;
+      backdrop-filter: blur(4px) !important;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    #modal-schedule-time.modal.hidden {
+      display: none !important;
+    }
+
+    #modal-schedule-time .modal-dialog {
+      width: 100%;
+      max-width: 480px;
+      margin: 0;
+      display: block;
+    }
+
+    #modal-schedule-time .modal-content {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+    }
+
+    #modal-schedule-time .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    #modal-schedule-time .modal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin: 0;
+    }
+
+    #modal-schedule-time .text-primary {
+      color: var(--blue) !important;
+    }
+
+    #modal-schedule-time .fw-bold {
+      font-weight: 700 !important;
+    }
+
+    #modal-schedule-time .text-muted {
+      color: var(--gray-500) !important;
+    }
+
+    #modal-schedule-time .btn-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--gray-400);
+      line-height: 1;
+    }
+
+    #modal-schedule-time .btn-close:hover {
+      color: var(--gray-700);
+    }
+
+    #modal-schedule-time .modal-body {
+      padding: 16px;
+    }
+
+    #modal-schedule-time .mb-3 {
+      margin-bottom: 14px;
+    }
+
+    #modal-schedule-time .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--gray-700);
+    }
+
+    #modal-schedule-time .form-control,
+    #modal-schedule-time .form-select {
+      width: 100%;
+      border: 1px solid var(--gray-300);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #modal-schedule-time .form-control:focus,
+    #modal-schedule-time .form-select:focus {
+      border-color: var(--blue);
+    }
+
+    #modal-schedule-time .bg-light {
+      background-color: var(--gray-100);
+    }
+
+    #modal-schedule-time .form-text {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    #modal-schedule-time .modal-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    #modal-schedule-time .btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    #modal-schedule-time .btn-outline-secondary {
+      border-color: var(--gray-300);
+      background: var(--white);
+      color: var(--gray-700);
+    }
+
+    #modal-schedule-time .btn-outline-secondary:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+
+    #modal-schedule-time .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    #modal-schedule-time .btn-primary:hover {
+      background: var(--blue-dark);
+    }
   </style>
 </head>
 
@@ -1392,8 +1551,6 @@
                 </div>
               </div>
               <div class="case-card-right">
-                <button class="btn btn-amber btn-xs" style="font-weight:700"
-                  onclick="event.stopPropagation(); handleSimulateLottery(this)">🎲 進行抽籤</button>
                 <button class="btn btn-ghost btn-xs" style="font-size:11px"
                   onclick="event.stopPropagation(); toggleCase('c3')">🔍 查看詳情</button>
               </div>
@@ -1440,8 +1597,8 @@
                 </div>
               </div>
               <div class="case-card-right">
-                <button class="btn btn-danger btn-xs auth-manager-only"
-                  onclick="event.stopPropagation(); handleManualAssign()">👤 手動指派</button>
+                <button class="btn btn-primary btn-xs auth-manager-only"
+                  onclick="event.stopPropagation(); toggleCase('c5'); showC5RepublishStep();">🔄 重新發佈</button>
                 <button class="btn btn-ghost btn-xs" style="font-size:11px"
                   onclick="event.stopPropagation(); toggleCase('c5')">🔍 查看詳情</button>
               </div>
@@ -1953,8 +2110,7 @@
 
         <!-- 病摘與醫囑 (輕量化) -->
         <div style="background:#F9FAFB;padding:12px;border-radius:8px;margin-bottom:12px;font-size:12px">
-          <div style="margin-bottom:6px"><strong>病歷摘要：</strong>腦中風(CVA)右側偏癱，日常生活功能恢復。</div>
-          <div><strong>醫囑方向：</strong>PT：每週 3 次，每次 50 分鐘。著重右側肢體復健。</div>
+          <div><strong>病歷摘要：</strong>腦中風(CVA)右側偏癱，日常生活功能恢復。</div>
         </div>
 
         <div id="c1-setup-section">
@@ -2063,8 +2219,7 @@
 
         <!-- 病摘與醫囑 (輕量化) -->
         <div style="background:#F9FAFB;padding:12px;border-radius:8px;margin-bottom:12px;font-size:12px">
-          <div style="margin-bottom:6px"><strong>病歷摘要：</strong>衰弱高齡，近期行動遲緩，步態不穩，易有跌倒風險。</div>
-          <div><strong>醫囑方向：</strong>PT/OT：平衡訓練、防跌指導與日常生活自理。</div>
+          <div><strong>病歷摘要：</strong>衰弱高齡，近期行動遲緩，步態不穩，易有跌倒風險。</div>
         </div>
 
         <div class="divider"></div>
@@ -2143,8 +2298,7 @@
 
         <!-- 病摘與醫囑 (輕量化) -->
         <div style="background:#F9FAFB;padding:12px;border-radius:8px;margin-bottom:12px;font-size:12px">
-          <div style="margin-bottom:6px"><strong>病歷摘要：</strong>腦中風(CVA)右側偏癱，目前穩定復健中，日常生活需協助。</div>
-          <div><strong>醫囑方向：</strong>PT/OT：加強患側肢體肌力與關節活動度，指導正確擺位與家屬轉位。</div>
+          <div><strong>病歷摘要：</strong>腦中風(CVA)右側偏癱，目前穩定復健中，日常生活需協助。</div>
         </div>
 
         <div class="divider"></div>
@@ -2216,8 +2370,7 @@
 
         <!-- 病摘與醫囑 (輕量化) -->
         <div style="background:#F9FAFB;padding:12px;border-radius:8px;margin-bottom:12px;font-size:12px">
-          <div style="margin-bottom:6px"><strong>病歷摘要：</strong>創傷性神經損傷，雙下肢無力，日常生活需協助，跌倒風險高。</div>
-          <div><strong>醫囑方向：</strong>PT/OT：主要著重肌力重建、步態平衡、防跌訓練。</div>
+          <div><strong>病歷摘要：</strong>創傷性神經損傷，雙下肢無力，日常生活需協助，跌倒風險高。</div>
         </div>
 
         <div class="divider"></div>
@@ -2287,8 +2440,7 @@
 
         <!-- 病摘與醫囑 (輕量化) -->
         <div style="background:#F9FAFB;padding:12px;border-radius:8px;margin-bottom:12px;font-size:12px">
-          <div style="margin-bottom:6px"><strong>病歷摘要：</strong>高齡衰弱，四肢乏力，活動耐受力差，有多次跌倒病史。</div>
-          <div><strong>醫囑方向：</strong>PT/OT：加強日常生活功能自理，防跌技巧指導，平衡及站立耐力訓練。</div>
+          <div><strong>病歷摘要：</strong>高齡衰弱，四肢乏力，活動耐受力差，有多次跌倒病史。</div>
         </div>
 
         <!-- 治療執行紀錄區塊 (待優化) -->
@@ -3532,6 +3684,7 @@
       </div>
       <div class="modal-footer"
         style="padding: 12px 16px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn btn-danger" id="edit-shift-delete-btn" style="margin-right: auto; display: none;" onclick="deleteShift()">刪除排班</button>
         <button class="btn btn-secondary" onclick="closeModal('modal-edit-shift')">取消</button>
         <button class="btn btn-primary" onclick="saveShift()">確認送出</button>
       </div>
@@ -3608,15 +3761,27 @@
 
   <script>
     let currentRole = 'case';
-    let prevView = 'view-case';
     let dynamicCaseCount = 7; // Start from 7 because we have c1 to c7 hardcoded
+    let currentLoggedInUser = '黃志豪';
 
     function switchRole(role) {
       // Map React role codes to legacy role codes for consistency
       if (role === 'mgr') role = 'case';
       if (role === 'sup') role = 'manager';
       if (role === 'adm') role = 'secretary';
-      if (role === 'pt' || role === 'ot' || role === 'st') role = 'therapist';
+
+      if (role === 'pt' || role === 'ot' || role === 'st' || role === 'therapist') {
+        if (role === 'pt') {
+          currentLoggedInUser = '黃志豪';
+        } else if (role === 'ot') {
+          currentLoggedInUser = '李佳穎';
+        } else if (role === 'st') {
+          currentLoggedInUser = '吳怡君';
+        } else {
+          currentLoggedInUser = '黃志豪'; // fallback
+        }
+        role = 'therapist';
+      }
 
       currentRole = role;
       document.body.className = 'role-' + role;
@@ -3656,9 +3821,19 @@
         if (btnBonusWrap) btnBonusWrap.classList.remove('hidden');
       } else if (role === 'therapist') {
         document.getElementById('ua').className = 'user-avatar av-therapist';
-        document.getElementById('ua').textContent = '黃';
-        document.getElementById('uname').textContent = '黃志豪';
-        document.getElementById('urole').textContent = '物理治療師（PT）';
+        if (currentLoggedInUser === '李佳穎') {
+          document.getElementById('ua').textContent = '李';
+          document.getElementById('uname').textContent = '李佳穎';
+          document.getElementById('urole').textContent = '職能治療師（OT）';
+        } else if (currentLoggedInUser === '吳怡君') {
+          document.getElementById('ua').textContent = '吳';
+          document.getElementById('uname').textContent = '吳怡君';
+          document.getElementById('urole').textContent = '語言治療師（ST）';
+        } else {
+          document.getElementById('ua').textContent = '黃';
+          document.getElementById('uname').textContent = '黃志豪';
+          document.getElementById('urole').textContent = '物理治療師（PT）';
+        }
 
         if (btnAddCaseWrap) btnAddCaseWrap.classList.add('hidden');
         if (btnPublishRecordWrap) btnPublishRecordWrap.classList.add('hidden');
@@ -3675,7 +3850,6 @@
       }
 
       document.getElementById('view-main').classList.remove('hidden');
-      prevView = 'view-main';
 
       // Apply RBAC logic for tabs and buttons
       updateRBAC();
@@ -3784,16 +3958,9 @@
 
         // Card 3: 王大明
         if (caseName === '王大明') {
-          if (role === 'manager') {
-            cardRight.innerHTML = `
-                  <button class="btn btn-amber btn-xs" style="font-weight:700" onclick="event.stopPropagation(); handleSimulateLottery(this)">🎲 進行抽籤</button>
-                  <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('c3')">🔍 查看詳情</button>
-                `;
-          } else {
-            cardRight.innerHTML = `
-                  <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('c3')">🔍 查看詳情</button>
-                `;
-          }
+          cardRight.innerHTML = `
+                <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('c3')">🔍 查看詳情</button>
+              `;
         }
 
         // Card 4: 吳淑珍
@@ -3814,7 +3981,7 @@
         if (caseName === '陳阿信') {
           if (role === 'manager') {
             cardRight.innerHTML = `
-                  <button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); handleManualAssign()">👤 手動指派</button>
+                  <button class="btn btn-primary btn-xs" onclick="event.stopPropagation(); toggleCase('c5'); showC5RepublishStep();">🔄 重新發佈</button>
                   <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase('c5')">🔍 查看詳情</button>
                 `;
           } else {
@@ -4006,6 +4173,17 @@
             infoNote.innerHTML = '✅ 待排時段：等待治療師排定詳細時段。';
             infoNote.className = 'info-note green';
           }
+
+          // Manager can see all buttons
+          const winners = modal.querySelectorAll('.reg-list .reg-item.winner');
+          winners.forEach(item => {
+            const btn = item.querySelector('button');
+            if (btn) {
+              btn.style.display = '';
+              btn.removeAttribute('data-bs-toggle');
+              btn.removeAttribute('data-bs-target');
+            }
+          });
         } else {
           if (btnRemind) {
             btnRemind.style.display = 'none';
@@ -4014,6 +4192,23 @@
             infoNote.innerHTML = '✅ 待排時段：等待治療師排定詳細時段 (僅限復健主管可發送排班提醒)。';
             infoNote.className = 'info-note blue';
           }
+
+          // Therapist (黃志豪 PT) or other roles
+          const winners = modal.querySelectorAll('.reg-list .reg-item.winner');
+          winners.forEach(item => {
+            const nameEl = item.querySelector('.reg-name');
+            const nameText = nameEl ? nameEl.textContent : '';
+            const btn = item.querySelector('button');
+            if (btn) {
+              if (role === 'therapist' && nameText.includes('黃志豪')) {
+                btn.style.display = '';
+                btn.setAttribute('data-bs-toggle', 'modal');
+                btn.setAttribute('data-bs-target', '#modal-schedule-time');
+              } else {
+                btn.style.display = 'none';
+              }
+            }
+          });
         }
       }
 
@@ -4048,7 +4243,50 @@
         const txt = btn.textContent.trim();
         if (txt.includes('排定時段') || txt.includes('更改排班') || txt.includes('申請改班') || txt.includes('✏️') || txt.includes('➕') || txt.includes('🔒')) {
           if (!txt.includes('單筆批價')) {
-            btn.style.display = isSchedulingAllowed ? '' : 'none';
+            if (role === 'therapist') {
+              if (txt.includes('排定時段')) {
+                // For "排定時段" button, only show it if the row/item mentions the logged-in therapist name
+                const parentWinner = btn.closest('.winner');
+                if (parentWinner) {
+                  const nameEl = parentWinner.querySelector('.reg-name');
+                  const nameText = nameEl ? nameEl.textContent : '';
+                  if (nameText.includes(currentLoggedInUser)) {
+                    btn.style.setProperty('display', '', 'important');
+                    btn.setAttribute('data-bs-toggle', 'modal');
+                    btn.setAttribute('data-bs-target', '#modal-schedule-time');
+                    btn.removeAttribute('onclick');
+                  } else {
+                    btn.style.setProperty('display', 'none', 'important');
+                  }
+                } else {
+                  btn.style.setProperty('display', 'none', 'important');
+                }
+              } else {
+                // Therapist can only edit/change their own shifts
+                const shiftRow = btn.closest('.shift-row');
+                if (shiftRow) {
+                  const strongEl = shiftRow.querySelector('strong');
+                  const shiftTherapist = strongEl ? strongEl.textContent.trim() : '';
+                  if (shiftTherapist.includes(currentLoggedInUser)) {
+                    btn.style.setProperty('display', '', 'important');
+                  } else {
+                    btn.style.setProperty('display', 'none', 'important');
+                  }
+                } else {
+                  // Not in a shift row (e.g. "+ 新增排班時段" button), allow display
+                  btn.style.setProperty('display', '', 'important');
+                }
+              }
+            } else {
+              // Non-therapist role (e.g. Manager)
+              btn.style.setProperty('display', isSchedulingAllowed ? '' : 'none', 'important');
+              if (txt.includes('排定時段')) {
+                // For manager, keep default alert and remove Bootstrap trigger
+                btn.removeAttribute('data-bs-toggle');
+                btn.removeAttribute('data-bs-target');
+                btn.setAttribute('onclick', "alert('(模擬彈出時間選擇器) 請為該治療師選擇排班日期與時間。')");
+              }
+            }
           }
         }
       });
@@ -4145,18 +4383,6 @@
 
     function handleConfirmPause() {
       openModal('modal-suspend');
-    }
-
-    function handleSettleFee(btn, caseName) {
-      event.stopPropagation();
-      const card = btn.closest('.case-card');
-      const header = card.querySelector('.case-card-header');
-      const badgesText = header ? header.textContent : '';
-      if (badgesText.includes('待批價')) {
-        alert("【結案阻擋】\n尚有未批價的療程，請先完成批價再進行結案與費用結算。");
-      } else {
-        alert(`【費用結算】\n個案「${caseName}」已完成所有已執行項目的批價，費用結算成功！可以順利結案。`);
-      }
     }
 
     function openModal(id) { document.getElementById(id).classList.remove('hidden') }
@@ -4409,18 +4635,12 @@
         updateC3UI('unestablished_zero');
         alert('報名人數為 0，此班表未成立。');
       } else if (result === 'not_enough') {
-        openModal('modal-waitlist-deadline');
+        alert('報名人數不足，已開啟補位機制！');
+        updateC3UI('waitlist');
       } else if (result === 'exceed') {
-        alert('報名人數超額，系統已自動抽籤，並送交主管審核！');
-        updateC3UI('pending_approval');
-        openModal('modal-approval-signup');
+        alert('報名人數超額，系統已自動抽籤，並已送交主管核准，班表正式成立！');
+        updateC3UI('established');
       }
-    }
-
-    function confirmWaitlistDeadline() {
-      closeModal('modal-waitlist-deadline');
-      updateC3UI('waitlist');
-      alert('已開放補位，系統等待補位截止。');
     }
 
     function simulateWaitlist() {
@@ -4431,23 +4651,6 @@
 
     function resetPublishFlow() {
       updateC3UI('initial');
-    }
-
-    function rejectApprovalSignup() {
-      closeModal('modal-approval-signup');
-      openModal('modal-manual-adjust');
-    }
-
-    function approveApprovalSignup() {
-      closeModal('modal-approval-signup');
-      updateC3UI('established');
-      alert('主管已同意名單，班表已正式成立！');
-    }
-
-    function confirmManualAdjust() {
-      closeModal('modal-manual-adjust');
-      updateC3UI('established_manual');
-      alert('手動調整完成，班表已正式成立！');
     }
 
     function updateC3UI(state, data) {
@@ -4594,7 +4797,6 @@
       }
     }
 
-    function switchToBonus() { openBonusModal(); }
     function switchBackFromBonus() {
       document.getElementById('view-bonus').classList.add('hidden');
       document.getElementById('view-main').classList.remove('hidden');
@@ -4825,7 +5027,7 @@
           if (currentRole === 'manager') {
             showChangeBtn = true;
           } else if (currentRole === 'therapist') {
-            if (shift.therapist.includes('黃志豪')) {
+            if (shift.therapist.includes(currentLoggedInUser)) {
               showChangeBtn = true;
             }
           }
@@ -4835,7 +5037,7 @@
           if (currentRole === 'manager') {
             showEditBtn = true;
           } else if (currentRole === 'therapist') {
-            if (shift.therapist.includes('黃志豪')) {
+            if (shift.therapist.includes(currentLoggedInUser)) {
               showEditBtn = true;
             }
           }
@@ -4882,6 +5084,9 @@
       document.getElementById('edit-shift-date').value = '';
       document.getElementById('edit-shift-period').value = '上午';
 
+      const deleteBtn = document.getElementById('edit-shift-delete-btn');
+      if (deleteBtn) deleteBtn.style.display = 'none';
+
       setupTherapistField();
       openModal('modal-edit-shift');
     }
@@ -4900,12 +5105,48 @@
       document.getElementById('edit-shift-date').value = shift.date;
       document.getElementById('edit-shift-period').value = shift.period;
 
+      const deleteBtn = document.getElementById('edit-shift-delete-btn');
+      if (deleteBtn) {
+        if (currentRole === 'manager') {
+          deleteBtn.style.display = 'inline-block';
+        } else {
+          deleteBtn.style.display = 'none';
+        }
+      }
+
       setupTherapistField(shift.therapist);
       openModal('modal-edit-shift');
     }
 
+    function deleteShift() {
+      const caseId = document.getElementById('edit-shift-case-id').value;
+      const indexVal = document.getElementById('edit-shift-index').value;
+      
+      if (!caseId || indexVal === '') return;
+
+      const reason = prompt('請輸入刪除排班的理由：');
+      if (reason === null) return; // User cancelled the prompt
+      
+      const trimmedReason = reason.trim();
+      if (!trimmedReason) {
+        alert('⚠️ 必須輸入理由才能刪除排班！');
+        return;
+      }
+
+      if (confirm('確定要刪除此排班時段嗎？\n刪除理由：' + trimmedReason)) {
+        const caseData = caseShiftsData[caseId];
+        if (caseData && caseData.shifts) {
+          caseData.shifts.splice(Number(indexVal), 1);
+          alert('已刪除！');
+          closeModal('modal-edit-shift');
+          renderShifts(caseId);
+        }
+      }
+    }
+
     function setupTherapistField(defaultValue) {
-      defaultValue = defaultValue || '黃志豪 PT';
+      const titleSuffix = currentLoggedInUser === '黃志豪' ? ' PT' : (currentLoggedInUser === '李佳穎' ? ' OT' : ' ST');
+      defaultValue = defaultValue || (currentLoggedInUser + titleSuffix);
       const container = document.getElementById('edit-shift-therapist-container');
       if (!container) return;
 
@@ -4926,7 +5167,7 @@
           document.getElementById('edit-shift-therapist').value = defaultValue;
         }
       } else {
-        container.innerHTML = '<input type="text" id="edit-shift-therapist" class="form-control" value="黃志豪 PT" readonly style="background:#F3F4F6;width:100%;border:1px solid var(--gray-300);padding:8px;border-radius:4px;font-size:13px;box-sizing:border-box">';
+        container.innerHTML = '<input type="text" id="edit-shift-therapist" class="form-control" value="' + currentLoggedInUser + titleSuffix + '" readonly style="background:#F3F4F6;width:100%;border:1px solid var(--gray-300);padding:8px;border-radius:4px;font-size:13px;box-sizing:border-box">';
       }
     }
 
@@ -5031,10 +5272,6 @@
 
       alert(msg);
       closeModal('modal-apply-change');
-    }
-
-    function applyForChange(caseId, index) {
-      openApplyChangeModal(caseId, index);
     }
 
     function singleBill(caseId, index) {
@@ -5145,9 +5382,92 @@
       resetC5Modal();
     }
 
+    // Support Bootstrap-like modal trigger for modal-schedule-time
+    document.addEventListener('click', function (e) {
+      const trigger = e.target.closest('[data-bs-toggle="modal"]');
+      if (trigger) {
+        const targetId = trigger.getAttribute('data-bs-target');
+        if (targetId) {
+          const modalEl = document.querySelector(targetId);
+          if (modalEl) {
+            modalEl.classList.remove('hidden');
+            modalEl.style.display = 'flex';
 
+            if (targetId === '#modal-schedule-time') {
+              const therapistInput = modalEl.querySelector('input[type="text"]');
+              if (therapistInput) {
+                const titleSuffix = currentLoggedInUser === '黃志豪' ? ' PT' : (currentLoggedInUser === '李佳穎' ? ' OT' : ' ST');
+                therapistInput.value = currentLoggedInUser + titleSuffix;
+              }
+              const confirmBtn = modalEl.querySelector('.modal-footer .btn-primary');
+              if (confirmBtn) {
+                const titleSuffix = currentLoggedInUser === '黃志豪' ? ' PT' : (currentLoggedInUser === '李佳穎' ? ' OT' : ' ST');
+                confirmBtn.setAttribute('onclick', `alert('✅ 已成功為 ${currentLoggedInUser}${titleSuffix} 排定時段！'); document.querySelector('#modal-schedule-time .btn-close').click();`);
+              }
+            }
+          }
+        }
+      }
+
+      // Close modal on dismiss click
+      const dismiss = e.target.closest('[data-bs-dismiss="modal"]');
+      if (dismiss) {
+        const modalEl = dismiss.closest('.modal-overlay') || dismiss.closest('#modal-schedule-time');
+        if (modalEl) {
+          modalEl.classList.add('hidden');
+          modalEl.style.display = 'none';
+        }
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target.id === 'modal-schedule-time') {
+        e.target.classList.add('hidden');
+        e.target.style.display = 'none';
+      }
+    });
 
   </script>
+
+  <!-- 排定時段彈窗 -->
+  <div class="modal fade" id="modal-schedule-time" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold text-primary">📅 排定復健時段</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 治療師姓名 (防呆鎖定) -->
+          <div class="mb-3">
+            <label class="form-label text-muted">治療師</label>
+            <input type="text" class="form-control bg-light" value="黃志豪 PT" readonly disabled>
+            <div class="form-text">為保護班表安全，僅能為自己排定時段。</div>
+          </div>
+          <!-- 日期選擇 -->
+          <div class="mb-3">
+            <label class="form-label">選擇日期</label>
+            <input type="date" class="form-control">
+          </div>
+          <!-- 時段選擇 -->
+          <div class="mb-3">
+            <label class="form-label">選擇時段</label>
+            <select class="form-select">
+              <option selected disabled>請下拉選擇時段...</option>
+              <option value="morning">上午 (08:00 - 12:00)</option>
+              <option value="afternoon">下午 (13:00 - 17:00)</option>
+              <option value="evening">下班後 (18:00 之後)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary"
+            onclick="alert('✅ 已成功為 黃志豪 PT 排定時段！'); document.querySelector('#modal-schedule-time .btn-close').click();">確定排定</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

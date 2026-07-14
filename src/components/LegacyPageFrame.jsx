@@ -10,7 +10,7 @@ function getMappedRole(pageId, role) {
     if (role === 'mgr') return 'case';
     if (role === 'sup') return 'manager';
     if (role === 'adm') return 'secretary';
-    return 'therapist';
+    return role;
   }
   return role;
 }
