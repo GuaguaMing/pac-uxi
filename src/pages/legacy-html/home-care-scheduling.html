@@ -1393,6 +1393,53 @@
     #modal-schedule-time .btn-primary:hover {
       background: var(--blue-dark);
     }
+
+    /* Network status toggle slider style */
+    .switch-container {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+      margin-left: 4px;
+    }
+
+    .switch-container input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-container .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+
+    .switch-container .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    .switch-container input:checked+.slider {
+      background-color: #10B981;
+    }
+
+    .switch-container input:checked+.slider:before {
+      transform: translateX(14px);
+    }
   </style>
 </head>
 
@@ -3101,6 +3148,80 @@
     </div>
   </div>
 
+  <!-- 抵達簽到彈窗 -->
+  <div id="modal-check-in" class="modal-overlay hidden">
+    <div class="modal modal-sm" style="width:420px">
+      <div class="modal-header">
+        <div class="modal-title">📍 抵達簽到</div>
+        <button class="modal-close" onclick="closeModal('modal-check-in')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">個案姓名</div>
+          <div style="font-weight:700;font-size:16px;color:var(--gray-800)" id="check-in-case-name">-</div>
+        </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">排班日期與時段</div>
+          <div style="font-weight:600;font-size:14px;color:var(--gray-800)" id="check-in-date-period">-</div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label style="font-size:13px;color:var(--gray-500);display:block;margin-bottom:6px">簽到時間 <span
+              class="required">*</span></label>
+          <input class="form-control" type="time" id="check-in-time"
+            style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:4px;font-size:14px;box-sizing:border-box;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-check-in')">取消</button>
+        <button class="btn btn-primary" id="check-in-submit-btn"
+          onclick="submitCheckIn(this.getAttribute('data-case-id'), Number(this.getAttribute('data-index')))">確認簽到</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 結束與簽名彈窗 -->
+  <div id="modal-signature" class="modal-overlay hidden">
+    <div class="modal" style="width:460px">
+      <div class="modal-header">
+        <div class="modal-title">📝 結束與簽名</div>
+        <button class="modal-close" onclick="closeModal('modal-signature')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">個案姓名</div>
+            <div style="font-weight:700;font-size:16px;color:var(--gray-800)" id="signature-case-name">-</div>
+          </div>
+          <div>
+            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">簽到時間</div>
+            <div style="font-weight:600;font-size:14px;color:var(--gray-700)" id="signature-check-in-time">-</div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label style="font-size:13px;color:var(--gray-500);display:block;margin-bottom:6px">簽退時間 <span
+              class="required">*</span></label>
+          <input class="form-control" type="time" id="signature-check-out-time"
+            style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:4px;font-size:14px;box-sizing:border-box;">
+        </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <label style="font-size:13px;color:var(--gray-500)">家屬簽名板 <span class="required">*</span></label>
+            <button type="button" class="btn" id="clear-signature-btn"
+              style="padding:2px 8px;font-size:11px;background:var(--gray-100);border:1px solid var(--gray-300);border-radius:4px;cursor:pointer">清除簽名</button>
+          </div>
+          <canvas id="signature-canvas" width="420" height="150"
+            style="border:1px dashed var(--gray-300);border-radius:6px;background:#f9fafb;cursor:crosshair;width:100%;height:150px;touch-action:none;box-sizing:border-box;display:block;"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-signature')">取消</button>
+        <button class="btn btn-primary btn-success" id="signature-submit-btn"
+          style="background:#10B981;border-color:#059669;"
+          onclick="submitCheckOut(this.getAttribute('data-case-id'), Number(this.getAttribute('data-index')))">確認結束並送出</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 暫停個案 -->
   <div id="modal-suspend" class="modal-overlay hidden">
     <div class="modal modal-sm" style="width:420px">
@@ -4577,47 +4698,357 @@
       if (bClose) bClose.textContent = closeCount;
     }
 
-    // init
-    switchRole(currentRole);
+    // --- 離線優先與模擬網路狀態機制 ---
+    let isNetworkOnline = localStorage.getItem('isNetworkOnline') !== 'false';
+    let offlineQueue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
 
-    // Highlight AND open case navigated from rehab-scheduling
-    (function () {
-      try {
-        const target = JSON.parse(localStorage.getItem('hc_target') || 'null');
-        if (!target || !target.name) return;
-        localStorage.removeItem('hc_target');
+    function saveOfflineQueue() {
+      localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue));
+    }
 
-        // Map case names to their caseId for toggleCase
-        const nameToId = {
-          '陳志明': 'c1', '林小華': 'c2', '王大明': 'c3', '吳淑珍': 'c4', '陳阿信': 'c5',
-          '黃建國': 'c6', '郭大同': 'c7', '王淑芬': 'c8', '張阿玉': 'c9', '李金水': 'c10'
-        };
+    function toggleMockNetwork(checked) {
+      isNetworkOnline = checked;
+      localStorage.setItem('isNetworkOnline', String(checked));
 
-        const caseId = nameToId[target.name];
+      const dot = document.getElementById('network-status-dot');
+      const text = document.getElementById('network-status-text');
+      const checkbox = document.getElementById('mock-network-checkbox');
 
-        // Find the matching case card
-        document.querySelectorAll('#case-list-all .case-name').forEach(el => {
-          if (el.textContent.trim() === target.name) {
-            const card = el.closest('.case-card');
-            if (!card) return;
-            // Scroll and highlight
-            setTimeout(() => {
-              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              card.style.outline = '2px solid var(--blue)';
-              card.style.boxShadow = '0 0 0 4px rgba(37,99,235,0.2)';
-              setTimeout(() => {
-                card.style.outline = '';
-                card.style.boxShadow = '';
-              }, 2500);
-              // Auto-open detail modal if available
-              if (caseId) {
-                setTimeout(() => { toggleCase(caseId); }, 300);
-              }
-            }, 400);
+      if (checkbox) checkbox.checked = checked;
+
+      if (checked) {
+        if (dot) dot.style.background = '#10B981';
+        if (text) {
+          text.textContent = '網路已連線';
+          text.style.color = 'var(--gray-700)';
+        }
+        console.log('Network restored. Syncing offline events...');
+        syncOfflineEvents();
+      } else {
+        if (dot) dot.style.background = '#EF4444';
+        if (text) {
+          text.textContent = '網路離線中 (模擬)';
+          text.style.color = '#EF4444';
+        }
+      }
+    }
+
+    // Window events for physical network changes
+    window.addEventListener('online', () => toggleMockNetwork(true));
+    window.addEventListener('offline', () => toggleMockNetwork(false));
+
+    // Simulate API Call with latency
+    function mockApiCall(event) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (!isNetworkOnline) {
+            reject(new Error('Network offline (mock)'));
+          } else {
+            console.log('Mock API Call success:', event);
+            resolve({ success: true });
           }
-        });
-      } catch (e) { }
-    })();
+        }, 1000);
+      });
+    }
+
+    let isSyncing = false;
+    async function syncOfflineEvents() {
+      if (!isNetworkOnline || isSyncing || offlineQueue.length === 0) return;
+      isSyncing = true;
+
+      while (offlineQueue.length > 0 && isNetworkOnline) {
+        const event = offlineQueue[0];
+        try {
+          await mockApiCall(event);
+          offlineQueue.shift();
+          saveOfflineQueue();
+        } catch (err) {
+          console.warn('Sync failed, will retry later:', err);
+          break;
+        }
+      }
+      isSyncing = false;
+    }
+
+    // Helper to save caseShiftsData to localStorage
+    function saveCaseShiftsData() {
+      localStorage.setItem('caseShiftsData', JSON.stringify(caseShiftsData));
+    }
+
+    // Initialize/merge caseShiftsData from localStorage with version control
+    const MOCK_DATA_VERSION = 'v4_c6_focus_checkin';
+    const cachedVersion = localStorage.getItem('caseShiftsDataVersion');
+    if (cachedVersion !== MOCK_DATA_VERSION) {
+      localStorage.removeItem('caseShiftsData');
+      localStorage.setItem('caseShiftsDataVersion', MOCK_DATA_VERSION);
+    }
+
+    const cachedShiftsData = localStorage.getItem('caseShiftsData');
+    if (cachedShiftsData) {
+      try {
+        const parsed = JSON.parse(cachedShiftsData);
+        for (const cid in parsed) {
+          if (caseShiftsData[cid]) {
+            caseShiftsData[cid].shifts = parsed[cid].shifts;
+          }
+        }
+      } catch (e) {
+        console.error('Error parsing cached caseShiftsData:', e);
+      }
+    }
+
+    // 動態將 c6 (黃建國) 最後一筆黃志豪 PT 班次日期調整為今天，確保測試 UI 可呈現
+    function adjustTestDataToToday() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      if (caseShiftsData.c6 && caseShiftsData.c6.shifts) {
+        const c6Shifts = caseShiftsData.c6.shifts;
+        for (let i = c6Shifts.length - 1; i >= 0; i--) {
+          if (c6Shifts[i].therapist.includes('黃志豪') && c6Shifts[i].status !== 'billed') {
+            c6Shifts[i].date = todayStr;
+            if (!c6Shifts[i].checkInState) {
+              c6Shifts[i].checkInState = 'not_started';
+            }
+            break;
+          }
+        }
+        saveCaseShiftsData();
+      }
+    }
+
+    // --- 簽到與簽退 (簽名) 互動邏輯 ---
+    function openCheckInModal(caseId, originalIndex) {
+      const caseData = caseShiftsData[caseId];
+      if (!caseData) return;
+      const shift = caseData.shifts[originalIndex];
+      if (!shift) return;
+
+      document.getElementById('check-in-case-name').textContent = caseData.name;
+      document.getElementById('check-in-date-period').textContent = shift.date + ' (' + shift.period + ')';
+
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('check-in-time').value = `${hh}:${mm}`;
+
+      const submitBtn = document.getElementById('check-in-submit-btn');
+      submitBtn.setAttribute('data-case-id', caseId);
+      submitBtn.setAttribute('data-index', originalIndex);
+      submitBtn.disabled = false;
+      submitBtn.innerText = '確認簽到';
+
+      openModal('modal-check-in');
+    }
+
+    function submitCheckIn(caseId, index) {
+      const timeVal = document.getElementById('check-in-time').value;
+      if (!timeVal) {
+        alert('⚠️ 請輸入簽到時間！');
+        return;
+      }
+
+      const submitBtn = document.getElementById('check-in-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = '處理中...';
+      }
+
+      // Update local storage and memory
+      const shift = caseShiftsData[caseId].shifts[index];
+      shift.checkInState = 'checked_in';
+      shift.checkInTime = timeVal;
+      saveCaseShiftsData();
+
+      // Push to sync queue
+      offlineQueue.push({
+        id: 'chk_in_' + Date.now(),
+        type: 'check_in',
+        caseId: caseId,
+        index: index,
+        time: timeVal,
+        timestamp: Date.now()
+      });
+      saveOfflineQueue();
+
+      // Re-render immediately
+      closeModal('modal-check-in');
+      renderShifts(caseId);
+
+      // Trigger sync in background
+      syncOfflineEvents();
+    }
+
+    let isCanvasSigned = false;
+    let canvas, ctx, drawing = false;
+
+    function initSignaturePad() {
+      canvas = document.getElementById('signature-canvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+
+      isCanvasSigned = false;
+      drawing = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#1E293B';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Mouse events
+      canvas.onmousedown = (e) => {
+        drawing = true;
+        isCanvasSigned = true;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      };
+
+      canvas.onmousemove = (e) => {
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      };
+
+      canvas.onmouseup = () => {
+        drawing = false;
+      };
+
+      canvas.onmouseleave = () => {
+        drawing = false;
+      };
+
+      // Touch events for mobile
+      canvas.ontouchstart = (e) => {
+        e.preventDefault();
+        if (e.touches.length === 1) {
+          drawing = true;
+          isCanvasSigned = true;
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+          const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+        }
+      };
+
+      canvas.ontouchmove = (e) => {
+        e.preventDefault();
+        if (drawing && e.touches.length === 1) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+          const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+      };
+
+      canvas.ontouchend = (e) => {
+        e.preventDefault();
+        drawing = false;
+      };
+
+      const clearBtn = document.getElementById('clear-signature-btn');
+      if (clearBtn) {
+        clearBtn.onclick = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          isCanvasSigned = false;
+        };
+      }
+    }
+
+    function openSignatureModal(caseId, originalIndex) {
+      const caseData = caseShiftsData[caseId];
+      if (!caseData) return;
+      const shift = caseData.shifts[originalIndex];
+      if (!shift) return;
+
+      document.getElementById('signature-case-name').textContent = caseData.name;
+      document.getElementById('signature-check-in-time').textContent = shift.checkInTime || '';
+
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('signature-check-out-time').value = `${hh}:${mm}`;
+
+      const submitBtn = document.getElementById('signature-submit-btn');
+      submitBtn.setAttribute('data-case-id', caseId);
+      submitBtn.setAttribute('data-index', originalIndex);
+      submitBtn.disabled = false;
+      submitBtn.innerText = '確認結束並送出';
+
+      openModal('modal-signature');
+      setTimeout(initSignaturePad, 100);
+    }
+
+    function submitCheckOut(caseId, index) {
+      const checkOutTime = document.getElementById('signature-check-out-time').value;
+      if (!checkOutTime) {
+        alert('⚠️ 請輸入簽退時間！');
+        return;
+      }
+
+      const shift = caseShiftsData[caseId].shifts[index];
+      const checkInTime = shift.checkInTime;
+
+      // Time Validation
+      const [inH, inM] = checkInTime.split(':').map(Number);
+      const [outH, outM] = checkOutTime.split(':').map(Number);
+      const inVal = inH * 60 + inM;
+      const outVal = outH * 60 + outM;
+
+      if (outVal <= inVal) {
+        alert('⚠️ 簽退時間不可早於或等於簽到時間！');
+        return;
+      }
+
+      if (!isCanvasSigned) {
+        alert('⚠️ 請在簽名板上進行家屬簽名！');
+        return;
+      }
+
+      const submitBtn = document.getElementById('signature-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = '處理中...';
+      }
+
+      // Update local storage and memory
+      shift.checkInState = 'completed';
+      shift.checkOutTime = checkOutTime;
+      saveCaseShiftsData();
+
+      // Push to sync queue
+      offlineQueue.push({
+        id: 'chk_out_' + Date.now(),
+        type: 'check_out',
+        caseId: caseId,
+        index: index,
+        time: checkOutTime,
+        timestamp: Date.now()
+      });
+      saveOfflineQueue();
+
+      // Re-render immediately
+      closeModal('modal-signature');
+      renderShifts(caseId);
+
+      // Trigger sync in background
+      syncOfflineEvents();
+    }
+
+
     function confirmPublishSignup() {
       const ptCount = document.getElementById('publish-pt-count').value;
       const otCount = document.getElementById('publish-ot-count').value;
@@ -4883,8 +5314,8 @@
     // Dynamic Week Limits and Shifts Management
     // ==========================================
     const diseaseMaxWeeks = {
-      '腦中風(CVA)': 12,
-      '創傷性神經損傷': 12,
+      '腦中風(CVA)': 6,
+      '創傷性神經損傷': 6,
       '衰弱高齡': 4,
       '脆弱性骨折': 3
     };
@@ -4895,11 +5326,41 @@
         disease: '創傷性神經損傷',
         startDate: '2026-06-22',
         shifts: [
-          { date: '2026-06-22', period: '上午', therapist: '陳建宏 PT', status: 'billed' },
-          { date: '2026-06-23', period: '下午', therapist: '李佳穎 OT', status: 'billed' },
-          { date: '2026-06-24', period: '下午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-06-25', period: '下午', therapist: '王怡珍 OT', status: 'billed' },
-          { date: '2026-06-26', period: '上午', therapist: '李建明 PT', status: 'billed' }
+          // Week 1 (06-22 to 06-28) - 6 shifts
+          { date: '2026-06-22', period: '上午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-23', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-24', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-25', period: '下午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-26', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-27', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 2 (06-29 to 07-05) - 6 shifts
+          { date: '2026-06-29', period: '上午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-30', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-01', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-02', period: '下午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-03', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-04', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 3 (07-06 to 07-12) - 6 shifts
+          { date: '2026-07-06', period: '上午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-07', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-08', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-09', period: '下午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-10', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-11', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 4 (07-13 to 07-19) - 6 shifts
+          { date: '2026-07-13', period: '上午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-14', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-15', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-16', period: '下午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-17', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-18', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 5 (07-20 to 07-26) - 6 shifts (Monday to Wednesday completed, Thursday today pending, Friday to Saturday pending)
+          { date: '2026-07-20', period: '上午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-21', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-22', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-24', period: '下午', therapist: '王怡珍 OT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-25', period: '下午', therapist: '李佳穎 OT', status: 'pending', checkInState: 'not_started' }
         ]
       },
       c7: {
@@ -4907,11 +5368,27 @@
         disease: '脆弱性骨折',
         startDate: '2026-06-08',
         shifts: [
-          { date: '2026-06-15', period: '下午', therapist: '陳建宏 PT', status: 'billed' },
-          { date: '2026-06-16', period: '下午', therapist: '王志明 OT', status: 'pending' },
-          { date: '2026-06-17', period: '上午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-06-18', period: '上午', therapist: '李佳穎 OT', status: 'pending' },
-          { date: '2026-06-19', period: '下午', therapist: '李建明 PT', status: 'billed' }
+          // Week 1 (06-08 to 06-14) - 6 shifts
+          { date: '2026-06-08', period: '下午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-09', period: '下午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-10', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-11', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-12', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-13', period: '上午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 2 (06-15 to 06-21) - 6 shifts
+          { date: '2026-06-15', period: '下午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-16', period: '下午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-17', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-18', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-19', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-20', period: '下午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          // Week 3 (06-22 to 06-28) - 6 shifts
+          { date: '2026-06-22', period: '下午', therapist: '陳建宏 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-23', period: '下午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-24', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-25', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-26', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-27', period: '下午', therapist: '王志明 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' }
         ]
       },
       c8: {
@@ -4919,12 +5396,27 @@
         disease: '脆弱性骨折',
         startDate: '2026-05-25',
         shifts: [
-          { date: '2026-06-08', period: '上午', therapist: '王怡珍 OT', status: 'billed' },
-          { date: '2026-06-09', period: '上午', therapist: '李建明 PT', status: 'billed' },
-          { date: '2026-06-10', period: '下午', therapist: '李佳穎 OT', status: 'billed' },
-          { date: '2026-06-11', period: '下午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-06-12', period: '上午', therapist: '陳淑雅 OT', status: 'billed' },
-          { date: '2026-06-13', period: '上午', therapist: '李佳穎 OT', status: 'billed' }
+          // Week 1 (05-25 to 05-31) - 6 shifts
+          { date: '2026-05-25', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-26', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-27', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-28', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-29', period: '上午', therapist: '陳淑雅 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-30', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 2 (06-01 to 06-07) - 6 shifts
+          { date: '2026-06-01', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-02', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-03', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-04', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-05', period: '上午', therapist: '陳淑雅 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-06', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 3 (06-08 to 06-14) - 6 shifts
+          { date: '2026-06-08', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-09', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-10', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-11', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-12', period: '上午', therapist: '陳淑雅 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-13', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' }
         ]
       },
       c9: {
@@ -4932,25 +5424,98 @@
         disease: '衰弱高齡',
         startDate: '2026-05-04',
         shifts: [
-          { date: '2026-05-25', period: '下午', therapist: '李建明 PT', status: 'billed' },
-          { date: '2026-05-26', period: '上午', therapist: '王怡珍 OT', status: 'billed' },
-          { date: '2026-05-27', period: '下午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-05-28', period: '下午', therapist: '李佳穎 OT', status: 'billed' },
-          { date: '2026-05-29', period: '上午', therapist: '吳怡君 ST', status: 'billed' },
-          { date: '2026-05-30', period: '上午', therapist: '李佳穎 OT', status: 'billed' }
+          // Week 1 (05-04 to 05-10) - 6 shifts
+          { date: '2026-05-04', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-05', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-06', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-07', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-08', period: '上午', therapist: '吳怡君 ST', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-09', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 2 (05-11 to 05-17) - 6 shifts
+          { date: '2026-05-11', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-12', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-13', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-14', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-15', period: '上午', therapist: '吳怡君 ST', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-16', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 3 (05-18 to 05-24) - 6 shifts
+          { date: '2026-05-18', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-19', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-20', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-21', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-22', period: '上午', therapist: '吳怡君 ST', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-23', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 4 (05-25 to 05-31) - 6 shifts
+          { date: '2026-05-25', period: '下午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-26', period: '上午', therapist: '王怡珍 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-27', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-28', period: '下午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-05-29', period: '上午', therapist: '吳怡君 ST', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-05-30', period: '上午', therapist: '李佳穎 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' }
         ]
       },
       c10: {
         name: '李金水',
         disease: '腦中風(CVA)',
         startDate: '2026-06-01',
+        totalApprovedWeeks: 8,
         shifts: [
-          { date: '2026-06-15', period: '下午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-06-16', period: '下午', therapist: '林怡君 OT', status: 'pending' },
-          { date: '2026-06-17', period: '上午', therapist: '黃志豪 PT', status: 'billed' },
-          { date: '2026-06-18', period: '上午', therapist: '林怡君 OT', status: 'pending' },
-          { date: '2026-06-19', period: '上午', therapist: '林怡君 OT', status: 'pending' },
-          { date: '2026-06-19', period: '下午', therapist: '黃志豪 PT', status: 'billed' }
+          // Week 1 (06-01 to 06-07) - 6 shifts
+          { date: '2026-06-01', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-02', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-03', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-04', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-05', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-06', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 2 (06-08 to 06-14) - 6 shifts
+          { date: '2026-06-08', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-09', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-10', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-11', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-12', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-13', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 3 (06-15 to 06-21) - 6 shifts
+          { date: '2026-06-15', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-16', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-17', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-18', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-19', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-19', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          // Week 4 (06-22 to 06-28) - 6 shifts
+          { date: '2026-06-22', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-23', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-24', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-25', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-26', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-06-27', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 5 (06-29 to 07-05) - 6 shifts
+          { date: '2026-06-29', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-06-30', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-01', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-02', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-03', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-04', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 6 (07-06 to 07-12) - 6 shifts
+          { date: '2026-07-06', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-07', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-08', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-09', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-10', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-11', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 7 (07-13 to 07-19) - 6 shifts
+          { date: '2026-07-13', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-14', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-15', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-16', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-17', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          { date: '2026-07-18', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
+          // Week 8 (07-20 to 07-26) - 6 shifts
+          { date: '2026-07-20', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-21', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-22', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-24', period: '上午', therapist: '林怡君 OT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-25', period: '上午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' }
         ]
       }
     };
@@ -4975,6 +5540,54 @@
       };
     }
 
+    const weekCollapseStates = {}; // key: `caseId_weekNum` -> boolean (true: collapsed, false: expanded)
+
+    function getWeekRange(startDateStr, weekIndex) {
+      const start = new Date(startDateStr);
+      start.setDate(start.getDate() + (weekIndex - 1) * 7);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 6);
+      
+      const formatDate = (d) => {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      };
+      
+      return {
+        start: formatDate(start),
+        end: formatDate(end)
+      };
+    }
+
+    function formatDateRange(startStr, endStr) {
+      const parseStr = (s) => {
+        const parts = s.split('-');
+        if (parts.length >= 3) {
+          return `${parts[1]}/${parts[2]}`;
+        }
+        return s;
+      };
+      return `${parseStr(startStr)} - ${parseStr(endStr)}`;
+    }
+
+    function toggleWeekCollapse(caseId, weekNum, headerEl) {
+      const stateKey = caseId + '_' + weekNum;
+      const isCollapsed = !weekCollapseStates[stateKey];
+      weekCollapseStates[stateKey] = isCollapsed;
+      
+      const rowsEl = headerEl.nextElementSibling;
+      const arrowEl = headerEl.querySelector('.collapse-arrow');
+      if (isCollapsed) {
+        rowsEl.style.display = 'none';
+        if (arrowEl) arrowEl.textContent = '▼';
+      } else {
+        rowsEl.style.display = 'block';
+        if (arrowEl) arrowEl.textContent = '▲';
+      }
+    }
+
     function renderShifts(caseId) {
       const caseData = caseShiftsData[caseId];
       if (!caseData) return;
@@ -4982,102 +5595,252 @@
       const container = document.getElementById('shifts-container-' + caseId);
       if (!container) return;
 
-      const weeks = {};
-      caseData.shifts.forEach((shift, index) => {
-        const wInfo = getWeekInfo(caseData.startDate, shift.date);
-        if (!weeks[wInfo.weekIndex]) {
-          weeks[wInfo.weekIndex] = {
-            weekIndex: wInfo.weekIndex,
-            dateRangeStr: wInfo.dateRangeStr,
-            shifts: []
-          };
-        }
-        weeks[wInfo.weekIndex].shifts.push(Object.assign({}, shift, { originalIndex: index }));
-      });
-
       const disease = caseData.disease;
-      const maxWeeks = diseaseMaxWeeks[disease] || 12;
+      let maxWeeks = caseData.totalApprovedWeeks || diseaseMaxWeeks[disease] || 6;
+      if (maxWeeks > 12) maxWeeks = 12;
+      const startDateStr = caseData.startDate;
 
       let html = '';
-      const sortedWeekIndices = Object.keys(weeks).map(Number).sort((a, b) => a - b);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      sortedWeekIndices.forEach(wIdx => {
-        if (wIdx > maxWeeks) return;
+      for (let w = 1; w <= maxWeeks; w++) {
+        const range = getWeekRange(startDateStr, w);
+        const wStart = range.start;
+        const wEnd = range.end;
 
-        const weekData = weeks[wIdx];
-        const totalCount = weekData.shifts.length;
-        const progress = totalCount;
+        const startD = new Date(wStart + 'T00:00:00');
+        const endD = new Date(wEnd + 'T23:59:59');
+        const isCurrentWeek = (today >= startD && today <= endD);
+        const isPastWeek = (endD < today);
 
-        const limitLabel = (wIdx === maxWeeks) ? ' (即將結案)' : '';
+        const stateKey = caseId + '_' + w;
+        if (weekCollapseStates[stateKey] === undefined) {
+          weekCollapseStates[stateKey] = !isCurrentWeek; // default collapsed unless current week
+        }
 
-        html += '<div class="week-group" style="margin-bottom:12px;border:1px solid var(--gray-200);border-radius:6px;overflow:hidden">' +
-          '  <div class="week-header" style="background:var(--gray-100);padding:8px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--gray-700);border-bottom:1px solid var(--gray-200)">' +
-          '    <span>📅 第 ' + wIdx + ' 週 / 總期程 ' + maxWeeks + ' 週' + limitLabel + ' (' + weekData.dateRangeStr + ')</span>' +
-          '    <span>進度：' + progress + ' / 6 次</span>' +
-          '  </div>' +
-          '  <div class="week-rows">';
+        const isCollapsed = weekCollapseStates[stateKey];
+        const arrowText = isCollapsed ? '▼' : '▲';
+        const displayStyle = isCollapsed ? 'display: none;' : 'display: block;';
 
-        weekData.shifts.forEach(shift => {
-          const dateObj = new Date(shift.date);
-          const days = ['日', '一', '二', '三', '四', '五', '六'];
-          const dayName = days[dateObj.getDay()];
-          const pad = (num) => String(num).padStart(2, '0');
-          const dateLabel = pad(dateObj.getMonth() + 1) + '/' + pad(dateObj.getDate()) + ' (' + dayName + ') ' + shift.period;
-
-          const isBilled = shift.status === 'billed';
-          const rowBg = isBilled ? '#F9FAFB' : '#FFFBEB';
-          const statusTag = isBilled ? '<span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>' : '<span style="font-size:11px;color:#D97706;font-weight:600">⚠️ 待批價</span>';
-
-          let buttonsHtml = '';
-
-          let showChangeBtn = false;
-          if (currentRole === 'manager') {
-            showChangeBtn = true;
-          } else if (currentRole === 'therapist') {
-            if (shift.therapist.includes(currentLoggedInUser)) {
-              showChangeBtn = true;
-            }
+        // Filter shifts belonging to this week
+        const weekShifts = [];
+        caseData.shifts.forEach((shift, originalIndex) => {
+          if (shift.date >= wStart && shift.date <= wEnd) {
+            weekShifts.push(Object.assign({}, shift, { originalIndex: originalIndex }));
           }
-          const changeDisplay = showChangeBtn ? 'inline-block' : 'none';
-
-          let showEditBtn = false;
-          if (currentRole === 'manager') {
-            showEditBtn = true;
-          } else if (currentRole === 'therapist') {
-            if (shift.therapist.includes(currentLoggedInUser)) {
-              showEditBtn = true;
-            }
-          }
-          const editDisplay = showEditBtn ? 'inline-block' : 'none';
-
-          let showBillBtn = (currentRole === 'secretary');
-          const billDisplay = showBillBtn ? 'inline-block' : 'none';
-
-          if (isBilled) {
-            buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-apply-change" style="color:#DC2626;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:4px;cursor:pointer;font-size:10px;padding:2px 6px; display: ' + changeDisplay + ' !important;" onclick="openApplyChangeModal(\'' + caseId + '\', ' + shift.originalIndex + ')">申請改班</button>';
-          } else {
-            buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-edit-shift" style="color:#4B5563;border:1px solid #D1D5DB;background:#F9FAFB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px; display: ' + editDisplay + ' !important;" onclick="openEditShiftModal(\'' + caseId + '\', ' + shift.originalIndex + ')">更改排班</button>' +
-              '<button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 6px;cursor:pointer; display: ' + billDisplay + ' !important;" onclick="singleBill(\'' + caseId + '\', ' + shift.originalIndex + ')">💰 單筆批價</button>';
-          }
-
-          html += '    <div class="shift-row" style="background:' + rowBg + ';display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--gray-200)">' +
-            '      <span style="font-size:12px;"><span style="color:var(--gray-500); margin-right:4px;">[' + dateLabel + ']</span> <strong>' + shift.therapist + '</strong></span>' +
-            '      <div style="display:flex;align-items:center;gap:6px">' +
-            '        ' + statusTag +
-            '        ' + buttonsHtml +
-            '      </div>' +
-            '    </div>';
         });
+
+        // Calculate counts and alert badges
+        let alertBadges = '';
+        let pendingCount = 0;
+        let changeCount = 0;
+
+        weekShifts.forEach(shift => {
+          if (shift.status === 'pending') pendingCount++;
+          if (shift.checkInState === 'applying_change') changeCount++;
+        });
+
+        if (pendingCount > 0) {
+          alertBadges += `<span class="badge alert-badge" style="background:#FEE2E2;color:#EF4444;border:1px solid #FCA5A5;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-left:6px;display:inline-block;">⚠️ ${pendingCount} 筆待批價</span>`;
+        }
+        if (changeCount > 0) {
+          alertBadges += `<span class="badge alert-badge" style="background:#FEF3C7;color:#D97706;border:1px solid #FCD34D;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-left:6px;display:inline-block;">⚠️ ${changeCount} 筆改班申請</span>`;
+        }
+
+        // Header styles
+        let headerBg = 'background:var(--gray-100);';
+        let headerBorder = '';
+        if (isCurrentWeek) {
+          headerBg = 'background:#EFF6FF;'; // Highlight background
+          headerBorder = 'border-left: 4px solid #3B82F6;'; // Highlight left border
+        }
+
+        const dateRangeStr = formatDateRange(wStart, wEnd);
+        const limitLabel = (w === maxWeeks) ? ' (即將結案)' : '';
+
+        html += `<div class="week-group" style="margin-bottom:12px;border:1px solid var(--gray-200);border-radius:6px;overflow:hidden">
+          <div class="week-header" onclick="toggleWeekCollapse('${caseId}', ${w}, this)" style="${headerBg}${headerBorder}padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--gray-700);border-bottom:1px solid var(--gray-200);cursor:pointer;">
+            <div style="display:flex;align-items:center;">
+              <span>📅 第 ${w} 週 / 總期程 ${maxWeeks} 週${limitLabel} (${dateRangeStr})</span>
+              ${alertBadges}
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:12px;color:var(--gray-500);font-weight:normal;">進度：${weekShifts.length} / 6 次</span>
+              <span class="collapse-arrow" style="font-size:10px;color:var(--gray-400);">${arrowText}</span>
+            </div>
+          </div>
+          <div class="week-rows" style="${displayStyle}">`;
+
+        if (weekShifts.length === 0) {
+          // Empty State
+          const hideCopy = (w === 1) ? 'display:none;' : 'display:inline-block;';
+          const addBtnHtml = isPastWeek ? '' : `<button class="btn btn-xs btn-primary auth-therapist-manager" style="font-size:11px;padding:4px 8px;" onclick="openAddShiftModalForWeek('${caseId}', '${wStart}')">＋ 新增排班時段</button>`;
+          html += `<div class="empty-week-state" style="padding:24px;text-align:center;background:#F9FAFB;color:var(--gray-400);font-size:13px;">
+            <div style="margin-bottom:12px;">📋 本週暫無排班時段</div>
+            <div style="display:flex;justify-content:center;gap:8px;">
+              ${addBtnHtml}
+              <button class="btn btn-xs btn-secondary auth-therapist-manager" style="font-size:11px;padding:4px 8px;${hideCopy}" onclick="copyLastWeekShifts('${caseId}', ${w})">⎘ 複製上週排班</button>
+            </div>
+          </div>`;
+        } else {
+          weekShifts.forEach((shift) => {
+            const dateObj = new Date(shift.date);
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            const dayName = days[dateObj.getDay()];
+            const pad = (num) => String(num).padStart(2, '0');
+            const dateLabel = pad(dateObj.getMonth() + 1) + '/' + pad(dateObj.getDate()) + ' (' + dayName + ') ' + shift.period;
+
+            const isBilled = shift.status === 'billed';
+            const rowBg = isBilled ? '#F9FAFB' : '#FFFBEB';
+            const statusTag = isBilled ? '<span style="font-size:11px;color:var(--gray-400)">🔒 已批價</span>' : '<span style="font-size:11px;color:#D97706;font-weight:600">⚠️ 待批價</span>';
+
+            let buttonsHtml = '';
+
+            let showChangeBtn = false;
+            if (currentRole === 'manager') {
+              showChangeBtn = true;
+            } else if (currentRole === 'therapist') {
+              if (shift.therapist && shift.therapist.includes(currentLoggedInUser)) {
+                showChangeBtn = true;
+              }
+            }
+            const changeDisplay = showChangeBtn ? 'inline-block' : 'none';
+
+            let showEditBtn = false;
+            if (currentRole === 'manager') {
+              showEditBtn = true;
+            } else if (currentRole === 'therapist') {
+              if (shift.therapist && shift.therapist.includes(currentLoggedInUser)) {
+                showEditBtn = true;
+              }
+            }
+            const editDisplay = showEditBtn ? 'inline-block' : 'none';
+
+            let showBillBtn = (currentRole === 'secretary');
+            const billDisplay = showBillBtn ? 'inline-block' : 'none';
+
+            const isAssignedTherapist = (currentRole === 'manager') || (shift.therapist && shift.therapist.includes(currentLoggedInUser));
+            const dateObjForToday = new Date(shift.date);
+            const localToday = new Date();
+            const isToday = (dateObjForToday.getFullYear() === localToday.getFullYear() &&
+              dateObjForToday.getMonth() === localToday.getMonth() &&
+              dateObjForToday.getDate() === localToday.getDate());
+
+            if (shift.checkInState === 'completed') {
+              buttonsHtml = '<span class="badge" style="background:#E5E7EB;color:#374151;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:4px;display:inline-block;border:1px solid #D1D5DB;font-weight:600;">已完成 ' + (shift.checkInTime || '') + '-' + (shift.checkOutTime || '') + '</span>';
+            } else {
+              if (isBilled) {
+                buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-apply-change" style="color:#DC2626;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:4px;cursor:pointer;font-size:10px;padding:2px 6px; display: ' + changeDisplay + ' !important;" onclick="openApplyChangeModal(\'' + caseId + '\', ' + shift.originalIndex + ')">申請改班</button>';
+              } else {
+                buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-edit-shift" style="color:#4B5563;border:1px solid #D1D5DB;background:#F9FAFB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px; display: ' + editDisplay + ' !important;" onclick="openEditShiftModal(\'' + caseId + '\', ' + shift.originalIndex + ')">更改排班</button>' +
+                  '<button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 6px;cursor:pointer; display: ' + billDisplay + ' !important;" onclick="singleBill(\'' + caseId + '\', ' + shift.originalIndex + ')">💰 單筆批價</button>';
+              }
+
+              if (isAssignedTherapist && isToday) {
+                const state = shift.checkInState || 'not_started';
+                if (state === 'not_started') {
+                  buttonsHtml = '<button class="btn btn-xs btn-primary" style="color:#FFF;background:#3B82F6;border:1px solid #2563EB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openCheckInModal(\'' + caseId + '\', ' + shift.originalIndex + ')">📍 抵達簽到</button>' + buttonsHtml;
+                } else if (state === 'checked_in') {
+                  buttonsHtml = '<button class="btn btn-xs btn-success" style="color:#FFF;background:#10B981;border:1px solid #059669;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openSignatureModal(\'' + caseId + '\', ' + shift.originalIndex + ')">📝 結束與簽名</button>' + buttonsHtml;
+                }
+              }
+            }
+
+            html += '    <div class="shift-row" style="background:' + rowBg + ';display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--gray-200)">' +
+              '      <span style="font-size:12px;"><span style="color:var(--gray-500); margin-right:4px;">[' + dateLabel + ']</span> <strong>' + shift.therapist + '</strong></span>' +
+              '      <div style="display:flex;align-items:center;gap:6px">' +
+              '        ' + statusTag +
+              '        ' + buttonsHtml +
+              '      </div>' +
+              '    </div>';
+          });
+
+          // "+ 新增排班時段" button at the bottom of the card list (hidden in past weeks)
+          if (!isPastWeek) {
+            html += `<div class="add-shift-btn-wrap auth-therapist-manager" style="padding:8px 12px;background:#FFF;border-top:1px solid var(--gray-100);display:flex;justify-content:flex-end;">
+              <button class="btn btn-xs btn-ghost" style="color:var(--blue);font-weight:600;font-size:11px;cursor:pointer;" onclick="openAddShiftModalForWeek('${caseId}', '${wStart}')">＋ 新增排班時段</button>
+            </div>`;
+          }
+        }
 
         html += '  </div>' +
           '</div>';
-      });
+      }
 
-      html += '<div class="add-shift-btn-wrap auth-therapist-manager" style="margin-top:12px">' +
-        '  <button style="width:100%;padding:10px;border:1px dashed var(--blue-mid);border-radius:6px;background:var(--white);color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.05)" onclick="openAddShiftModal(\'' + caseId + '\')">➕ 新增排班時段</button>' +
-        '</div>';
 
       container.innerHTML = html;
+    }
+
+    function openAddShiftModalForWeek(caseId, defaultDate) {
+      openAddShiftModal(caseId);
+      const dateInput = document.getElementById('edit-shift-date');
+      if (dateInput) {
+        dateInput.value = defaultDate;
+      }
+    }
+
+    function copyLastWeekShifts(caseId, weekNum) {
+      const caseData = caseShiftsData[caseId];
+      if (!caseData) return;
+
+      const startDateStr = caseData.startDate;
+      const lastWeekRange = getWeekRange(startDateStr, weekNum - 1);
+      const currentWeekRange = getWeekRange(startDateStr, weekNum);
+
+      // Find shifts of last week
+      const lastWeekShifts = caseData.shifts.filter(s => s.date >= lastWeekRange.start && s.date <= lastWeekRange.end);
+      // Find shifts of current week
+      const currentWeekShifts = caseData.shifts.filter(s => s.date >= currentWeekRange.start && s.date <= currentWeekRange.end);
+
+      if (lastWeekShifts.length === 0) {
+        alert('⚠️ 上週無排班資料可複製！');
+        return;
+      }
+
+      if (lastWeekShifts.length + currentWeekShifts.length > 6) {
+        alert('⚠️ 複製後將超出單週 6 診上限！');
+        return;
+      }
+
+      // Copy shifts with +7 days date offset
+      lastWeekShifts.forEach(shift => {
+        const newDate = addDays(shift.date, 7);
+        caseData.shifts.push({
+          date: newDate,
+          period: shift.period,
+          therapist: shift.therapist,
+          status: 'pending',
+          checkInState: 'not_started'
+        });
+      });
+
+      // Sort all shifts by date and period
+      sortShifts(caseData.shifts);
+
+      saveCaseShiftsData();
+      renderShifts(caseId);
+    }
+
+    function addDays(dateStr, days) {
+      const date = new Date(dateStr);
+      date.setDate(date.getDate() + days);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function sortShifts(shifts) {
+      const periodOrder = { '上午': 1, '中午': 2, '下午': 3, '晚上': 4 };
+      shifts.sort((a, b) => {
+        if (a.date !== b.date) {
+          return a.date.localeCompare(b.date);
+        }
+        const orderA = periodOrder[a.period] || 99;
+        const orderB = periodOrder[b.period] || 99;
+        return orderA - orderB;
+      });
     }
 
     function openAddShiftModal(caseId) {
@@ -5144,6 +5907,7 @@
         const caseData = caseShiftsData[caseId];
         if (caseData && caseData.shifts) {
           caseData.shifts.splice(Number(indexVal), 1);
+          saveCaseShiftsData();
           alert('已刪除！');
           closeModal('modal-edit-shift');
           renderShifts(caseId);
@@ -5194,7 +5958,8 @@
       if (!caseData) return;
 
       const wInfo = getWeekInfo(caseData.startDate, dateVal);
-      const maxWeeks = diseaseMaxWeeks[caseData.disease] || 12;
+      let maxWeeks = caseData.totalApprovedWeeks || diseaseMaxWeeks[caseData.disease] || 6;
+      if (maxWeeks > 12) maxWeeks = 12;
 
       if (wInfo.weekIndex > maxWeeks) {
         alert('⚠️ 無法安排此日期！\n個案疾病別為「' + caseData.disease + '」，法規上限為 ' + maxWeeks + ' 週。\n您選擇的日期屬於第 ' + wInfo.weekIndex + ' 週，已超出總期程。');
@@ -5228,10 +5993,14 @@
       } else {
         const oldShift = caseData.shifts[Number(indexVal)];
         newShift.status = oldShift.status;
+        newShift.checkInState = oldShift.checkInState;
+        newShift.checkInTime = oldShift.checkInTime;
+        newShift.checkOutTime = oldShift.checkOutTime;
         caseData.shifts[Number(indexVal)] = newShift;
         alert('✅ 排班修改成功！');
       }
 
+      saveCaseShiftsData();
       closeModal('modal-edit-shift');
       renderShifts(caseId);
     }
@@ -5283,6 +6052,7 @@
 
     function singleBill(caseId, index) {
       caseShiftsData[caseId].shifts[index].status = 'billed';
+      saveCaseShiftsData();
       alert('單筆批價成功！該排班時段已自動鎖定。');
       renderShifts(caseId);
     }
@@ -5433,6 +6203,50 @@
         e.target.style.display = 'none';
       }
     });
+
+    // init
+    adjustTestDataToToday();
+    switchRole(currentRole);
+    toggleMockNetwork(isNetworkOnline);
+
+    // Highlight AND open case navigated from rehab-scheduling
+    (function () {
+      try {
+        const target = JSON.parse(localStorage.getItem('hc_target') || 'null');
+        if (!target || !target.name) return;
+        localStorage.removeItem('hc_target');
+
+        // Map case names to their caseId for toggleCase
+        const nameToId = {
+          '陳志明': 'c1', '林小華': 'c2', '王大明': 'c3', '吳淑珍': 'c4', '陳阿信': 'c5',
+          '黃建國': 'c6', '郭大同': 'c7', '王淑芬': 'c8', '張阿玉': 'c9', '李金水': 'c10'
+        };
+
+        const caseId = nameToId[target.name];
+
+        // Find the matching case card
+        document.querySelectorAll('#case-list-all .case-name').forEach(el => {
+          if (el.textContent.trim() === target.name) {
+            const card = el.closest('.case-card');
+            if (!card) return;
+            // Scroll and highlight
+            setTimeout(() => {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.style.outline = '2px solid var(--blue)';
+              card.style.boxShadow = '0 0 0 4px rgba(37,99,235,0.2)';
+              setTimeout(() => {
+                card.style.outline = '';
+                card.style.boxShadow = '';
+              }, 2500);
+              // Auto-open detail modal if available
+              if (caseId) {
+                setTimeout(() => { toggleCase(caseId); }, 300);
+              }
+            }, 400);
+          }
+        });
+      } catch (e) { }
+    })();
 
   </script>
 

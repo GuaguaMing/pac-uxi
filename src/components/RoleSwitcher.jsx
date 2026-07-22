@@ -44,10 +44,12 @@ export function RoleSwitcher() {
             <p>模擬不同醫護人員的操作介面與權限</p>
           </div>
           <div className="role-list">
-            {roles.map((role) => {
-              const isActive = role.code === currentRole;
-              const allowedRoles = ['mgr', 'sup', 'pt', 'ot', 'st', 'adm'];
-              const isDisabled = !allowedRoles.includes(role.code);
+            {roles
+              .filter((role) => role.code !== 'ot' && role.code !== 'st')
+              .map((role) => {
+                const isActive = role.code === currentRole;
+                const allowedRoles = ['mgr', 'sup', 'pt', 'adm'];
+                const isDisabled = !allowedRoles.includes(role.code);
 
               return (
                 <button
