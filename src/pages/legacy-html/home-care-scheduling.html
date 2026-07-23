@@ -1526,7 +1526,7 @@
               class="badge badge-amber" style="margin-left:4px">4</span></div>
           <div class="tab" id="tab-active" onclick="switchCaseTab(this,'active')">執行中 <span id="badge-active"
               class="badge badge-green" style="margin-left:4px">3</span></div>
-          <div class="tab" id="tab-ending" onclick="switchCaseTab(this,'ending')">準備展延 <span id="badge-ending"
+          <div class="tab" id="tab-ending" onclick="switchCaseTab(this,'ending')">展延中 <span id="badge-ending"
               class="badge badge-blue" style="margin-left:4px">1</span></div>
           <div class="tab" id="tab-close" onclick="switchCaseTab(this,'close')">即將結案 <span id="badge-close"
               class="badge badge-purple" style="margin-left:4px">1</span></div>
@@ -1656,18 +1656,19 @@
           </div>
 
           <!-- 卡片 6 (對應：執行中-健康) -->
-          <div class="case-card" data-status="active">
+          <div class="case-card" data-status="active billing">
             <div class="case-card-header" onclick="toggleCase('c6')">
               <div style="flex:1">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span class="case-name">黃建國</span>
                   <span class="badge badge-green">執行中</span>
-                  <span class="badge badge-gray">批價 ✔</span>
+                  <span class="badge"
+                    style="background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-weight:700">待批價</span>
                 </div>
                 <div class="case-meta" style="margin-top:6px">
                   <span class="case-meta-item">創傷性神經損傷</span>
                   <span class="case-meta-item">彰化縣員林市・8.2km</span>
-                  <span class="case-meta-item">開案 2026/06/22｜第 1 週 (06/22 - 06/28)</span>
+                  <span class="case-meta-item">開案 2026/06/22｜第 5 週 (07/20 - 07/26)</span>
                 </div>
               </div>
               <div class="case-card-right">
@@ -1681,26 +1682,25 @@
             <div class="case-card-progress-row">
               <div class="quota-mini"><span class="quota-label-mini" style="color:var(--blue)">PT</span>
                 <div class="quota-bar-mini">
-                  <div class="quota-fill-mini pt-fill" style="width:100%"></div>
-                </div><span class="quota-text-mini">3/3</span>
+                  <div class="quota-fill-mini pt-fill" style="width:67%"></div>
+                </div><span class="quota-text-mini">2/3</span>
               </div>
               <div class="quota-mini"><span class="quota-label-mini" style="color:var(--purple)">OT</span>
                 <div class="quota-bar-mini">
-                  <div class="quota-fill-mini ot-fill" style="width:67%"></div>
-                </div><span class="quota-text-mini">2/3</span>
+                  <div class="quota-fill-mini ot-fill" style="width:33%"></div>
+                </div><span class="quota-text-mini">1/3</span>
               </div>
             </div>
           </div>
 
           <!-- 卡片 7 (對應：執行中-含待批價) -->
-          <div class="case-card" data-status="active billing">
+          <div class="case-card" data-status="active">
             <div class="case-card-header" onclick="toggleCase('c7')">
               <div style="flex:1">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span class="case-name">郭大同</span>
                   <span class="badge badge-green">執行中</span>
-                  <span class="badge"
-                    style="background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-weight:700">待批價 (2)</span>
+                  <span class="badge badge-gray">批價 ✔</span>
                 </div>
                 <div class="case-meta" style="margin-top:6px">
                   <span class="case-meta-item">脆弱性骨折</span>
@@ -1818,7 +1818,7 @@
                   <span class="case-name">李金水</span>
                   <span class="badge badge-green">執行中</span>
                   <span class="badge"
-                    style="background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-weight:700">待批價 (3)</span>
+                    style="background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-weight:700">待批價</span>
                 </div>
                 <div class="case-meta" style="margin-top:6px">
                   <span class="case-meta-item">腦中風(CVA)</span>
@@ -2609,7 +2609,9 @@
         <div class="billing-box" style="background:#FFFDF5;border:1px solid #FDE68A;padding:12px;border-radius:6px">
           <div class="billing-title" style="margin-bottom:0"><span
               style="font-size:12px;font-weight:700;color:#B45309">批價總結</span></div>
-          <div style="font-size:12px;color:#B45309;font-weight:600;margin-top:4px">本週已結算無欠款。</div>
+          <div style="font-size:12px;color:#B45309;font-weight:600;margin-top:4px">
+            待批價試算：累積 3 堂未批價，預估費用 NT$ 1,500
+          </div>
         </div>
 
         <!-- 治療執行紀錄區塊 (待優化) -->
@@ -2674,9 +2676,7 @@
         <div class="billing-box" style="background:#FFFDF5;border:1px solid #FDE68A;padding:12px;border-radius:6px">
           <div class="billing-title" style="margin-bottom:0"><span
               style="font-size:12px;font-weight:700;color:#B45309">批價總結</span></div>
-          <div style="font-size:12px;color:#B45309;font-weight:600;margin-top:4px">
-            ⚠️ 待批價試算：累積 2 堂未批價，預估費用 NT$ 1,000。家屬需補繳/待扣抵。
-          </div>
+          <div style="font-size:12px;color:#B45309;font-weight:600;margin-top:4px">本週已結算無欠款。</div>
         </div>
 
         <!-- 治療執行紀錄區塊 (待優化) -->
@@ -4016,6 +4016,18 @@
 
       // Apply RBAC logic for tabs and buttons
       updateRBAC();
+
+      // 即時重新計算所有統計數據與卡片標籤
+      updateTotals();
+
+      // 重新渲染目前所有開啟的個案 Modal 的班次列表
+      const openModals = document.querySelectorAll('.modal-overlay:not(.hidden)');
+      openModals.forEach(m => {
+        const id = m.id.replace('modal-detail-', '');
+        if (id && typeof caseShiftsData !== 'undefined' && caseShiftsData[id]) {
+          renderShifts(id);
+        }
+      });
     }
 
     function updateRBAC() {
@@ -4767,7 +4779,67 @@
 
       cards.forEach(card => {
         const caseName = card.querySelector('.case-name').textContent.trim();
-        const statusList = (card.getAttribute('data-status') || '').split(' ');
+        let statusList = (card.getAttribute('data-status') || '').split(' ');
+
+        // 動態根據 caseShiftsData 更新卡片上的待批價標籤及 data-status
+        const caseIdMap = { '黃建國': 'c6', '郭大同': 'c7', '王淑芬': 'c8', '張阿玉': 'c9', '李金水': 'c10', '吳淑珍': 'c4' };
+        const cid = caseIdMap[caseName];
+        if (cid && typeof caseShiftsData !== 'undefined' && caseShiftsData[cid]) {
+          const shifts = caseShiftsData[cid].shifts || [];
+          let currentPending = 0;
+          shifts.forEach(s => {
+            if (s.status === 'pending') currentPending++;
+          });
+
+          const badgeContainer = card.querySelector('.case-card-header > div > div');
+          if (badgeContainer) {
+            const spans = badgeContainer.querySelectorAll('span');
+            let targetSpan = null;
+            spans.forEach(sp => {
+              const text = sp.textContent.trim();
+              if (text.includes('待批價') || text.includes('批價 ✔')) {
+                targetSpan = sp;
+              }
+            });
+
+            // 只有在已開案執行的狀態下才渲染批價標籤
+            const isExecuted = statusList.some(s => ['active', 'billing', 'ending', 'close'].includes(s));
+
+            if (isExecuted) {
+              if (currentPending > 0) {
+                const badgeHtml = `<span class="badge" style="background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-weight:700">待批價</span>`;
+                if (targetSpan) {
+                  targetSpan.outerHTML = badgeHtml;
+                } else {
+                  badgeContainer.insertAdjacentHTML('beforeend', badgeHtml);
+                }
+                if (!statusList.includes('billing')) {
+                  statusList.push('billing');
+                  card.setAttribute('data-status', statusList.join(' '));
+                }
+              } else {
+                const badgeHtml = '<span class="badge badge-gray">批價 ✔</span>';
+                if (targetSpan) {
+                  targetSpan.outerHTML = badgeHtml;
+                } else {
+                  badgeContainer.insertAdjacentHTML('beforeend', badgeHtml);
+                }
+                if (statusList.includes('billing')) {
+                  statusList = statusList.filter(s => s !== 'billing');
+                  card.setAttribute('data-status', statusList.join(' '));
+                }
+              }
+            } else {
+              if (targetSpan) {
+                targetSpan.remove();
+              }
+              if (statusList.includes('billing')) {
+                statusList = statusList.filter(s => s !== 'billing');
+                card.setAttribute('data-status', statusList.join(' '));
+              }
+            }
+          }
+        }
 
         // Therapist role filtering for totals:
         if (currentRole === 'therapist') {
@@ -5929,7 +6001,7 @@
           { date: '2026-07-20', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'absent' },
           { date: '2026-07-21', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
           { date: '2026-07-22', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
-          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'not_started' },
+          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
           { date: '2026-07-24', period: '上午', therapist: '林怡君 OT', status: 'pending', checkInState: 'not_started' },
           { date: '2026-07-25', period: '上午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' }
         ]
@@ -6134,7 +6206,7 @@
             let showBillBtn = (currentRole === 'secretary');
             const billDisplay = showBillBtn ? 'inline-block' : 'none';
 
-            const isAssignedTherapist = (currentRole === 'manager') || (shift.therapist && shift.therapist.includes(currentLoggedInUser));
+            const isAssignedTherapist = (currentRole === 'manager') || (currentRole === 'therapist' && shift.therapist && shift.therapist.includes(currentLoggedInUser));
             const dateObjForToday = new Date(shift.date);
             const localToday = new Date();
             const isToday = (dateObjForToday.getFullYear() === localToday.getFullYear() &&
@@ -6146,7 +6218,11 @@
             } else if (shift.checkInState === 'late_completed') {
               buttonsHtml = '<span class="badge" style="background:#FEF3C7;color:#D97706;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:4px;display:inline-block;border:1px solid #FCD34D;font-weight:600;">補簽到 ' + (shift.checkInTime || '14:00') + '-' + (shift.checkOutTime || '15:00') + '</span>';
             } else if (shift.checkInState === 'absent') {
-              buttonsHtml = '<button class="btn btn-xs btn-danger" style="color:#FFF;background:#EF4444;border:1px solid #DC2626;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openAbsentReasonModal(\'' + caseId + '\', ' + shift.originalIndex + ')">未簽到</button>';
+              if (currentRole === 'secretary') {
+                buttonsHtml = '<span class="badge" style="background:#FEE2E2;color:#EF4444;border:1px solid #FCA5A5;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:4px;display:inline-block;font-weight:600;">未簽到</span>';
+              } else {
+                buttonsHtml = '<button class="btn btn-xs btn-danger" style="color:#FFF;background:#EF4444;border:1px solid #DC2626;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openAbsentReasonModal(\'' + caseId + '\', ' + shift.originalIndex + ')">未簽到</button>';
+              }
             } else {
               const isCheckedIn = (shift.checkInState === 'checked_in');
               if (isBilled) {
@@ -6190,6 +6266,28 @@
 
 
       container.innerHTML = html;
+
+      // 動態更新 Modal 中的批價總結資訊
+      let totalPending = 0;
+      (caseData.shifts || []).forEach(s => {
+        if (s.status === 'pending') totalPending++;
+      });
+
+      const modal = document.getElementById('modal-detail-' + caseId);
+      if (modal) {
+        const billingBox = modal.querySelector('.billing-box');
+        if (billingBox) {
+          const detailTextEl = billingBox.querySelector('div:nth-child(2)');
+          if (detailTextEl) {
+            if (totalPending > 0) {
+              const estFee = totalPending * 500;
+              detailTextEl.innerHTML = `待批價試算：累積 ${totalPending} 堂未批價，預估費用 NT$ ${estFee.toLocaleString()}`;
+            } else {
+              detailTextEl.innerHTML = `本週已結算無欠款。`;
+            }
+          }
+        }
+      }
     }
 
     function openAddShiftModalForWeek(caseId, defaultDate) {
@@ -6475,6 +6573,7 @@
       saveCaseShiftsData();
       alert('單筆批價成功！該排班時段已自動鎖定。');
       renderShifts(caseId);
+      updateTotals();
     }
 
     // ==========================================
