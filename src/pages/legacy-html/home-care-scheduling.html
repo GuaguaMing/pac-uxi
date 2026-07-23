@@ -1588,8 +1588,10 @@
               <div style="flex:1">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span class="case-name">王大明</span>
-                  <span class="badge" style="background:#F97316;color:#FFFFFF;font-weight:700">已發佈-待抽籤</span>
-                  <span style="font-size:11px;color:var(--gray-500)">截止: 2026/07/11 12:00 | 需求 2 人，目前 5 人報名</span>
+                  <span class="badge" id="c3-card-badge"
+                    style="background:#F97316;color:#FFFFFF;font-weight:700">已發佈-待抽籤</span>
+                  <span style="font-size:11px;color:var(--gray-500)" id="c3-card-desc">截止: 2026/07/11 12:00 | 目前 PT
+                    5人/OT 3人報名</span>
                 </div>
                 <div class="case-meta" style="margin-top:6px">
                   <span class="case-meta-item">腦中風(CVA)</span>
@@ -1634,8 +1636,9 @@
               <div style="flex:1">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span class="case-name">陳阿信</span>
-                  <span class="badge" style="background:#FEE2E2;color:#991B1B;font-weight:700">已發佈-無人報名</span>
-                  <span style="font-size:11px;color:var(--gray-500)">發布已超過 24 小時，0 人報名</span>
+                  <span class="badge" id="c5-card-badge"
+                    style="background:#FEE2E2;color:#991B1B;font-weight:700">已發佈-無人報名</span>
+                  <span style="font-size:11px;color:var(--gray-500)" id="c5-card-desc">發布已超過 24 小時，0 人報名</span>
                 </div>
                 <div class="case-meta" style="margin-top:6px">
                   <span class="case-meta-item">衰弱高齡</span>
@@ -2171,6 +2174,7 @@
               <select class="form-control" style="font-size:12px;padding:4px 8px">
                 <option>1 人</option>
                 <option>2 人</option>
+                <option>3 人</option>
                 <option>無</option>
               </select>
             </div>
@@ -2180,6 +2184,7 @@
               <select class="form-control" style="font-size:12px;padding:4px 8px">
                 <option>1 人</option>
                 <option>2 人</option>
+                <option>3 人</option>
                 <option>無</option>
               </select>
             </div>
@@ -2187,8 +2192,10 @@
               <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需
                 ST 人數</label>
               <select class="form-control" style="font-size:12px;padding:4px 8px">
-                <option>無</option>
                 <option>1 人</option>
+                <option>2 人</option>
+                <option>3 人</option>
+                <option>無</option>
               </select>
             </div>
             <div style="flex:1.5;min-width:180px">
@@ -2271,7 +2278,7 @@
 
         <div class="divider"></div>
         <div class="detail-section-title" style="margin-bottom:8px">報名狀態區</div>
-        <div class="reg-list" style="margin-bottom:14px">
+        <div class="reg-list" style="margin-bottom:14px" id="c2-reg-list">
           <div class="reg-item winner" style="padding:8px 12px">
             <span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span>
             <span class="badge badge-green">已報名</span>
@@ -2279,6 +2286,51 @@
           <div class="reg-item pending" style="border: 1px dashed #FCA5A5; background: #FEF2F2; padding:8px 12px">
             <span class="reg-name" style="color: #991B1B;">⚠️ 尚缺 OT 1名</span>
             <span class="badge badge-gray">待報名</span>
+          </div>
+        </div>
+
+        <!-- 修改報名條件編輯區塊 (預設隱藏) -->
+        <div id="c2-setup-section" class="hidden">
+          <div class="divider"></div>
+          <div class="detail-section-title">修改人力與時間</div>
+          <div
+            style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:16px">
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需 PT
+                人數</label>
+              <select id="c2-pt-count" class="form-control" style="font-size:12px;padding:4px 8px">
+                <option value="1人">1 人</option>
+                <option value="2人">2 人</option>
+                <option value="3人">3 人</option>
+                <option value="無">無</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需 OT
+                人數</label>
+              <select id="c2-ot-count" class="form-control" style="font-size:12px;padding:4px 8px">
+                <option value="1人">1 人</option>
+                <option value="2人">2 人</option>
+                <option value="3人">3 人</option>
+                <option value="無">無</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:120px">
+              <label style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">所需 ST
+                人數</label>
+              <select id="c2-st-count" class="form-control" style="font-size:12px;padding:4px 8px">
+                <option value="1人">1 人</option>
+                <option value="2人">2 人</option>
+                <option value="3人">3 人</option>
+                <option value="無">無</option>
+              </select>
+            </div>
+            <div style="flex:1.5;min-width:180px">
+              <label
+                style="font-size:11px;color:var(--gray-600);display:block;margin-bottom:4px;font-weight:600">報名截止時間</label>
+              <input type="date" id="c2-deadline-input" class="form-control" style="font-size:12px;padding:3px 8px"
+                value="2026-06-24">
+            </div>
           </div>
         </div>
 
@@ -2298,7 +2350,7 @@
         <!-- 治療執行紀錄區塊 (待優化) -->
       </div>
       <div id="modal-footer-c2" class="modal-footer">
-        <button id="c2-btn-edit" class="btn btn-secondary" onclick="alert('已開放編輯模式，請重新設定需求人數或截止時間。')">修改報名條件</button>
+        <button id="c2-btn-edit" class="btn btn-secondary" onclick="startEditC2Conditions()">修改報名條件</button>
         <button class="btn btn-secondary" onclick="closeModal('modal-detail-c2')">關閉</button>
       </div>
     </div>
@@ -2314,7 +2366,7 @@
       <div class="modal-body">
         <div class="info-note"
           style="margin-bottom:12px;background:#FFEDD5;color:#C2410C;border:1px solid #FED7AA;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <span>⚠️ 報名爆滿：需求 2 人，目前 5 人報名，請進行抽籤。</span>
+          <span id="c3-modal-info-label">⚠️ 報名爆滿，請進行抽籤。</span>
           <span
             style="font-weight:700;color:#9a3412;background:#fff7ed;padding:2px 6px;border-radius:4px;border:1px solid #ffedd5;font-size:11px">⏱
             報名已於 2026/07/11 12:00 截止</span>
@@ -2349,7 +2401,7 @@
         </div>
 
         <div class="divider"></div>
-        <div class="detail-section-title">報名名單清單 (5人)</div>
+        <div class="detail-section-title">報名名單清單 (8人)</div>
         <div class="reg-list" style="margin-bottom:14px">
           <div class="reg-item winner" style="padding:6px 12px"><span class="reg-name">陳建宏 <span
                 class="th-tag th-pt">PT</span></span><span class="badge badge-amber"
@@ -2366,14 +2418,22 @@
           <div class="reg-item winner" style="padding:6px 12px"><span class="reg-name">王武雄 <span
                 class="th-tag th-pt">PT</span></span><span class="badge badge-amber"
               style="background:#F97316;color:#fff">已報名</span></div>
+          <div class="reg-item winner" style="padding:6px 12px"><span class="reg-name">李佳穎 <span
+                class="th-tag th-ot">OT</span></span><span class="badge badge-amber"
+              style="background:#F97316;color:#fff">已報名</span></div>
+          <div class="reg-item winner" style="padding:6px 12px"><span class="reg-name">張雅玲 <span
+                class="th-tag th-ot">OT</span></span><span class="badge badge-amber"
+              style="background:#F97316;color:#fff">已報名</span></div>
+          <div class="reg-item winner" style="padding:6px 12px"><span class="reg-name">王怡珍 <span
+                class="th-tag th-ot">OT</span></span><span class="badge badge-amber"
+              style="background:#F97316;color:#fff">已報名</span></div>
         </div>
 
         <!-- 治療執行紀錄區塊 (待優化) -->
       </div>
       <div class="modal-footer">
-        <button class="btn btn-amber" style="background:#F97316;color:#FFFFFF"
-          onclick="alert('抽籤完成！已自動排除時間衝突的治療師。'); closeModal('modal-detail-c3')" class="auth-coordinator-manager">🎲 進行
-          AI 抽籤</button>
+        <button class="btn btn-amber auth-coordinator-manager" style="background:#F97316;color:#FFFFFF"
+          onclick="closeModal('modal-detail-c3');openLotteryModal('c3')">🎲 進行抽籤</button>
         <button class="btn btn-secondary" onclick="closeModal('modal-detail-c3')">關閉</button>
       </div>
     </div>
@@ -2421,23 +2481,8 @@
         </div>
 
         <div class="divider"></div>
-        <div class="detail-section-title">排班區塊 (獲選治療師列表)</div>
-        <div class="reg-list" style="margin-bottom:14px">
-          <div class="reg-item winner"
-            style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px">
-            <span class="reg-name" style="font-size:12px;font-weight:600">李佳穎 <span class="th-tag th-ot">OT</span>
-              (時段待排定)</span>
-            <button class="btn btn-xs btn-primary" onclick="alert('(模擬彈出時間選擇器) 請為該治療師選擇排班日期與時間。')"
-              class="auth-therapist-manager">➕ 排定時段</button>
-          </div>
-          <div class="reg-item winner"
-            style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px">
-            <span class="reg-name" style="font-size:12px;font-weight:600">黃志豪 <span class="th-tag th-pt">PT</span>
-              (時段待排定)</span>
-            <button class="btn btn-xs btn-primary" onclick="alert('(模擬彈出時間選擇器) 請為該治療師選擇排班日期與時間。')"
-              class="auth-therapist-manager">➕ 排定時段</button>
-          </div>
-        </div>
+        <div class="detail-section-title">治療師排班時段</div>
+        <div id="shifts-container-c4"></div>
 
         <!-- 治療執行紀錄區塊 (待優化) -->
       </div>
@@ -2492,21 +2537,7 @@
 
         <!-- 治療執行紀錄區塊 (待優化) -->
 
-        <!-- 區塊一：手動指派操作區塊 (預設隱藏，紅色警示風格) -->
-        <div id="c5-assign-section" class="mt-3 p-3 rounded"
-          style="display: none; background-color: #fee2e2; border: 1px solid #f87171; padding: 12px; border-radius: 6px; margin-top: 12px;">
-          <label class="form-label text-danger fw-bold" style="font-weight: 700; color: #b91c1c; font-size: 13px;">⚠️
-            逾期無人報名，請手動指派治療師：</label>
-          <select id="c5-therapist-select" class="form-select border-danger mt-1"
-            style="width: 100%; border: 1px solid #f87171; padding: 8px; border-radius: 4px; font-size: 13px; margin-top: 4px; box-sizing: border-box;">
-            <option value="" disabled selected>請下拉選擇治療師...</option>
-            <option value="黃志豪 PT">黃志豪 PT (目前負擔: 3案)</option>
-            <option value="陳建宏 PT">陳建宏 PT (目前負擔: 5案)</option>
-            <option value="李佳穎 OT">李佳穎 OT (目前負擔: 2案)</option>
-          </select>
-        </div>
-
-        <!-- 區塊二：重新發布設定區塊 (預設隱藏，藍色一般風格) -->
+        <!-- 重新發布設定區塊 (預設隱藏，藍色一般風格) -->
         <div id="c5-republish-section" class="mt-3 p-3 rounded"
           style="display: none; background-color: #e0f2fe; border: 1px solid #7dd3fc; padding: 12px; border-radius: 6px; margin-top: 12px;">
           <label class="form-label text-primary fw-bold" style="font-weight: 700; color: #0369a1; font-size: 13px;">🔄
@@ -2519,12 +2550,10 @@
         </div>
       </div>
       <div class="modal-footer" id="c5-modal-footer">
-        <button id="c5-btn-assign-step1" class="btn btn-danger" onclick="showC5AssignStep()">手動指派</button>
+        <button id="c5-btn-assign-step1" class="btn btn-danger" onclick="reportC5NoAccept()">回報不承接</button>
         <button id="c5-btn-reissue-step1" class="btn btn-secondary" onclick="showC5RepublishStep()">重新發布</button>
         <button id="c5-btn-close-step1" class="btn btn-secondary" onclick="closeModal('modal-detail-c5')">關閉</button>
 
-        <button id="c5-btn-assign-confirm" class="btn btn-danger" style="display: none;"
-          onclick="confirmC5Assign()">確認指派</button>
         <button id="c5-btn-republish-confirm" class="btn btn-primary" style="display: none;"
           onclick="confirmC5Republish()">確認重新發布</button>
         <button id="c5-btn-cancel-step2" class="btn btn-secondary" style="display: none;"
@@ -2957,7 +2986,7 @@
         </div>
         <div style="margin-top:12px">
           <button class="btn btn-amber" style="width:100%;justify-content:center"
-            onclick="closeModal('modal-detail-mp1');openModal('modal-lottery')">🎲 執行抽籤</button>
+            onclick="closeModal('modal-detail-mp1');openLotteryModal('c6')">🎲 執行抽籤</button>
         </div>
       </div>
       <div class="modal-footer">
@@ -3076,33 +3105,14 @@
   <div id="modal-lottery" class="modal-overlay hidden">
     <div class="modal">
       <div class="modal-header">
-        <div class="modal-title">🎲 執行抽籤・黃建國</div><button class="modal-close"
+        <div class="modal-title" id="lottery-modal-title">🎲 進行抽籤</div><button class="modal-close"
           onclick="closeModal('modal-lottery')">✕</button>
       </div>
-      <div class="modal-body">
-        <div class="info-note amber">PT 報名人數（4人）超過需求（3人），需進行抽籤。OT 報名人數（2人）未超額，直接確認。</div>
-        <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">PT 報名名單（超額・需抽籤）</div>
-        <div class="reg-list" style="margin-bottom:14px">
-          <div class="reg-item"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span
-              class="badge badge-amber">待抽籤</span></div>
-          <div class="reg-item"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span
-              class="badge badge-amber">待抽籤</span></div>
-          <div class="reg-item"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span
-              class="badge badge-amber">待抽籤</span></div>
-          <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span
-              class="badge badge-amber">待抽籤</span></div>
-        </div>
-        <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">OT 報名名單（直接確認）</div>
-        <div class="reg-list">
-          <div class="reg-item winner"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span
-              class="badge badge-green">確認</span></div>
-          <div class="reg-item winner"><span class="reg-name">張雅玲 <span class="th-tag th-ot">OT</span></span><span
-              class="badge badge-green">確認</span></div>
-        </div>
+      <div class="modal-body" id="lottery-modal-body">
+        <!-- 動態渲染 -->
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-lottery')">取消</button>
-        <button class="btn btn-primary" onclick="closeModal('modal-lottery')">🎲 開始 PT 抽籤</button>
+      <div class="modal-footer" id="lottery-modal-footer">
+        <!-- 動態渲染 -->
       </div>
     </div>
   </div>
@@ -3144,6 +3154,37 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-checkin')">取消</button>
         <button class="btn btn-primary" onclick="closeModal('modal-checkin')">✓ 確認已執行並上傳</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 未簽到補簽原因彈窗 -->
+  <div id="modal-absent-reason" class="modal-overlay hidden">
+    <div class="modal modal-sm" style="width:420px">
+      <div class="modal-header">
+        <div class="modal-title">✏️ 填寫補簽原因</div>
+        <button class="modal-close" onclick="closeModal('modal-absent-reason')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">個案姓名</div>
+          <div style="font-weight:700;font-size:16px;color:var(--gray-800)" id="absent-case-name">-</div>
+        </div>
+        <div style="margin-bottom:16px">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">排班日期與時段</div>
+          <div style="font-weight:600;font-size:14px;color:var(--gray-800)" id="absent-date-period">-</div>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label style="font-size:13px;color:var(--gray-500);display:block;margin-bottom:6px">補簽到原因 <span
+              class="required" style="color:red">*</span></label>
+          <textarea class="form-control" id="absent-reason-input" rows="3" placeholder="請輸入補簽到原因（例如：當日忘記簽到、系統異常等）"
+            style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:4px;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('modal-absent-reason')">取消</button>
+        <button class="btn btn-primary" id="absent-submit-btn"
+          onclick="submitAbsentReason(this.getAttribute('data-case-id'), Number(this.getAttribute('data-index')))">確認送出</button>
       </div>
     </div>
   </div>
@@ -4274,7 +4315,7 @@
             btnLottery.disabled = false;
           }
           if (infoNote) {
-            infoNote.innerHTML = '<span>⚠️ 報名爆滿：需求 2 人，目前 5 人報名，請進行抽籤。</span><span style="font-weight:700;color:#9a3412;background:#fff7ed;padding:2px 6px;border-radius:4px;border:1px solid #ffedd5;font-size:11px">⏱ 報名已於 2026/07/11 12:00 截止</span>';
+            infoNote.innerHTML = '<span>⚠️ 報名爆滿，請進行抽籤。</span><span style="font-weight:700;color:#9a3412;background:#fff7ed;padding:2px 6px;border-radius:4px;border:1px solid #ffedd5;font-size:11px">⏱ 報名已於 2026/07/11 12:00 截止</span>';
             infoNote.className = 'info-note amber';
           }
         } else {
@@ -4282,7 +4323,7 @@
             btnLottery.style.display = 'none';
           }
           if (infoNote) {
-            infoNote.innerHTML = '<span>⚠️ 報名爆滿 (僅限復健主管可進行 AI 抽籤)。</span><span style="font-weight:700;color:#991b1b;background:#fef2f2;padding:2px 6px;border-radius:4px;border:1px solid #fca5a5;font-size:11px">⏱ 報名已於 2026/07/11 12:00 截止</span>';
+            infoNote.innerHTML = '<span>⚠️ 報名爆滿 (僅限復健主管可進行抽籤)。</span><span style="font-weight:700;color:#991b1b;background:#fef2f2;padding:2px 6px;border-radius:4px;border:1px solid #fca5a5;font-size:11px">⏱ 報名已於 2026/07/11 12:00 截止</span>';
             infoNote.className = 'info-note red';
           }
         }
@@ -4513,7 +4554,97 @@
       openModal('modal-suspend');
     }
 
-    function openModal(id) { document.getElementById(id).classList.remove('hidden') }
+    let caseLotteryStatus = { c3: false, c6: false };
+
+    function saveLotteryStatus() {
+      // 純記憶體變數，不再將 c3 寫入 localStorage 以便在刷新後復原為「待抽籤」
+    }
+
+    function updateC3ModalUI() {
+      if (caseLotteryStatus.c3) {
+        // 1. 更新詳情彈窗頂部提示
+        const infoNote = document.querySelector('#modal-detail-c3 .info-note');
+        if (infoNote) {
+          infoNote.innerHTML = '<span>✅ 抽籤完成！中選名單已確立。</span><span style="font-weight:700;color:#065f46;background:#d1fae5;padding:2px 6px;border-radius:4px;border:1px solid #a7f3d0;font-size:11px">⏱ 報名已截止</span>';
+          infoNote.className = 'info-note green';
+          infoNote.style.background = '#ECFDF5';
+          infoNote.style.color = '#065F46';
+          infoNote.style.borderColor = '#A7F3D0';
+        }
+
+        // 2. 更新詳情彈窗中的報名名單為中選與未中選狀態
+        const regList = document.querySelector('#modal-detail-c3 .reg-list');
+        if (regList) {
+          regList.innerHTML = `
+            <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;margin-bottom:6px;">
+              <span class="reg-name" style="font-weight:600;color:#065F46;">陳建宏 <span class="th-tag th-pt">PT</span></span>
+              <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+            </div>
+            <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;margin-bottom:6px;">
+              <span class="reg-name" style="font-weight:600;color:#065F46;">黃志豪 <span class="th-tag th-pt">PT</span></span>
+              <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+            </div>
+            <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;margin-bottom:6px;">
+              <span class="reg-name" style="font-weight:600;color:#065F46;">李佳穎 <span class="th-tag th-ot">OT</span></span>
+              <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+            </div>
+            <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;margin-bottom:6px;">
+              <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">張大華 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+              <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+            </div>
+            <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;margin-bottom:6px;">
+              <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">李小萍 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+              <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+            </div>
+            <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;margin-bottom:6px;">
+              <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">王武雄 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+              <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+            </div>
+            <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;margin-bottom:6px;">
+              <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">張雅玲 <span class="th-tag th-ot" style="background:#D1D5DB;color:#374151;">OT</span></span>
+              <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+            </div>
+            <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;margin-bottom:6px;">
+              <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">王怡珍 <span class="th-tag th-ot" style="background:#D1D5DB;color:#374151;">OT</span></span>
+              <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+            </div>
+          `;
+        }
+
+        // 3. 更新按鈕文字
+        const btnLottery = document.querySelector('#modal-detail-c3 .modal-footer .btn-amber');
+        if (btnLottery) {
+          btnLottery.textContent = '🎲 檢視抽籤結果';
+        }
+
+        // 4. 更新首頁卡片狀態與描述
+        const cardBadge = document.getElementById('c3-card-badge');
+        if (cardBadge) {
+          cardBadge.textContent = '已抽籤-待確定';
+          cardBadge.style.background = '#10B981';
+        }
+        const cardDesc = document.getElementById('c3-card-desc');
+        if (cardDesc) {
+          cardDesc.textContent = '截止: 2026/07/11 12:00 | 抽籤已完成，中選名單已確立';
+        }
+      }
+    }
+
+    function executeC3Lottery() {
+      caseLotteryStatus.c3 = true;
+      saveLotteryStatus();
+      alert('✅ 抽籤完成！已自動排除時間衝突的治療師。');
+      closeModal('modal-lottery');
+      updateC3ModalUI();
+      openLotteryModal('c3');
+    }
+
+    function openModal(id) {
+      if (id === 'modal-detail-c3') {
+        updateC3ModalUI();
+      }
+      document.getElementById(id).classList.remove('hidden');
+    }
     function closeModal(id) { document.getElementById(id).classList.add('hidden') }
     document.querySelectorAll('.modal-overlay').forEach(o => {
       o.addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden') });
@@ -4776,7 +4907,7 @@
     }
 
     // Initialize/merge caseShiftsData from localStorage with version control
-    const MOCK_DATA_VERSION = 'v4_c6_focus_checkin';
+    const MOCK_DATA_VERSION = 'v9_c10_billed_today';
     const cachedVersion = localStorage.getItem('caseShiftsDataVersion');
     if (cachedVersion !== MOCK_DATA_VERSION) {
       localStorage.removeItem('caseShiftsData');
@@ -4808,7 +4939,9 @@
       if (caseShiftsData.c6 && caseShiftsData.c6.shifts) {
         const c6Shifts = caseShiftsData.c6.shifts;
         for (let i = c6Shifts.length - 1; i >= 0; i--) {
-          if (c6Shifts[i].therapist.includes('黃志豪') && c6Shifts[i].status !== 'billed') {
+          const shiftDate = c6Shifts[i].date;
+          // 只針對原本在第 5 週 (2026-07-20 至 2026-07-26) 區間內的黃志豪 PT 班次進行調整，防止誤改第 6 週的班次
+          if (c6Shifts[i].therapist.includes('黃志豪') && c6Shifts[i].status !== 'billed' && shiftDate >= '2026-07-20' && shiftDate <= '2026-07-26') {
             c6Shifts[i].date = todayStr;
             if (!c6Shifts[i].checkInState) {
               c6Shifts[i].checkInState = 'not_started';
@@ -4818,6 +4951,64 @@
         }
         saveCaseShiftsData();
       }
+    }
+
+    // --- 未簽到補簽到互動邏輯 ---
+    function openAbsentReasonModal(caseId, originalIndex) {
+      const caseData = caseShiftsData[caseId];
+      if (!caseData) return;
+      const shift = caseData.shifts[originalIndex];
+      if (!shift) return;
+
+      document.getElementById('absent-case-name').textContent = caseData.name;
+      document.getElementById('absent-date-period').textContent = shift.date + ' (' + shift.period + ')';
+      document.getElementById('absent-reason-input').value = '';
+
+      const submitBtn = document.getElementById('absent-submit-btn');
+      submitBtn.setAttribute('data-case-id', caseId);
+      submitBtn.setAttribute('data-index', originalIndex);
+
+      openModal('modal-absent-reason');
+    }
+
+    function submitAbsentReason(caseId, index) {
+      const reasonVal = document.getElementById('absent-reason-input').value.trim();
+      if (!reasonVal) {
+        alert('⚠️ 請輸入補簽到原因！');
+        return;
+      }
+
+      const caseData = caseShiftsData[caseId];
+      const shift = caseData.shifts[index];
+
+      // 更新補簽到狀態與時間
+      shift.checkInState = 'late_completed';
+      shift.absentReason = reasonVal;
+
+      if (shift.period === '下午') {
+        shift.checkInTime = '14:00';
+        shift.checkOutTime = '15:00';
+      } else {
+        shift.checkInTime = '09:00';
+        shift.checkOutTime = '10:00';
+      }
+
+      saveCaseShiftsData();
+
+      // 推送到離線同步佇列（模擬）
+      offlineQueue.push({
+        id: 'chk_late_' + Date.now(),
+        type: 'check_in_late',
+        caseId: caseId,
+        index: index,
+        reason: reasonVal,
+        timestamp: Date.now()
+      });
+      saveOfflineQueue();
+
+      closeModal('modal-absent-reason');
+      renderShifts(caseId);
+      syncOfflineEvents();
     }
 
     // --- 簽到與簽退 (簽名) 互動邏輯 ---
@@ -5241,6 +5432,217 @@
     }
 
 
+    function startEditC2Conditions() {
+      // 1. 顯示編輯區塊
+      document.getElementById('c2-setup-section').classList.remove('hidden');
+      // 2. 隱藏原本的我要報名區塊與狀態區
+      document.getElementById('c2-signup-section').classList.add('hidden');
+
+      // 3. 修改按鈕為「儲存修改」
+      const editBtn = document.getElementById('c2-btn-edit');
+      editBtn.textContent = '確認儲存';
+      editBtn.setAttribute('onclick', 'saveC2Conditions()');
+
+      // 4. 設定預設值
+      document.getElementById('c2-pt-count').value = '1人';
+      document.getElementById('c2-ot-count').value = '1人';
+      document.getElementById('c2-st-count').value = '無';
+      document.getElementById('c2-deadline-input').value = '2026-06-24';
+    }
+
+    function saveC2Conditions() {
+      const ptVal = document.getElementById('c2-pt-count').value;
+      const otVal = document.getElementById('c2-ot-count').value;
+      const stVal = document.getElementById('c2-st-count').value;
+      const deadlineVal = document.getElementById('c2-deadline-input').value;
+
+      // 更新 UI 上的報名狀態區
+      const regList = document.getElementById('c2-reg-list');
+      let html = '';
+
+      // 模擬：陳建宏 PT 已報名 (占 1 人)
+      html += `
+        <div class="reg-item winner" style="padding:8px 12px">
+          <span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span>
+          <span class="badge badge-green">已報名</span>
+        </div>
+      `;
+
+      // 檢查 PT 還缺多少人
+      const ptNum = ptVal === '無' ? 0 : parseInt(ptVal);
+      if (ptNum > 1) {
+        html += `
+          <div class="reg-item pending" style="border: 1px dashed #FCA5A5; background: #FEF2F2; padding:8px 12px">
+            <span class="reg-name" style="color: #991B1B;">⚠️ 尚缺 PT ${ptNum - 1} 名</span>
+            <span class="badge badge-gray">待報名</span>
+          </div>
+        `;
+      }
+
+      // 檢查 OT 缺多少人
+      const otNum = otVal === '無' ? 0 : parseInt(otVal);
+      if (otNum > 0) {
+        html += `
+          <div class="reg-item pending" style="border: 1px dashed #FCA5A5; background: #FEF2F2; padding:8px 12px">
+            <span class="reg-name" style="color: #991B1B;">⚠️ 尚缺 OT ${otNum} 名</span>
+            <span class="badge badge-gray">待報名</span>
+          </div>
+        `;
+      }
+
+      // 檢查 ST 缺多少人
+      const stNum = stVal === '無' ? 0 : parseInt(stVal);
+      if (stNum > 0) {
+        html += `
+          <div class="reg-item pending" style="border: 1px dashed #FCA5A5; background: #FEF2F2; padding:8px 12px">
+            <span class="reg-name" style="color: #991B1B;">⚠️ 尚缺 ST ${stNum} 名</span>
+            <span class="badge badge-gray">待報名</span>
+          </div>
+        `;
+      }
+
+      regList.innerHTML = html;
+
+      // 更新報名截止時間說明字樣
+      const deadlineText = document.querySelector('#c2-signup-section div div div:last-child') ||
+        document.querySelector('#c2-signup-section div div:nth-child(2)');
+      if (deadlineText) {
+        const formattedDate = deadlineVal.replace(/-/g, '/');
+        deadlineText.innerHTML = `點擊右方按鈕登記您的偏好時段，報名截止 ${formattedDate} 12:00`;
+      }
+
+      // 隱藏編輯區塊，恢復我要報名區塊
+      document.getElementById('c2-setup-section').classList.add('hidden');
+      document.getElementById('c2-signup-section').classList.remove('hidden');
+
+      // 恢復按鈕為「修改報名條件」
+      const editBtn = document.getElementById('c2-btn-edit');
+      editBtn.textContent = '修改報名條件';
+      editBtn.setAttribute('onclick', 'startEditC2Conditions()');
+
+      alert('✅ 報名條件已修改成功！');
+    }
+
+    function openLotteryModal(caseId) {
+      let title = '';
+      let bodyHtml = '';
+      let footerHtml = '';
+
+      const isC3 = (caseId === 'c3' || caseId === '王大明');
+      const isDone = isC3 ? caseLotteryStatus.c3 : caseLotteryStatus.c6;
+
+      if (isC3) {
+        if (isDone) {
+          title = '🎲 抽籤結果・王大明';
+          bodyHtml = `
+            <div class="info-note green" style="background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0;">✅ 抽籤已完成。中選名單已確立，系統已發送通知給相關治療師。</div>
+            
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">PT 抽籤名單 (需求 2 人，中選 2 人)</div>
+            <div class="reg-list" style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+              <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;">
+                <span class="reg-name" style="font-weight:600;color:#065F46;">陳建宏 <span class="th-tag th-pt">PT</span></span>
+                <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+              </div>
+              <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;">
+                <span class="reg-name" style="font-weight:600;color:#065F46;">黃志豪 <span class="th-tag th-pt">PT</span></span>
+                <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+              </div>
+              <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;">
+                <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">張大華 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+                <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+              </div>
+              <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;">
+                <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">李小萍 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+                <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+              </div>
+              <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;">
+                <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">王武雄 <span class="th-tag th-pt" style="background:#D1D5DB;color:#374151;">PT</span></span>
+                <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+              </div>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">OT 抽籤名單 (需求 1 人，中選 1 人)</div>
+            <div class="reg-list" style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+              <div class="reg-item" style="background:#ECFDF5;border:1px solid #A7F3D0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;">
+                <span class="reg-name" style="font-weight:600;color:#065F46;">李佳穎 <span class="th-tag th-ot">OT</span></span>
+                <span class="badge" style="background:#10B981;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">中選</span>
+              </div>
+              <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;">
+                <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">張雅玲 <span class="th-tag th-ot" style="background:#D1D5DB;color:#374151;">OT</span></span>
+                <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+              </div>
+              <div class="reg-item" style="background:#F3F4F6;border:1px solid #E5E7EB;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;border-radius:6px;opacity:0.7;">
+                <span class="reg-name" style="color:#6B7280;text-decoration:line-through;">王怡珍 <span class="th-tag th-ot" style="background:#D1D5DB;color:#374151;">OT</span></span>
+                <span class="badge" style="background:#9CA3AF;color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;">未中選</span>
+              </div>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">ST 報名名單</div>
+            <div style="font-size:12px;color:var(--gray-400);padding:12px 12px;text-align:center;border:1px dashed var(--gray-200);border-radius:6px;background:#FAFAFA;">無 ST 報名人員</div>
+          `;
+          footerHtml = `
+            <button class="btn btn-secondary" onclick="closeModal('modal-lottery')">關閉</button>
+          `;
+        } else {
+          title = '🎲 進行抽籤・王大明';
+          bodyHtml = `
+            <div class="info-note amber">PT 報名人數（5人）超過需求（2人），需進行抽籤。OT 報名人數（3人）超過需求（1人），需進行抽籤。</div>
+            
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">PT 報名名單（超額・需抽籤）</div>
+            <div class="reg-list" style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">張大華 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">李小萍 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">王武雄 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">OT 報名名單（超額・需抽籤）</div>
+            <div class="reg-list" style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">張雅玲 <span class="th-tag th-ot">OT</span></span><span class="badge badge-amber">待抽籤</span></div>
+              <div class="reg-item" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;"><span class="reg-name">王怡珍 <span class="th-tag th-ot">OT</span></span><span class="badge badge-amber">待抽籤</span></div>
+            </div>
+
+            <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">ST 報名名單</div>
+            <div style="font-size:12px;color:var(--gray-400);padding:16px 12px;text-align:center;border:1px dashed var(--gray-200);border-radius:6px;background:#FAFAFA;">無 ST 報名人員</div>
+          `;
+          footerHtml = `
+            <button class="btn btn-secondary" onclick="closeModal('modal-lottery')">取消</button>
+            <button class="btn btn-primary" onclick="executeC3Lottery()">🎲 開始抽籤</button>
+          `;
+        }
+      } else {
+        // 預設為黃建國 (c6) 的抽籤
+        title = '🎲 進行抽籤・黃建國';
+        bodyHtml = `
+          <div class="info-note amber">PT 報名人數（4人）超過需求（3人），需進行抽籤。OT 報名人數（2人）未超額，直接確認。</div>
+          <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">PT 報名名單（超額・需抽籤）</div>
+          <div class="reg-list" style="margin-bottom:14px">
+            <div class="reg-item"><span class="reg-name">陳建宏 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+            <div class="reg-item"><span class="reg-name">黃志豪 <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+            <div class="reg-item"><span class="reg-name">王復健主管 <span class="th-tag th-mgr">主管</span></span><span class="badge badge-amber">待抽籤</span></div>
+            <div class="reg-item"><span class="reg-name">林○○ <span class="th-tag th-pt">PT</span></span><span class="badge badge-amber">待抽籤</span></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--gray-700);margin-bottom:10px">OT 報名名單（直接確認）</div>
+          <div class="reg-list">
+            <div class="reg-item winner"><span class="reg-name">李佳穎 <span class="th-tag th-ot">OT</span></span><span class="badge badge-green">確認</span></div>
+            <div class="reg-item winner"><span class="reg-name">張雅玲 <span class="th-tag th-ot">OT</span></span><span class="badge badge-green">確認</span></div>
+          </div>
+        `;
+        footerHtml = `
+          <button class="btn btn-secondary" onclick="closeModal('modal-lottery')">取消</button>
+          <button class="btn btn-primary" onclick="alert('抽籤完成！已自動排除時間衝突的治療師。'); closeModal('modal-lottery')">🎲 開始 PT 抽籤</button>
+        `;
+      }
+
+      document.getElementById('lottery-modal-title').textContent = title;
+      document.getElementById('lottery-modal-body').innerHTML = bodyHtml;
+      document.getElementById('lottery-modal-footer').innerHTML = footerHtml;
+
+      openModal('modal-lottery');
+    }
+
     let _signupTargetCaseId = null;
     let _signupTargetCaseName = null;
     const dayLabelMap = { mon: '週一', tue: '週二', wed: '週三', thu: '週四', fri: '週五', sat: '週六' };
@@ -5306,7 +5708,7 @@
         '個案：' + _signupTargetCaseName + '\n' +
         '治療師：' + therapistName + '\n' +
         '偏好時段：\n  • ' + selections.join('\n  • ') + '\n\n' +
-        '系統已將您的時段偏好送出，靜候個管師/主管確認排班。'
+        '系統已將您的時段偏好送出，靜候確認排班。'
       );
     }
 
@@ -5321,6 +5723,13 @@
     };
 
     const caseShiftsData = {
+      c4: {
+        name: '吳淑珍',
+        disease: '創傷性神經損傷',
+        startDate: '2026-07-27',
+        totalApprovedWeeks: 6,
+        shifts: []
+      },
       c6: {
         name: '黃建國',
         disease: '創傷性神經損傷',
@@ -5360,7 +5769,14 @@
           { date: '2026-07-22', period: '上午', therapist: '李建明 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
           { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
           { date: '2026-07-24', period: '下午', therapist: '王怡珍 OT', status: 'pending', checkInState: 'not_started' },
-          { date: '2026-07-25', period: '下午', therapist: '李佳穎 OT', status: 'pending', checkInState: 'not_started' }
+          { date: '2026-07-25', period: '下午', therapist: '李佳穎 OT', status: 'pending', checkInState: 'not_started' },
+          // Week 6 (07-27 to 08-02) - 6 shifts (Copied from Week 5, pending, sign-in disabled)
+          { date: '2026-07-27', period: '上午', therapist: '陳建宏 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-28', period: '下午', therapist: '李佳穎 OT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-29', period: '上午', therapist: '李建明 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-30', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-31', period: '下午', therapist: '王怡珍 OT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-08-01', period: '下午', therapist: '李佳穎 OT', status: 'pending', checkInState: 'not_started' }
         ]
       },
       c7: {
@@ -5510,10 +5926,10 @@
           { date: '2026-07-17', period: '上午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
           { date: '2026-07-18', period: '上午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '09:00', checkOutTime: '10:00' },
           // Week 8 (07-20 to 07-26) - 6 shifts
-          { date: '2026-07-20', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
+          { date: '2026-07-20', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'absent' },
           { date: '2026-07-21', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
           { date: '2026-07-22', period: '下午', therapist: '林怡君 OT', status: 'billed', checkInState: 'completed', checkInTime: '14:00', checkOutTime: '15:00' },
-          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' },
+          { date: '2026-07-23', period: '下午', therapist: '黃志豪 PT', status: 'billed', checkInState: 'not_started' },
           { date: '2026-07-24', period: '上午', therapist: '林怡君 OT', status: 'pending', checkInState: 'not_started' },
           { date: '2026-07-25', period: '上午', therapist: '黃志豪 PT', status: 'pending', checkInState: 'not_started' }
         ]
@@ -5547,14 +5963,14 @@
       start.setDate(start.getDate() + (weekIndex - 1) * 7);
       const end = new Date(start);
       end.setDate(end.getDate() + 6);
-      
+
       const formatDate = (d) => {
         const yyyy = d.getFullYear();
         const mm = String(d.getMonth() + 1).padStart(2, '0');
         const dd = String(d.getDate()).padStart(2, '0');
         return `${yyyy}-${mm}-${dd}`;
       };
-      
+
       return {
         start: formatDate(start),
         end: formatDate(end)
@@ -5576,7 +5992,7 @@
       const stateKey = caseId + '_' + weekNum;
       const isCollapsed = !weekCollapseStates[stateKey];
       weekCollapseStates[stateKey] = isCollapsed;
-      
+
       const rowsEl = headerEl.nextElementSibling;
       const arrowEl = headerEl.querySelector('.collapse-arrow');
       if (isCollapsed) {
@@ -5674,13 +6090,11 @@
 
         if (weekShifts.length === 0) {
           // Empty State
-          const hideCopy = (w === 1) ? 'display:none;' : 'display:inline-block;';
           const addBtnHtml = isPastWeek ? '' : `<button class="btn btn-xs btn-primary auth-therapist-manager" style="font-size:11px;padding:4px 8px;" onclick="openAddShiftModalForWeek('${caseId}', '${wStart}')">＋ 新增排班時段</button>`;
           html += `<div class="empty-week-state" style="padding:24px;text-align:center;background:#F9FAFB;color:var(--gray-400);font-size:13px;">
             <div style="margin-bottom:12px;">📋 本週暫無排班時段</div>
             <div style="display:flex;justify-content:center;gap:8px;">
               ${addBtnHtml}
-              <button class="btn btn-xs btn-secondary auth-therapist-manager" style="font-size:11px;padding:4px 8px;${hideCopy}" onclick="copyLastWeekShifts('${caseId}', ${w})">⎘ 複製上週排班</button>
             </div>
           </div>`;
         } else {
@@ -5729,15 +6143,21 @@
 
             if (shift.checkInState === 'completed') {
               buttonsHtml = '<span class="badge" style="background:#E5E7EB;color:#374151;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:4px;display:inline-block;border:1px solid #D1D5DB;font-weight:600;">已完成 ' + (shift.checkInTime || '') + '-' + (shift.checkOutTime || '') + '</span>';
+            } else if (shift.checkInState === 'late_completed') {
+              buttonsHtml = '<span class="badge" style="background:#FEF3C7;color:#D97706;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:4px;display:inline-block;border:1px solid #FCD34D;font-weight:600;">補簽到 ' + (shift.checkInTime || '14:00') + '-' + (shift.checkOutTime || '15:00') + '</span>';
+            } else if (shift.checkInState === 'absent') {
+              buttonsHtml = '<button class="btn btn-xs btn-danger" style="color:#FFF;background:#EF4444;border:1px solid #DC2626;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openAbsentReasonModal(\'' + caseId + '\', ' + shift.originalIndex + ')">未簽到</button>';
             } else {
+              const isCheckedIn = (shift.checkInState === 'checked_in');
               if (isBilled) {
                 buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-apply-change" style="color:#DC2626;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:4px;cursor:pointer;font-size:10px;padding:2px 6px; display: ' + changeDisplay + ' !important;" onclick="openApplyChangeModal(\'' + caseId + '\', ' + shift.originalIndex + ')">申請改班</button>';
               } else {
-                buttonsHtml = '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-edit-shift" style="color:#4B5563;border:1px solid #D1D5DB;background:#F9FAFB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px; display: ' + editDisplay + ' !important;" onclick="openEditShiftModal(\'' + caseId + '\', ' + shift.originalIndex + ')">更改排班</button>' +
+                const editBtnHtml = isCheckedIn ? '' : '<button class="btn btn-xs" data-bs-toggle="modal" data-bs-target="#modal-edit-shift" style="color:#4B5563;border:1px solid #D1D5DB;background:#F9FAFB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px; display: ' + editDisplay + ' !important;" onclick="openEditShiftModal(\'' + caseId + '\', ' + shift.originalIndex + ')">更改排班</button>';
+                buttonsHtml = editBtnHtml +
                   '<button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 6px;cursor:pointer; display: ' + billDisplay + ' !important;" onclick="singleBill(\'' + caseId + '\', ' + shift.originalIndex + ')">💰 單筆批價</button>';
               }
 
-              if (isAssignedTherapist && isToday) {
+              if (isAssignedTherapist && isToday && !(caseId === 'c6' && w === 6)) {
                 const state = shift.checkInState || 'not_started';
                 if (state === 'not_started') {
                   buttonsHtml = '<button class="btn btn-xs btn-primary" style="color:#FFF;background:#3B82F6;border:1px solid #2563EB;font-size:10px;padding:2px 6px;cursor:pointer;margin-right:4px;" onclick="openCheckInModal(\'' + caseId + '\', ' + shift.originalIndex + ')">📍 抵達簽到</button>' + buttonsHtml;
@@ -5756,8 +6176,8 @@
               '    </div>';
           });
 
-          // "+ 新增排班時段" button at the bottom of the card list (hidden in past weeks)
-          if (!isPastWeek) {
+          // "+ 新增排班時段" button at the bottom of the card list (hidden in past weeks, or when max shifts reached)
+          if (!isPastWeek && weekShifts.length < 6) {
             html += `<div class="add-shift-btn-wrap auth-therapist-manager" style="padding:8px 12px;background:#FFF;border-top:1px solid var(--gray-100);display:flex;justify-content:flex-end;">
               <button class="btn btn-xs btn-ghost" style="color:var(--blue);font-weight:600;font-size:11px;cursor:pointer;" onclick="openAddShiftModalForWeek('${caseId}', '${wStart}')">＋ 新增排班時段</button>
             </div>`;
@@ -6060,72 +6480,43 @@
     // ==========================================
     // Interactive Handlers for Case 5 (趙美惠)
     // ==========================================
-    function showC5AssignStep() {
-      document.getElementById('c5-assign-section').style.display = 'block';
-      document.getElementById('c5-republish-section').style.display = 'none';
+    function reportC5NoAccept() {
+      alert('已回報個管師');
+      closeModal('modal-detail-c5');
 
-      document.getElementById('c5-btn-assign-step1').style.display = 'none';
-      document.getElementById('c5-btn-reissue-step1').style.display = 'none';
-      document.getElementById('c5-btn-close-step1').style.display = 'none';
+      const badgeEl = document.getElementById('c5-card-badge');
+      if (badgeEl) {
+        badgeEl.textContent = '已回報不承接';
+        badgeEl.style.background = '#6B7280';
+        badgeEl.style.color = '#FFFFFF';
+      }
 
-      document.getElementById('c5-btn-assign-confirm').style.display = 'inline-block';
-      document.getElementById('c5-btn-republish-confirm').style.display = 'none';
-      document.getElementById('c5-btn-cancel-step2').style.display = 'inline-block';
+      const descEl = document.getElementById('c5-card-desc');
+      if (descEl) {
+        descEl.textContent = '已回報個案管理師，此案件不承接';
+      }
     }
 
     function showC5RepublishStep() {
-      document.getElementById('c5-assign-section').style.display = 'none';
       document.getElementById('c5-republish-section').style.display = 'block';
 
       document.getElementById('c5-btn-assign-step1').style.display = 'none';
       document.getElementById('c5-btn-reissue-step1').style.display = 'none';
       document.getElementById('c5-btn-close-step1').style.display = 'none';
 
-      document.getElementById('c5-btn-assign-confirm').style.display = 'none';
       document.getElementById('c5-btn-republish-confirm').style.display = 'inline-block';
       document.getElementById('c5-btn-cancel-step2').style.display = 'inline-block';
     }
 
     function resetC5Modal() {
-      document.getElementById('c5-assign-section').style.display = 'none';
       document.getElementById('c5-republish-section').style.display = 'none';
 
       document.getElementById('c5-btn-assign-step1').style.display = 'inline-block';
       document.getElementById('c5-btn-reissue-step1').style.display = 'inline-block';
       document.getElementById('c5-btn-close-step1').style.display = 'inline-block';
 
-      document.getElementById('c5-btn-assign-confirm').style.display = 'none';
       document.getElementById('c5-btn-republish-confirm').style.display = 'none';
       document.getElementById('c5-btn-cancel-step2').style.display = 'none';
-
-      document.getElementById('c5-therapist-select').selectedIndex = 0;
-    }
-
-    function confirmC5Assign() {
-      const val = document.getElementById('c5-therapist-select').value;
-      if (!val) {
-        alert('⚠️ 請選擇要指派的治療師！');
-        return;
-      }
-
-      const cards = document.querySelectorAll('.case-card');
-      cards.forEach(card => {
-        const nameEl = card.querySelector('.case-name');
-        if (nameEl && nameEl.textContent.trim() === '趙美惠') {
-          const badgeContainer = card.querySelector('.case-card-badges');
-          if (badgeContainer) {
-            badgeContainer.innerHTML = '<span class="badge badge-green">已指派</span><span class="badge badge-green">執行中</span>';
-          }
-          const rightContainer = card.querySelector('.case-card-right');
-          if (rightContainer) {
-            rightContainer.innerHTML = '<button class="btn btn-danger btn-xs" onclick="event.stopPropagation(); handleConfirmPause()">暫停</button> <button class="btn btn-ghost btn-xs" style="font-size:11px" onclick="event.stopPropagation(); toggleCase(\'c5\')">🔍 查看詳情</button>';
-          }
-        }
-      });
-
-      alert('✅ 指派成功！已將個案 趙美惠 指派給 ' + val + '。');
-      closeModal('modal-detail-c5');
-      resetC5Modal();
     }
 
     function confirmC5Republish() {
@@ -6206,6 +6597,7 @@
 
     // init
     adjustTestDataToToday();
+    updateC3ModalUI();
     switchRole(currentRole);
     toggleMockNetwork(isNetworkOnline);
 
