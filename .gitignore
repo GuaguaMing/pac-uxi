@@ -36,3 +36,9 @@ edits_history.json
 scratch_multi_replace.jsonl
 scratch_transcript.json
 scratch_transcript.txt
+
+# Internal & Confidential Documents (不對外公開)
+file/
+*.pdf
+private/
+temp/

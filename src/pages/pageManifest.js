@@ -3,6 +3,7 @@ import caseManagementHtml from './legacy-html/case-management.html?raw';
 import bedManagementHtml from './legacy-html/bed-management.html?raw';
 import rehabSchedulingHtml from './legacy-html/rehab-scheduling.html?raw';
 import homeCareSchedulingHtml from './legacy-html/home-care-scheduling.html?raw';
+import assessmentReportHtml from './legacy-html/comprehensive-assessment-report.html?raw';
 import assessmentFormsHtml from './legacy-html/assessment-forms.html?raw';
 import indicatorExportHtml from './legacy-html/indicator-export.html?raw';
 import userProfileHtml from './legacy-html/user-profile.html?raw';
@@ -36,7 +37,7 @@ export const pages = [
   {
     id: 'rehab-scheduling',
     file: 'rehab-scheduling.html',
-    label: '復健排班',
+    label: '排班總覽',
     description: 'In-hospital rehabilitation scheduling and therapist assignment views.',
     icon: '📅',
     html: rehabSchedulingHtml,
@@ -48,6 +49,14 @@ export const pages = [
     description: 'Home PAC case publishing, therapist signup, scheduling, and bonus flows.',
     icon: '🏡',
     html: homeCareSchedulingHtml,
+  },
+  {
+    id: 'comprehensive-assessment-report',
+    file: 'comprehensive-assessment-report.html',
+    label: '綜合評估報告書',
+    description: 'Interdisciplinary PAC team comprehensive assessment report.',
+    icon: '📑',
+    html: assessmentReportHtml,
   },
   {
     id: 'assessment-forms',

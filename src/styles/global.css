@@ -25,59 +25,373 @@ button {
   overflow: hidden;
 }
 
+/* 1920w 藍色科技醫療風格側邊欄 (支援展開與收合) */
 .app-sidebar {
-  width: 236px;
-  min-width: 236px;
+  width: 230px;
+  min-width: 230px;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  border-right: 1px solid #e2e8f0;
+  background: #1681c6;
+  color: #ffffff;
+  border-right: none;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+  transition: width 0.2s ease, min-width 0.2s ease;
+}
+
+.app-sidebar.collapsed {
+  width: 68px;
+  min-width: 68px;
+}
+
+.app-sidebar.collapsed .brand {
+  padding: 14px 8px;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-sidebar.collapsed .nav-label,
+.app-sidebar.collapsed .nav-arrow,
+.app-sidebar.collapsed .nav-sub-items,
+.app-sidebar.collapsed .user-info-text {
+  display: none !important;
+}
+
+.app-sidebar.collapsed .nav-button,
+.app-sidebar.collapsed .nav-group-header {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.app-sidebar.collapsed .sidebar-user-footer {
+  justify-content: center;
+  padding: 12px 0;
 }
 
 .brand {
-  padding: 18px 18px 14px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.brand-title {
+.brand-logo-text-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo-icon {
+  font-size: 20px;
+  color: #a7f3d0;
+}
+
+.brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: 0.5px;
+}
+
+.brand-main {
   font-size: 16px;
   font-weight: 800;
-  color: #2563eb;
+  color: #ffffff;
+  letter-spacing: 0.5px;
 }
 
+.sidebar-collapse-toggle-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 3px 7px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sidebar-collapse-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .app-nav {
   flex: 1;
-  padding: 10px 8px;
+  padding: 12px 10px;
   overflow-y: auto;
 }
 
+/* 導覽按鈕 (單層) */
 .nav-button {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 10px 12px;
+  gap: 10px;
+  padding: 9px 14px;
   border: 0;
-  border-left: 3px solid transparent;
   border-radius: 6px;
-  color: #475569;
+  color: rgba(255, 255, 255, 0.88);
   background: transparent;
   cursor: pointer;
   text-align: left;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 3px;
+  transition: all 0.15s ease;
 }
 
-.nav-button:hover {
-  background: #f1f5f9;
+.nav-button:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
 .nav-button.active {
-  background: #eff6ff;
-  border-left-color: #2563eb;
-  color: #1d4ed8;
+  background: #0e659c;
+  color: #ffffff;
   font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
+.nav-button.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 群組與樹狀導覽 */
+.nav-group {
+  margin-bottom: 4px;
+}
+
+.nav-group-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.88);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.nav-group-header:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-group-header.has-active {
+  color: #ffffff;
+}
+
+.nav-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  transition: transform 0.2s;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-arrow.collapsed {
+  transform: rotate(-90deg);
+}
+
+.nav-sub-items {
+  padding-left: 28px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.nav-sub-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12.5px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  transition: all 0.15s ease;
+}
+
+.nav-sub-button:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-sub-button.active {
+  background: #0e659c;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.nav-sub-button.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nav-sub-bullet {
+  font-size: 8px;
+  opacity: 0.6;
+}
+
+/* 側邊欄左下角使用者資訊與角色切換 Popover */
+.sidebar-user-container {
+  position: relative;
+  margin-top: auto;
+}
+
+.sidebar-user-footer {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.sidebar-user-footer:hover {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-info-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.user-info-text .user-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.user-info-text .user-role-title {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 角色切換上彈面板 (Popover) */
+.sidebar-role-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 10px;
+  width: 210px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid #e2e8f0;
+  z-index: 1000;
+  padding: 8px 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.role-popover-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  padding: 6px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  letter-spacing: 0.5px;
+}
+
+.role-popover-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.role-popover-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  width: 100%;
+}
+
+.role-popover-item:hover {
+  background: #f1f5f9;
+}
+
+.role-popover-item.active {
+  background: #eff6ff;
+}
+
+.role-avatar-tiny {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  color: #0284c7;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.role-info strong {
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.role-info small {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.check-mark {
+  color: #0284c7;
+  font-weight: 700;
+  font-size: 13px;
+}
 
 .workspace {
   flex: 1;
@@ -87,27 +401,60 @@ button {
   overflow: hidden;
 }
 
+/* 1920w 頂部列 */
 .workspace-topbar {
-  height: 64px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 0 20px;
+  padding: 0 24px;
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
 }
 
-.workspace-topbar h1 {
-  margin: 2px 0 0;
-  font-size: 18px;
-  line-height: 1.2;
+.topbar-left .page-heading-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.2px;
 }
 
-.eyebrow {
-  font-size: 11px;
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.system-datetime {
+  font-size: 13px;
+  font-weight: 500;
   color: #64748b;
+}
+
+.topbar-notif-btn {
+  background: transparent;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  position: relative;
+  padding: 4px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notif-badge-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 1.5px solid #ffffff;
 }
 
 

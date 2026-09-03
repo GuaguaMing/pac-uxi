@@ -1,3459 +1,1021 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PAC 復健排班</title>
+  <title>排班總覽 - 員郭醫院 PAC</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --blue: #2563EB;
-      --blue-light: #EFF6FF;
-      --blue-mid: #BFDBFE;
-      --blue-dark: #1E40AF;
-      --gray-50: #F8FAFC;
-      --gray-100: #F1F5F9;
-      --gray-200: #E2E8F0;
-      --gray-300: #CBD5E1;
-      --gray-400: #94A3B8;
-      --gray-500: #64748B;
-      --gray-600: #475569;
-      --gray-700: #334155;
-      --gray-900: #0F172A;
-      --green: #16A34A;
-      --green-light: #DCFCE7;
-      --green-mid: #BBF7D0;
-      --amber: #D97706;
-      --amber-light: #FEF3C7;
-      --red: #DC2626;
-      --red-light: #FEE2E2;
-      --purple: #7C3AED;
-      --purple-light: #EDE9FE;
-      --teal: #0D9488;
-      --teal-light: #CCFBF1;
-      --white: #FFFFFF;
-      --pac-inpatient: #2563EB;
-      --pac-inpatient-bg: #EFF6FF;
-      --nonpac-inpatient: #64748B;
-      --nonpac-inpatient-bg: #F1F5F9;
-      --pac-home: #16A34A;
-      --pac-home-bg: #DCFCE7;
-      --nonpac-home: #0D9488;
-      --nonpac-home-bg: #CCFBF1;
+      --primary-blue: #1681c6;
+      --primary-hover: #126fa9;
+      --header-blue-bg: #d0ecfd;
+      --card-bg: #ffffff;
+      --page-bg: #f8fafc;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      --current-row-bg: #e0f2fe;
+      --current-row-border: #0284c7;
     }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
-      background: var(--gray-50);
-      color: var(--gray-900);
-      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      background: var(--page-bg);
+      color: var(--text-main);
+      padding: 20px;
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    /* 頂部操作與視圖切換列 */
+    .top-action-bar {
       display: flex;
-      overflow: hidden;
-      font-size: 14px
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 14px;
     }
-
-    /* Sidebar */
-    .sidebar {
-      width: 192px;
-      min-width: 192px;
-      background: var(--white);
-      border-right: 1px solid var(--gray-200);
-      display: flex;
-      flex-direction: column
-    }
-
-    .sidebar-logo {
-      padding: 16px 16px 13px;
-      border-bottom: 1px solid var(--gray-200)
-    }
-
-    .logo-text {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--blue)
-    }
-
-    .logo-sub {
-      font-size: 11px;
-      color: var(--gray-400);
-      margin-top: 2px
-    }
-
-    .sidebar-nav {
-      padding: 6px 0;
-      flex: 1
-    }
-
-    .nav-item {
+    .view-toggle-group {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
-      font-size: 13px;
-      color: var(--gray-500);
-      border-left: 3px solid transparent;
-      cursor: default
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 8px;
+      gap: 2px;
     }
-
-    .nav-item.active {
-      background: var(--blue-light);
-      color: var(--blue);
-      font-weight: 600;
-      border-left-color: var(--blue)
-    }
-
-    .nav-item.disabled {
-      opacity: .38;
-      cursor: not-allowed
-    }
-
-    .sidebar-user {
-      margin-top: auto;
-      padding: 11px 14px;
-      border-top: 1px solid var(--gray-200)
-    }
-
-    .user-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px
-    }
-
-    .user-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--purple-light);
-      color: var(--purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700
-    }
-
-    .user-avatar.manager {
-      background: var(--amber-light);
-      color: var(--amber)
-    }
-
-    .user-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--gray-700)
-    }
-
-    .user-role {
-      font-size: 11px;
-      color: var(--gray-400)
-    }
-
-    .role-switcher {
-      display: flex;
-      border: 1px solid var(--gray-200);
+    .view-toggle-btn {
+      padding: 6px 18px;
       border-radius: 6px;
-      overflow: hidden;
-      width: 100%
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-
-    .role-btn {
-      flex: 1;
-      padding: 4px 0;
-      font-size: 10px;
+    .view-toggle-btn.active {
+      background: #ffffff;
+      color: var(--primary-blue);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .date-navigator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .date-nav-btn {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .date-nav-btn:hover { background: #f1f5f9; }
+    .current-date-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .btn-today {
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      border: none;
-      background: var(--white);
-      color: var(--gray-400);
-      text-align: center;
-      transition: all .15s
+      color: #334155;
     }
 
-    .role-btn.active {
-      background: var(--blue);
-      color: var(--white)
-    }
-
-    /* Main */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden
-    }
-
-    .topbar {
-      background: var(--white);
-      border-bottom: 1px solid var(--gray-200);
-      padding: 0 20px;
-      height: 48px;
+    .top-right-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0
+      gap: 10px;
     }
-
-    .breadcrumb {
-      font-size: 12px;
-      color: var(--gray-500)
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px
-    }
-
-    .content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px
-    }
-
-    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
+      gap: 6px;
+      padding: 6px 14px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      border: none;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all .15s;
-      white-space: nowrap
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
     }
-
     .btn-primary {
-      background: var(--blue);
-      color: var(--white)
+      background: var(--primary-blue);
+      color: #ffffff;
     }
-
-    .btn-primary:hover {
-      background: var(--blue-dark)
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline {
+      background: #ffffff;
+      border-color: var(--border-color);
+      color: var(--text-main);
     }
-
-    .btn-secondary {
-      background: var(--white);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-300)
-    }
-
-    .btn-secondary:hover {
-      background: var(--gray-50)
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--blue);
-      border: 1px solid var(--blue-mid)
-    }
-
-    .btn-ghost:hover {
-      background: var(--blue-light)
-    }
-
-    .btn-green {
-      background: var(--white);
-      color: var(--green);
-      border: 1px solid var(--green-mid)
-    }
-
-    .btn-green:hover {
-      background: var(--green-light)
-    }
-
-    .btn-danger {
-      background: var(--white);
-      color: var(--red);
-      border: 1px solid #FECACA
-    }
-
-    .btn-danger:hover {
-      background: var(--red-light)
-    }
-
-    .btn-sm {
-      padding: 5px 10px;
-      font-size: 12px
-    }
-
-    .btn-xs {
-      padding: 3px 8px;
-      font-size: 11px
-    }
-
-    /* Badge */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 7px;
+    .btn-outline:hover { background: #f1f5f9; }
+    .badge-count {
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600
-    }
-
-    .badge-blue {
-      background: var(--blue-light);
-      color: var(--blue)
-    }
-
-    .badge-green {
-      background: var(--green-light);
-      color: var(--green)
-    }
-
-    .badge-amber {
-      background: var(--amber-light);
-      color: var(--amber)
-    }
-
-    .badge-gray {
-      background: var(--gray-100);
-      color: var(--gray-500)
-    }
-
-    .badge-red {
-      background: var(--red-light);
-      color: var(--red)
-    }
-
-    .badge-purple {
-      background: var(--purple-light);
-      color: var(--purple)
-    }
-
-    /* Notification badge */
-    .notif-badge {
-      position: relative;
-      display: inline-flex
-    }
-
-    .notif-dot {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--red);
-      color: var(--white);
-      font-size: 10px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center
-    }
-
-    /* View controls */
-    .view-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      justify-content: space-between
-    }
-
-    .view-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap
-    }
-
-    .view-bar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    .view-toggle {
-      display: flex;
-      border: 1px solid var(--gray-200);
-      border-radius: 6px;
-      overflow: hidden
-    }
-
-    .view-btn {
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      background: var(--white);
-      color: var(--gray-500);
-      border: none;
-      font-weight: 500
-    }
-
-    .view-btn.active {
-      background: var(--blue);
-      color: var(--white)
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 4px
-    }
-
-    .filter-tab {
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gray-500);
-      cursor: pointer;
-      border-radius: 6px;
-      border: 1px solid var(--gray-200);
-      background: var(--white);
-      transition: all .15s
-    }
-
-    .filter-tab.active {
-      background: var(--blue);
-      color: var(--white);
-      border-color: var(--blue)
-    }
-
-    .nav-month {
-      display: flex;
-      align-items: center;
-      gap: 6px
-    }
-
-    .nav-month span {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gray-700);
-      min-width: 90px;
-      text-align: center
-    }
-
-    .nav-arrow {
-      width: 26px;
-      height: 26px;
-      border-radius: 5px;
-      border: 1px solid var(--gray-200);
-      background: var(--white);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: var(--gray-500)
-    }
-
-    .nav-arrow:hover {
-      background: var(--gray-50)
-    }
-
-    select.filter-control {
-      padding: 5px 10px;
-      border: 1px solid var(--gray-300);
-      border-radius: 6px;
-      font-size: 12px;
-      color: var(--gray-700);
-      background: var(--white);
-      outline: none;
-      cursor: pointer
-    }
-
-    /* Legend */
-    .legend {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      align-items: center
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      color: var(--gray-500)
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      flex-shrink: 0
-    }
-
-    /* ── Month Calendar ── */
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 1px;
-      background: var(--gray-200);
-      border: 1px solid var(--gray-200);
-      border-radius: 10px;
-      overflow: hidden
-    }
-
-    .cal-header {
-      background: var(--gray-50);
-      padding: 8px 6px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gray-500)
-    }
-
-    .cal-cell {
-      background: var(--white);
-      min-height: 110px;
-      padding: 6px;
-      position: relative;
-      vertical-align: top;
-      cursor: pointer;
-      transition: background .12s
-    }
-
-    .cal-cell:not(.other-month):hover {
-      background: var(--blue-light)
-    }
-
-    .cal-cell.other-month {
-      background: var(--gray-50);
-      cursor: default
-    }
-
-    .cal-cell.today {
-      background: #EFF6FF
-    }
-
-    .cal-cell.today:hover {
-      background: #DBEAFE
-    }
-
-    .cal-cell.holiday {
-      background: #FFF7ED
-    }
-
-    .cal-cell.holiday:hover {
-      background: #FFEDD5
-    }
-
-    .cal-date {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--gray-600);
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px
-    }
-
-    .cal-date.today-num {
-      width: 22px;
-      height: 22px;
-      background: var(--blue);
-      color: var(--white);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      flex-shrink: 0
-    }
-
-    .holiday-label {
-      font-size: 9px;
-      color: var(--amber);
-      font-weight: 600
-    }
-
-    .cal-event {
-      border-radius: 4px;
-      padding: 2px 5px;
-      margin-bottom: 2px;
-      font-size: 10px;
-      line-height: 1.4;
-      cursor: pointer;
-      transition: opacity .15s
-    }
-
-    .cal-event:hover {
-      opacity: .8
-    }
-
-    .cal-event.pac-in {
-      background: var(--pac-inpatient-bg);
-      color: var(--pac-inpatient);
-      border-left: 3px solid var(--pac-inpatient)
-    }
-
-    .cal-event.nonpac-in {
-      background: var(--nonpac-inpatient-bg);
-      color: var(--nonpac-inpatient);
-      border-left: 3px solid var(--nonpac-inpatient)
-    }
-
-    .cal-event.pac-home {
-      background: var(--pac-home-bg);
-      color: var(--pac-home);
-      border-left: 3px solid var(--pac-home)
-    }
-
-    .cal-event.nonpac-home {
-      background: var(--nonpac-home-bg);
-      color: var(--nonpac-home);
-      border-left: 3px solid var(--nonpac-home)
-    }
-
-    .cal-event.open {
-      background: var(--amber-light);
-      color: var(--amber);
-      border-left: 3px solid var(--amber)
-    }
-
-    .more-tag {
-      font-size: 10px;
-      color: var(--gray-400);
-      cursor: pointer;
-      padding: 1px 4px
-    }
-
-    .more-tag:hover {
-      color: var(--blue)
-    }
-
-    /* ── Week Calendar (matrix for manager) ── */
-    .week-matrix {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 10px;
-      overflow: hidden;
-      font-size: 12px
-    }
-
-    .week-matrix th {
-      padding: 8px 10px;
-      background: var(--gray-50);
-      border-bottom: 1px solid var(--gray-200);
-      border-right: 1px solid var(--gray-100);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gray-600);
-      white-space: nowrap
-    }
-
-    .week-matrix td {
-      padding: 4px 6px;
-      border-bottom: 1px solid var(--gray-100);
-      border-right: 1px solid var(--gray-100);
-      vertical-align: top;
-      min-width: 100px;
-      min-height: 40px
-    }
-
-    .week-matrix .time-col {
-      background: var(--gray-50);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gray-500);
-      width: 60px;
-      text-align: right;
-      padding-right: 8px
-    }
-
-    .week-matrix .therapist-header {
-      text-align: center
-    }
-
-    .therapist-tag {
-      display: inline-block;
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 700;
-      margin-bottom: 2px
-    }
-
-    .therapist-pt {
-      background: #DBEAFE;
-      color: #1D4ED8
-    }
-
-    .therapist-ot {
-      background: #FCE7F3;
-      color: #9D174D
-    }
-
-    .therapist-st {
-      background: #D1FAE5;
-      color: #065F46
-    }
-
-    .week-event {
-      border-radius: 4px;
-      padding: 2px 5px;
-      margin-bottom: 2px;
-      font-size: 10px;
-      cursor: pointer;
-      line-height: 1.4
-    }
-
-    .week-event.pac-in {
-      background: var(--pac-inpatient-bg);
-      color: var(--pac-inpatient)
-    }
-
-    .week-event.nonpac-in {
-      background: var(--nonpac-inpatient-bg);
-      color: var(--nonpac-inpatient)
-    }
-
-    .week-event.pac-home {
-      background: var(--pac-home-bg);
-      color: var(--pac-home)
-    }
-
-    .week-event.open {
-      background: var(--amber-light);
-      color: var(--amber)
-    }
-
-    .pac-tag {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--blue);
-      margin-left: 2px
-    }
-
-    /* ── Unified center modal overlay (used for both day list, detail, and register) ── */
-    .day-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      backdrop-filter: blur(2px)
-    }
-
-    .detail-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 110;
-      backdrop-filter: blur(2px)
-    }
-
-    /* Drawer is now a centred modal panel (no slide-in) */
-    .drawer-overlay {
-      display: none !important
-    }
-
-    .drawer {
-      position: relative;
-      right: auto;
-      top: auto;
-      bottom: auto;
-      transform: none !important;
-      width: 520px;
-      max-width: 92vw;
-      max-height: 88vh;
-      background: var(--white);
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .18);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden
-    }
-
-    .drawer-header {
-      padding: 16px 20px 13px;
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      flex-shrink: 0
-    }
-
-    .drawer-title {
-      font-size: 15px;
-      font-weight: 700
-    }
-
-    .drawer-close {
-      width: 25px;
-      height: 25px;
-      border-radius: 5px;
-      border: none;
-      background: var(--gray-100);
-      color: var(--gray-500);
-      cursor: pointer;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center
-    }
-
-    .drawer-close:hover {
-      background: var(--gray-200)
-    }
-
-    .drawer-body {
-      padding: 16px 20px;
-      overflow-y: auto;
-      flex: 1
-    }
-
-    .drawer-section {
-      margin-bottom: 16px
-    }
-
-    .drawer-section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--gray-400);
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: 8px
-    }
-
-    .drawer-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px
-    }
-
-    .drawer-field label {
-      font-size: 10px;
-      color: var(--gray-400);
-      display: block;
-      margin-bottom: 2px;
-      text-transform: uppercase;
-      letter-spacing: .04em
-    }
-
-    .drawer-field span {
-      font-size: 13px;
-      color: var(--gray-800);
-      font-weight: 500
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--gray-100);
-      margin: 13px 0
-    }
-
-    .summary-box {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: 7px;
-      padding: 12px;
-      font-size: 12px;
-      line-height: 1.8;
-      color: var(--gray-700)
-    }
-
-    /* ── Modal ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, .5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 120;
-      backdrop-filter: blur(2px)
-    }
-
-    .modal {
-      background: var(--white);
-      border-radius: 12px;
-      width: 520px;
-      max-width: 92vw;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .15)
-    }
-
-    .modal-lg {
-      width: 640px
-    }
-
-    .modal-header {
-      padding: 16px 20px 13px;
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0
-    }
-
-    .modal-title {
-      font-size: 15px;
-      font-weight: 700
-    }
-
-    .modal-close {
-      width: 25px;
-      height: 25px;
-      border-radius: 5px;
-      border: none;
-      background: var(--gray-100);
-      color: var(--gray-500);
-      cursor: pointer;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center
-    }
-
-    .modal-close:hover {
-      background: var(--gray-200)
-    }
-
-    .modal-body {
-      padding: 16px 20px;
-      overflow-y: auto;
-      flex: 1
-    }
-
-    .modal-footer {
-      padding: 13px 20px;
-      border-top: 1px solid var(--gray-200);
-      display: flex;
-      justify-content: flex-end;
-      gap: 7px;
-      flex-shrink: 0
-    }
-
-    /* Form */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-bottom: 12px
-    }
-
-    .form-group label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gray-600)
-    }
-
-    .form-control {
-      padding: 7px 10px;
-      border: 1px solid var(--gray-300);
-      border-radius: 6px;
-      font-size: 13px;
-      color: var(--gray-800);
-      background: var(--white);
-      outline: none
-    }
-
-    .form-control:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px var(--blue-light)
-    }
-
-    select.form-control {
-      cursor: pointer
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 70px
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px
-    }
-
-    .required {
-      color: var(--red);
-      margin-left: 2px
-    }
-
-    /* Approval list */
-    .approval-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px
-    }
-
-    .approval-item {
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      padding: 13px 15px
-    }
-
-    .approval-item-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 8px
-    }
-
-    .approval-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gray-900)
-    }
-
-    .approval-meta {
-      font-size: 11px;
-      color: var(--gray-400);
-      margin-top: 2px
-    }
-
-    .approval-reason {
-      font-size: 12px;
-      color: var(--gray-600);
-      background: var(--gray-50);
-      padding: 8px 10px;
-      border-radius: 5px;
-      margin-bottom: 10px
-    }
-
-    .approval-actions {
-      display: flex;
-      gap: 7px;
-      justify-content: flex-end
-    }
-
-    /* Registration quota */
-    .quota-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--gray-100)
-    }
-
-    .quota-row:last-child {
-      border-bottom: none
-    }
-
-    .quota-label {
-      font-size: 12px;
-      color: var(--gray-700);
-      min-width: 30px
-    }
-
-    .quota-bar {
-      flex: 1;
-      height: 8px;
-      background: var(--gray-100);
-      border-radius: 999px;
-      overflow: hidden
-    }
-
-    .quota-fill {
-      height: 100%;
-      border-radius: 999px
-    }
-
-    .quota-fill.pt {
-      background: var(--blue)
-    }
-
-    .quota-fill.ot {
-      background: var(--purple)
-    }
-
-    .quota-fill.st {
-      background: var(--green)
-    }
-
-    .quota-count {
-      font-size: 11px;
-      color: var(--gray-500);
-      min-width: 40px;
-      text-align: right
-    }
-
-    /* Info note */
-    .info-note {
-      font-size: 12px;
-      padding: 10px 12px;
-      border-radius: 6px;
-      margin-bottom: 12px
-    }
-
-    .info-note.blue {
-      background: var(--blue-light);
-      color: var(--blue-dark)
-    }
-
-    .info-note.amber {
-      background: var(--amber-light);
-      color: var(--amber)
-    }
-
-    .info-note.green {
-      background: var(--green-light);
-      color: var(--green)
-    }
-
-    /* Time slot selector */
-    .time-slot-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 6px
-    }
-
-    .time-slot {
-      padding: 6px;
-      border: 1px solid var(--gray-200);
-      border-radius: 5px;
-      font-size: 11px;
-      text-align: center;
-      cursor: pointer;
-      color: var(--gray-600)
-    }
-
-    .hidden {
-      display: none !important
-    }
-
-    /* Custom Dropdown for Therapist Filter */
-    .custom-dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-btn {
-      padding: 5px 12px;
-      border: 1px solid var(--gray-300);
-      border-radius: 6px;
-      font-size: 12px;
-      color: var(--gray-700);
-      background: var(--white);
-      outline: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s;
-    }
-
-    .dropdown-btn:after {
-      content: '▼';
-      font-size: 8px;
-      color: var(--gray-400);
       margin-left: 4px;
     }
 
-    .dropdown-btn:hover {
-      border-color: var(--blue);
-    }
-
-    .dropdown-btn.disabled {
-      background: var(--gray-50);
-      color: var(--gray-400);
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .dropdown-btn.disabled:after {
-      display: none;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: calc(100% + 4px);
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      z-index: 95;
-      min-width: 170px;
-      padding: 6px;
-    }
-
-    .dropdown-content.show {
-      display: block;
-    }
-
-    .dropdown-item {
+    /* 05 原稿 7 類圓點標籤列 */
+    .legend-type-bar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
+      gap: 14px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
       font-size: 12px;
-      color: var(--gray-700);
-      cursor: pointer;
+      font-weight: 500;
+      color: #475569;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot-normal { background: #94a3b8; }
+    .dot-opd { background: #64748b; }
+    .dot-ward { background: #334155; }
+    .dot-inpatient { background: #0284c7; }
+    .dot-daycare { background: #7e22ce; }
+    .dot-home { background: #16a34a; }
+    .dot-home-recruiting { background: transparent; border: 1.5px solid #16a34a; }
+
+    /* 篩選工具列 */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .search-box-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+    .search-input {
+      width: 100%;
+      padding: 6px 12px 6px 30px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 12.5px;
+      outline: none;
+    }
+    .filter-select {
+      padding: 6px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 12.5px;
+      color: var(--text-main);
+      background: #fff;
+    }
+
+    /* 單日排班矩陣 (支援完整每小時 4 格、午休/下班後獨立格子、當前時段高亮) */
+    .schedule-matrix-wrap {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow-y: auto;
+      max-height: calc(100vh - 230px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1150px;
+    }
+    .schedule-table th {
+      background: var(--header-blue-bg);
+      color: #0f4c75;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 8px 10px;
+      border: 1px solid #bae6fd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      text-align: center;
+      min-width: 105px;
+    }
+    .schedule-table td {
+      border: 1px solid var(--border-color);
+      padding: 3px 5px;
+      font-size: 12px;
+      height: 38px;
+      vertical-align: middle;
+      background: #ffffff;
+    }
+    .time-col {
+      width: 85px;
+      min-width: 85px;
+      background: #f8fafc !important;
+      font-weight: 700;
+      color: #64748b;
+      text-align: center;
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      border-right: 2px solid #cbd5e1 !important;
+    }
+
+    /* 配合現在時辰 (下午 2:47 -> 14:45)，整條 row 高亮 (指示 6) */
+    .current-hour-highlight td {
+      background: #e0f2fe !important;
+      border-top: 2px solid #0284c7 !important;
+      border-bottom: 2px solid #0284c7 !important;
+    }
+    .current-hour-highlight .time-col {
+      background: #bae6fd !important;
+      color: #0369a1 !important;
+      font-weight: 800;
+    }
+
+    /* 午休與下班後 row (正常中性底色，不再特別標黃) */
+    .noon-row td, .after-work-row td {
+      background: #f8fafc;
+      height: 42px;
+      border-top: 1.5px solid #cbd5e1;
+      border-bottom: 1.5px solid #cbd5e1;
+    }
+    .noon-row .time-col, .after-work-row .time-col {
+      color: #334155;
+      font-weight: 700;
+    }
+
+    .booking-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
       border-radius: 4px;
-      transition: background 0.1s;
-      white-space: nowrap;
-    }
-
-    .dropdown-item:hover {
-      background: var(--gray-100);
-    }
-
-    .dropdown-item input[type="checkbox"] {
-      accent-color: var(--blue);
+      background: #f1f5f9;
+      color: #1e293b;
       cursor: pointer;
+      font-size: 11.5px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
     }
+    .booking-card:hover { background: #e2e8f0; transform: scale(1.02); }
+    .p-tag {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+      text-align: center;
+      background: #0284c7;
+      color: #fff;
+      font-size: 9.5px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .p-tag.home { background: #16a34a; }
+
+    /* 月曆視圖 (完全展開不遮擋，指示 2) */
+    .calendar-container {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      margin-bottom: 30px;
+    }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: var(--header-blue-bg);
+      text-align: center;
+      font-weight: 700;
+      color: #0f4c75;
+      padding: 10px 0;
+      border-bottom: 1px solid #bae6fd;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+    .calendar-day-cell {
+      min-height: 120px;
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .calendar-day-cell:hover { background: #f8fafc; }
+    .calendar-day-cell.other-month { background: #f8fafc; opacity: 0.45; }
+    .day-num { font-weight: 700; font-size: 13px; color: #334155; margin-bottom: 4px; }
+    .day-num.today { color: var(--primary-blue); font-weight: 800; }
+    .cal-event-pill {
+      font-size: 11px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      margin-bottom: 3px;
+      background: #eef7fc;
+      color: #0369a1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .cal-event-pill.home-event { background: #dcfce7; color: #15803d; }
+    .cal-event-more { font-size: 11px; color: #94a3b8; font-weight: 600; }
+
+    /* 置中 Modal 系統 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
+      z-index: 1050;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .center-modal-box {
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalFadeIn {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header-title { font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .modal-close-btn { background: transparent; border: none; font-size: 18px; color: #64748b; cursor: pointer; }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+
+    .pink-capsule-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      background: #fdf2f8;
+      border: 1px solid #f472b6;
+      color: #be185d;
+    }
+
+    /* 月曆單日排班總表彈窗 (指示 3) */
+    .cal-day-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cal-day-summary-row:hover { background: #f8fafc; }
+    .cal-day-summary-row:last-child { border-bottom: none; }
   </style>
 </head>
-
 <body>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <!--
-  <div class="sidebar-logo">
-    <div class="logo-text">PAC 管理系統</div>
-    <div class="logo-sub">急性後期照護</div>
+  <!-- 頂部視圖切換與導航列 -->
+  <div class="top-action-bar">
+    <div class="view-toggle-group">
+      <button class="view-toggle-btn active" id="btnViewToday" onclick="switchView('today')">今日</button>
+      <button class="view-toggle-btn" id="btnViewCalendar" onclick="switchView('calendar')">月曆</button>
+    </div>
+
+    <div class="date-navigator">
+      <button class="date-nav-btn" onclick="prevDate()">◀</button>
+      <span class="current-date-title" id="currentDateDisplay">2026 年 08 月 01 日 星期一</span>
+      <button class="date-nav-btn" onclick="nextDate()">▶</button>
+      <button class="btn-today" onclick="goToday()">回到今天</button>
+    </div>
+
+    <div class="top-right-actions">
+      <button class="btn btn-outline" onclick="openShiftAuditModal()">
+        <span>換班審核</span>
+        <span class="badge-count">2 件待審</span>
+      </button>
+      <button class="btn btn-primary" onclick="openAddScheduleModal()">+ 新增排班</button>
+    </div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-item disabled">🏠 個人儀表板</div>
-    <div class="nav-item disabled">📋 個案管理</div>
-    <div class="nav-item disabled">🛏 病床管理</div>
-    <div class="nav-item active">📅 班表總覽頁</div>
-    <div class="nav-item disabled">🏡 居家排班管理</div>
-    <div class="nav-item disabled">📊 評估量表</div>
-    <div class="nav-item disabled">💪 復健紀錄</div>
-    <div class="nav-item disabled">📤 指標匯出</div>
-  </nav>
--->
-    <div class="sidebar-user">
-      <div class="user-row">
-        <div class="user-avatar manager" id="user-avatar">王</div>
-        <div>
-          <div class="user-name" id="user-name">王復健主管</div>
-          <div class="user-role" id="user-role-label">復健主管</div>
-        </div>
-      </div>
-      <div class="role-switcher">
-        <button class="role-btn active" id="btn-manager" onclick="switchRole('manager')">復健主管</button>
-        <button class="role-btn" id="btn-therapist" onclick="switchRole('therapist')">治療師</button>
-      </div>
-    </div>
-  </aside>
 
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb" id="bc">班表總覽頁</div>
-      <div class="topbar-right">
-        <div id="approval-badge" class="notif-badge hidden">
-          <button class="btn btn-secondary btn-sm" onclick="openModal('modal-approval')">換班審核</button>
-          <span class="notif-dot">4</span>
-        </div>
-        <div id="my-application-badge" class="notif-badge hidden">
-          <button class="btn btn-secondary btn-sm" onclick="openModal('modal-my-applications')">我的申請</button>
-          <span class="notif-dot" style="background:var(--amber)">2</span>
-        </div>
-        <button id="btn-add-schedule" class="btn btn-primary btn-sm"
-          onclick="openModal('modal-add-schedule')">＋新增班表</button>
-      </div>
-    </div>
-    <div class="content">
+  <!-- 7 類排班圓點標籤列 -->
+  <div class="legend-type-bar">
+    <span class="legend-item"><span class="legend-dot dot-normal"></span> 一般復健</span>
+    <span class="legend-item"><span class="legend-dot dot-opd"></span> 門診復健</span>
+    <span class="legend-item"><span class="legend-dot dot-ward"></span> 復健病房</span>
+    <span class="legend-item"><span class="legend-dot dot-inpatient"></span> <span class="p-tag" style="width:12px;height:12px;line-height:12px;font-size:8px">P</span> PAC 住院</span>
+    <span class="legend-item"><span class="legend-dot dot-daycare"></span> <span class="p-tag" style="width:12px;height:12px;line-height:12px;font-size:8px;background:#7e22ce">P</span> PAC 日照</span>
+    <span class="legend-item"><span class="legend-dot dot-home"></span> <span class="p-tag home" style="width:12px;height:12px;line-height:12px;font-size:8px">P</span> PAC 居家</span>
+    <span class="legend-item"><span class="legend-dot dot-home-recruiting"></span> 可報名居家</span>
+  </div>
 
-      <!-- 視圖控制列 -->
-      <div class="view-bar">
-        <div class="view-bar-left">
-          <div class="view-toggle">
-            <button class="view-btn active" onclick="switchView(this,'month')">月曆</button>
-            <button class="view-btn" onclick="switchView(this,'week')">週次</button>
-          </div>
-          <div class="nav-month">
-            <button class="nav-arrow" onclick="prevPeriod()">◀</button>
-            <span id="current-period-label">2026年 6月</span>
-            <button class="nav-arrow" onclick="nextPeriod()">▶</button>
-          </div>
-          <button class="btn btn-secondary btn-sm" onclick="goToToday()">今日</button>
-          <div class="filter-tabs" id="type-filters">
-            <div class="filter-tab active" data-type="all" onclick="toggleTypeFilter('all')">全部</div>
-            <div class="filter-tab" data-type="inpatient" onclick="toggleTypeFilter('inpatient')">院內</div>
-            <div class="filter-tab" data-type="home" onclick="toggleTypeFilter('home')">居家</div>
-            <div class="filter-tab" data-type="open" onclick="toggleTypeFilter('open')">可報名 <span
-                class="badge badge-amber" id="open-count-badge" style="margin-left:3px">3</span></div>
-          </div>
-        </div>
-        <div class="view-bar-right">
-          <!-- Custom Therapist Dropdown -->
-          <div class="custom-dropdown" id="therapist-dropdown">
-            <button class="dropdown-btn" id="therapist-dropdown-btn"
-              onclick="toggleTherapistDropdown(event)">全部治療師</button>
-            <div class="dropdown-content" id="therapist-dropdown-menu">
-              <label class="dropdown-item"><input type="checkbox" id="chk-therapist-all" value="all" checked
-                  onchange="onTherapistCheckboxChange(this)"> 全部治療師</label>
-              <label class="dropdown-item"><input type="checkbox" class="chk-therapist" value="黃志豪" checked
-                  onchange="onTherapistCheckboxChange(this)"> 黃志豪（PT）</label>
-              <label class="dropdown-item"><input type="checkbox" class="chk-therapist" value="陳建宏" checked
-                  onchange="onTherapistCheckboxChange(this)"> 陳建宏（PT）</label>
-              <label class="dropdown-item"><input type="checkbox" class="chk-therapist" value="李佳穎" checked
-                  onchange="onTherapistCheckboxChange(this)"> 李佳穎（OT）</label>
-              <label class="dropdown-item"><input type="checkbox" class="chk-therapist" value="張雅玲" checked
-                  onchange="onTherapistCheckboxChange(this)"> 張雅玲（OT）</label>
-              <label class="dropdown-item"><input type="checkbox" class="chk-therapist" value="吳怡君" checked
-                  onchange="onTherapistCheckboxChange(this)"> 吳怡君（ST）</label>
+  <!-- 篩選列 -->
+  <div class="filter-bar">
+    <div class="search-box-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="搜尋個案姓名 / 電話 / 病歷號 / 身分證">
+    </div>
+    <select class="filter-select">
+      <option value="all">復健病房</option>
+      <option value="一般復健">一般復健</option>
+      <option value="門診復健">門診復健</option>
+    </select>
+    <select class="filter-select">
+      <option value="all">全部治療師</option>
+      <option value="黃志豪">黃志豪（主管/PT）</option>
+      <option value="陳怡君">陳怡君（PT）</option>
+      <option value="林承翰">林承翰（PT）</option>
+      <option value="黃雅婷">黃雅婷（PT）</option>
+      <option value="吳建宏">吳建宏（PT）</option>
+      <option value="蔡昕妤">蔡昕妤（PT）</option>
+      <option value="許哲銘">許哲銘（PT）</option>
+      <option value="劉思妤">劉思妤（OT）</option>
+      <option value="鄭佩芬">鄭佩芬（OT）</option>
+      <option value="謝宗霖">謝宗霖（OT）</option>
+    </select>
+  </div>
+
+  <!-- 1. 今日單日時間矩陣 (每小時完整 4 格，08:00 至 17:45 接著下班後，午休與下班後僅 PAC 居家，配合現在時辰 14:45 整條 highlight) -->
+  <div class="schedule-matrix-wrap" id="todayView">
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th class="time-col">時段/治療師</th>
+          <th>PT 黃志豪(主管)</th>
+          <th>PT 陳怡君</th>
+          <th>PT 林承翰</th>
+          <th>PT 黃雅婷</th>
+          <th>PT 吳建宏</th>
+          <th>PT 蔡昕妤</th>
+          <th>PT 許哲銘</th>
+          <th>OT 劉思妤</th>
+          <th>OT 鄭佩芬</th>
+          <th>OT 謝宗霖</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 08:00 - 08:45 -->
+        <tr>
+          <td class="time-col">08:00</td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:00', '黃志豪（PT）', '腦中風(CVA)', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('賴玉梅', '08:00', '陳怡君（PT）', '脆弱性骨折', '門診復健')">● 賴玉梅</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('賴玉梅', '08:00', '黃雅婷（PT）', '脆弱性骨折', '門診復健')">● 賴玉梅</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('蔡明德', '08:00', '吳建宏（PT）', '創傷性神經損傷', 'PAC 住院')"><span class="p-tag">P</span> 蔡明德</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('鄭正雄', '08:00', '蔡昕妤（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 鄭正雄</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:00', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('黃莉英', '08:00', '劉思妤（OT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('詹富貴', '08:00', '鄭佩芬（OT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 詹富貴</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('黃莉英', '08:00', '謝宗霖（OT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td>
+        </tr>
+        <tr>
+          <td class="time-col">08:15</td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:15', '黃志豪（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '陳怡君（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '黃雅婷（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:15', '吳建宏（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '蔡昕妤（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '劉思妤（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('林偉', '08:15', '謝宗霖（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+        </tr>
+        <tr>
+          <td class="time-col">08:30</td>
+          <td><div class="booking-card" style="background:#fdf2f8;border:1px solid #f472b6" onclick="openDetailModal('李文雄', '08:30', '黃志豪（PT）', '腦中風(CVA)', 'PAC 住院')"><span class="p-tag">P</span> <strong>李文雄</strong></div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '林承翰（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '黃雅婷（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '吳建宏（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '蔡昕妤（PT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '劉思妤（OT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '鄭佩芬（OT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('張美玲', '08:30', '謝宗霖（OT）', '衰弱高齡', '門診復健')">● 張美玲</div></td>
+        </tr>
+        <tr>
+          <td class="time-col">08:45</td>
+          <td></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '林承翰（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '吳建宏（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+          <td></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '劉思妤（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+          <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '謝宗霖（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
+        </tr>
+
+        <!-- 09:00 - 09:45 (補齊，無偷工減料) -->
+        <tr><td class="time-col">09:00</td><td><div class="booking-card" onclick="openDetailModal('司徒建智', '09:00', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 司徒建智</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('陳蘭梓', '09:00', '黃雅婷（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 陳蘭梓</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '09:00', '劉思妤（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td></tr>
+        <tr><td class="time-col">09:15</td><td></td><td><div class="booking-card" onclick="openDetailModal('彭春梅', '09:15', '陳怡君（PT）', '衰弱高齡', '門診復健')">● 彭春梅</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('郭琬棻', '09:15', '蔡昕妤（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 郭琬棻</div></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">09:30</td><td><div class="booking-card" onclick="openDetailModal('姜義企', '09:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 姜義企</div></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('簡麗卿', '09:30', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 簡麗卿</div></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">09:45</td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('郝珍貴', '09:45', '林承翰（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 郝珍貴</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+        <!-- 10:00 - 10:45 -->
+        <tr><td class="time-col">10:00</td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('張簡麗卿', '10:00', '吳建宏（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 張簡麗卿</div></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">10:15</td><td><div class="booking-card" onclick="openDetailModal('張簡麗卿', '10:15', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 張簡麗卿</div></td><td><div class="booking-card" onclick="openDetailModal('許月嵋', '10:15', '陳怡君（PT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 許月嵋</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('鄭正雄', '10:15', '黃雅婷（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 鄭正雄</div></td><td><div class="booking-card" onclick="openDetailModal('許月嵋', '10:15', '吳建宏（PT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 許月嵋</div></td><td><div class="booking-card" onclick="openDetailModal('許月嵋', '10:15', '蔡昕妤（PT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 許月嵋</div></td><td><div class="booking-card" onclick="openDetailModal('許月嵋', '10:15', '許哲銘（PT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 許月嵋</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('許月嵋', '10:15', '鄭佩芬（OT）', '脆弱性骨折', 'PAC 住院')"><span class="p-tag">P</span> 許月嵋</div></td><td></td></tr>
+        <tr><td class="time-col">10:30</td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('李文雄', '10:30', '吳建宏（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 李文雄</div></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">10:45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+        <!-- 11:00 - 11:45 -->
+        <tr><td class="time-col">11:00</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">11:15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">11:30</td><td><div class="booking-card" onclick="openDetailModal('林偉', '11:30', '黃志豪（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td><div class="booking-card" onclick="openDetailModal('詹富貴', '11:30', '陳怡君（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 詹富貴</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '林承翰（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '蔡昕妤（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('李文雄', '11:30', '許哲銘（ST）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 李文雄</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '劉思妤（OT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '鄭佩芬（OT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '11:30', '謝宗霖（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td></tr>
+        <tr><td class="time-col">11:45</td><td><div class="booking-card" onclick="openDetailModal('劉香香', '11:45', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('林偉', '11:45', '鄭佩芬（OT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td></td></tr>
+
+        <!-- 午休列：僅 PAC 居家，無門診，中性底色不標黃 (指示 2、6) -->
+        <tr class="noon-row">
+          <td class="time-col">午休</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('鄭正雄', '午休 12:30', '吳建宏（PT）', '衰弱高齡', 'PAC 居家')">
+              <span class="p-tag home">P</span> <strong>鄭正雄</strong> (居家)
             </div>
-          </div>
-        </div>
+          </td>
+          <td>
+            <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('蔣義雄', '午休 12:30', '蔡昕妤（PT）', '創傷神經', 'PAC 居家')">
+              <span class="p-tag home">P</span> <strong>蔣義雄</strong> (居家)
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <!-- 14:00 - 14:45 (下午時段，配合現在時辰 14:45 整條 highlight，指示 6) -->
+        <tr>
+          <td class="time-col">14:00</td>
+          <td></td><td></td><td><div class="booking-card" onclick="openDetailModal('張簡麗卿', '14:00', '林承翰（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 張簡麗卿</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:00', '許哲銘（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '14:00', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td>
+        </tr>
+        <tr>
+          <td class="time-col">14:15</td>
+          <td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:15', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:15', '吳建宏（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:15', '劉思妤（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:15', '鄭佩芬（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td><div class="booking-card" onclick="openDetailModal('林偉', '14:15', '謝宗霖（OT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td>
+        </tr>
+        <tr>
+          <td class="time-col">14:30</td>
+          <td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:30', '林承翰（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '蔡昕妤（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '劉思妤（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '謝宗霖（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td>
+        </tr>
+        <!-- 當前時辰 14:45 (下午 2:47) 整條藍色 highlight，方便即時對照班表 (指示 6) -->
+        <tr class="current-hour-highlight">
+          <td class="time-col">● 14:45 (現在)</td>
+          <td><div class="booking-card" style="background:#fff;border:1.5px solid #0284c7" onclick="openDetailModal('歐陽國華', '14:45', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> <strong>歐陽國華</strong></div></td>
+          <td></td>
+          <td></td>
+          <td><div class="booking-card" style="background:#fff;border:1.5px solid #0284c7" onclick="openDetailModal('鄭正雄', '14:45', '黃雅婷（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> <strong>鄭正雄</strong></div></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+        <!-- 15:00 - 15:45 -->
+        <tr><td class="time-col">15:00</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">15:15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">15:30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">15:45</td><td><div class="booking-card" onclick="openDetailModal('李文雄', '15:45', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 李文雄</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+        <!-- 16:00 - 16:45 -->
+        <tr><td class="time-col">16:00</td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '16:00', '陳怡君（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">16:15</td><td><div class="booking-card" onclick="openDetailModal('林偉', '16:15', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td></td><td></td><td></td><td></td><td><div class="booking-card" style="border-color:#f472b6" onclick="openDetailModal('李文雄', '16:15', '蔡昕妤（OT代）', '腦中風', 'PAC 住院')"><span>[代]</span> 李文雄</div></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">16:30</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">16:45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+        <!-- 17:00 - 17:45 -->
+        <tr><td class="time-col">17:00</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="time-col">17:15</td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('林偉', '17:15', '黃雅婷（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '17:15', '謝宗霖（OT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td></tr>
+        <tr><td class="time-col">17:30</td><td><div class="booking-card" onclick="openDetailModal('劉香香', '17:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '17:30', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td></tr>
+        <tr><td class="time-col">17:45</td><td></td><td><div class="booking-card" onclick="openDetailModal('詹富貴', '17:45', '陳怡君（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 詹富貴</div></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '17:45', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td><td></td><td></td></tr>
+
+        <!-- 下班後列：僅 PAC 居家，無門診，中性底色不標黃 (指示 2、6) -->
+        <tr class="after-work-row">
+          <td class="time-col">下班後</td>
+          <td>
+            <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('張簡麗卿', '下班後 18:30', '黃志豪（PT）', '腦中風', 'PAC 居家')">
+              <span class="p-tag home">P</span> <strong>張簡麗卿</strong> (居家)
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('歐陽國華', '下班後 18:30', '吳建宏（PT）', '腦中風', 'PAC 居家')">
+              <span class="p-tag home">P</span> <strong>歐陽國華</strong> (居家)
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('林偉', '下班後 18:30', '劉思妤（OT）', '腦中風', 'PAC 居家')">
+              <span class="p-tag home">P</span> <strong>林偉</strong> (居家)
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. 月曆總覽視圖 (完整 35 天不遮擋，點擊格子開啟「xx月xx日 排班總表」彈窗，指示 2、3) -->
+  <div class="calendar-container" id="calendarView">
+    <div class="calendar-weekdays">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+    </div>
+    <div class="calendar-grid">
+      <!-- 第 1 週 (7/26 - 8/1) -->
+      <div class="calendar-day-cell other-month"><div class="day-num">26</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">27</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">28</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">29</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">30</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">31</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/01', '星期六', 15)">
+        <div class="day-num today">01 (今日)</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・李鮭魚... 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</span>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
       </div>
 
-      <!-- 圖例 -->
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--pac-inpatient)"></div>PAC 院內
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--nonpac-inpatient)"></div>一般院內
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--pac-home)"></div>PAC 居家
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--nonpac-home)"></div>一般居家
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--amber-light)"></div>可報名居家
-        </div>
+      <!-- 第 2 週 (8/2 - 8/8) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/02', '星期日', 12)">
+        <div class="day-num">02</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・賴文雄 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・詹富勇 08:30</span>
+        <div class="cal-event-more">還有 9 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/03', '星期一', 10)">
+        <div class="day-num">03</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・林偉 08:45</span>
+        <div class="cal-event-more">還有 7 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/04', '星期二', 8)">
+        <div class="day-num">04</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:30</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:45</span>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/05', '星期三', 9)">
+        <div class="day-num">05</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・張美玲 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・嚴長憲 08:30</span>
+        <div class="cal-event-more">還有 6 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/06', '星期四', 13)">
+        <div class="day-num">06</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:30</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:45</span>
+        <div class="cal-event-more">還有 10 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/07', '星期五', 10)">
+        <div class="day-num">07</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:30</span>
+        <div class="cal-event-more">還有 7 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/08', '星期六', 15)">
+        <div class="day-num">08</div>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</span>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
       </div>
 
-      <!-- ══ 月曆視圖 ══ -->
-      <div id="view-month">
-        <div class="cal-grid">
-          <!-- 星期標題 -->
-          <div class="cal-header">日</div>
-          <div class="cal-header">一</div>
-          <div class="cal-header">二</div>
-          <div class="cal-header">三</div>
-          <div class="cal-header">四</div>
-          <div class="cal-header">五</div>
-          <div class="cal-header">六</div>
+      <!-- 第 3 週 (8/9 - 8/15) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/09', '星期日', 5)"><div class="day-num">09</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/10', '星期一', 6)"><div class="day-num">10</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/11', '星期二', 7)"><div class="day-num">11</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/12', '星期三', 5)"><div class="day-num">12</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/13', '星期四', 14)"><div class="day-num">13</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</span><div class="cal-event-more">還有 11 個 &gt;</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/14', '星期五', 6)"><div class="day-num">14</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/15', '星期六', 15)"><div class="day-num">15</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 12 個 &gt;</div></div>
 
-          <!-- 第一週 (5月尾) -->
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">1</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">2</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">3</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">4</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">5</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">6</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">7</div>
-          </div>
-
-          <!-- 第二週 6/1~6/7 -->
-          <div class="cal-cell holiday" data-date="6-1">
-            <div class="cal-date">1 <span class="holiday-label">端午節</span></div>
-          </div>
-          <div class="cal-cell" data-date="6-2">
-            <div class="cal-date">2</div>
-          </div>
-          <div class="cal-cell" data-date="6-3">
-            <div class="cal-date">3</div>
-          </div>
-          <div class="cal-cell" data-date="6-4">
-            <div class="cal-date">4</div>
-          </div>
-          <div class="cal-cell" data-date="6-5">
-            <div class="cal-date">5</div>
-          </div>
-          <div class="cal-cell" data-date="6-6">
-            <div class="cal-date">6</div>
-          </div>
-          <div class="cal-cell" data-date="6-7">
-            <div class="cal-date">7</div>
-          </div>
-
-          <!-- 第三週 6/8~6/14 -->
-          <div class="cal-cell" data-date="6-8">
-            <div class="cal-date">8</div>
-          </div>
-          <div class="cal-cell" data-date="6-9">
-            <div class="cal-date">9</div>
-          </div>
-          <div class="cal-cell" data-date="6-10">
-            <div class="cal-date">10</div>
-          </div>
-          <div class="cal-cell" data-date="6-11">
-            <div class="cal-date">11</div>
-          </div>
-          <div class="cal-cell" data-date="6-12">
-            <div class="cal-date">12</div>
-          </div>
-          <div class="cal-cell" data-date="6-13">
-            <div class="cal-date">13</div>
-          </div>
-          <div class="cal-cell" data-date="6-14">
-            <div class="cal-date">14</div>
-          </div>
-
-          <!-- 第四週 6/15~6/21 -->
-          <div class="cal-cell" data-date="6-15">
-            <div class="cal-date">15</div>
-          </div>
-          <div class="cal-cell" data-date="6-16">
-            <div class="cal-date">16</div>
-          </div>
-          <div class="cal-cell" data-date="6-17">
-            <div class="cal-date">17</div>
-          </div>
-          <div class="cal-cell" data-date="6-18">
-            <div class="cal-date">18</div>
-          </div>
-          <div class="cal-cell" data-date="6-19">
-            <div class="cal-date">19</div>
-          </div>
-          <div class="cal-cell" data-date="6-20">
-            <div class="cal-date">20</div>
-          </div>
-          <div class="cal-cell" data-date="6-21">
-            <div class="cal-date">21</div>
-          </div>
-
-          <!-- 第五週 6/22~6/28 -->
-          <div class="cal-cell" data-date="6-22">
-            <div class="cal-date">22</div>
-          </div>
-          <div class="cal-cell today" data-date="6-23">
-            <div class="cal-date"><span class="cal-date today-num">23</span> <span
-                style="font-size:10px;color:var(--blue)">今天</span></div>
-          </div>
-          <div class="cal-cell" data-date="6-24">
-            <div class="cal-date">24</div>
-          </div>
-          <div class="cal-cell" data-date="6-25">
-            <div class="cal-date">25</div>
-          </div>
-          <div class="cal-cell" data-date="6-26">
-            <div class="cal-date">26</div>
-          </div>
-          <div class="cal-cell" data-date="6-27">
-            <div class="cal-date">27</div>
-          </div>
-          <div class="cal-cell" data-date="6-28">
-            <div class="cal-date">28</div>
-          </div>
-
-          <!-- 第六週 6/29~6/30 + 下月 -->
-          <div class="cal-cell" data-date="6-29">
-            <div class="cal-date">29</div>
-          </div>
-          <div class="cal-cell" data-date="6-30">
-            <div class="cal-date">30</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">1</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">2</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">3</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">4</div>
-          </div>
-          <div class="cal-cell other-month">
-            <div class="cal-date" style="color:var(--gray-300)">5</div>
-          </div>
-        </div>
-      </div><!-- /view-month -->
-
-      <!-- ══ 週次視圖（主管白板式矩陣）══ -->
-      <div id="view-week" class="hidden">
-        <div
-          style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px">
-          <div class="filter-tabs" id="week-day-tabs">
-            <!-- Will render week day buttons by JS -->
-          </div>
-        </div>
-        <div style="overflow-x:auto" id="week-matrix-container">
-          <!-- Table rendered by JS -->
-        </div>
-      </div><!-- /view-week -->
-
-    </div><!-- /content -->
-  </div><!-- /main -->
-  <!-- Reusable Day Modal -->
-  <div id="day-modal" class="day-modal-overlay hidden">
-    <div class="drawer" style="max-width:460px;width:92vw;max-height:80vh">
-      <div class="drawer-header">
-        <div>
-          <div class="drawer-title" id="day-modal-title">📅 當日排班</div>
-          <div style="font-size:12px;color:var(--gray-500);margin-top:2px" id="day-modal-subtitle">共 0 筆排班</div>
-        </div>
-        <button class="drawer-close" onclick="closeDayModal()">✕</button>
+      <!-- 第 4 週 (8/16 - 8/22) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/16', '星期日', 4)"><div class="day-num">16</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span></div>
+      <div class="calendar-day-cell" style="background:#f0fdf4" onclick="openCalDaySummaryModal('08/17', '星期一', 11)">
+        <div class="day-num">17</div>
+        <span class="cal-event-pill home-event" style="font-weight:700">可報名居家・鄭正雄</span>
+        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span>
+        <div class="cal-event-more">還有 8 個 &gt;</div>
       </div>
-      <div class="drawer-body" style="padding:10px 16px" id="day-modal-list">
-        <!-- Dynamically populated by JS -->
-      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/18', '星期二', 6)"><div class="day-num">18</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/19', '星期三', 15)"><div class="day-num">19</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</span><div class="cal-event-more">還有 13 個 &gt;</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/20', '星期四', 5)"><div class="day-num">20</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/21', '星期五', 7)"><div class="day-num">21</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/22', '星期六', 11)"><div class="day-num">22</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 8 個 &gt;</div></div>
+
+      <!-- 第 5 週 (8/23 - 8/29) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/23', '星期日', 4)"><div class="day-num">23</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/24', '星期一', 6)"><div class="day-num">24</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/25', '星期二', 7)"><div class="day-num">25</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/26', '星期三', 5)"><div class="day-num">26</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/27', '星期四', 9)"><div class="day-num">27</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</span><div class="cal-event-more">還有 6 個 &gt;</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/28', '星期五', 13)"><div class="day-num">28</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</span><div class="cal-event-more">還有 10 個 &gt;</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/29', '星期六', 15)"><div class="day-num">29</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 12 個 &gt;</div></div>
+
+      <!-- 第 6 週 (8/30 - 9/5) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/30', '星期日', 4)"><div class="day-num">30</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/31', '星期一', 5)"><div class="day-num">31</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">01</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">02</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">03</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">04</div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num">05</div></div>
     </div>
   </div>
 
-  <!-- ══ DETAIL MODAL：院內個案 ══ -->
-  <div id="drawer-overlay-inpatient" class="detail-modal-overlay hidden">
-    <div id="drawer-inpatient" class="drawer">
-      <div class="drawer-header">
-        <div>
-          <div class="drawer-title" id="inpatient-det-title">鄧大偉・復健排班詳情</div>
-          <div style="font-size:12px;color:var(--gray-500);margin-top:3px" id="inpatient-det-subtitle">2026/06/23
-            09:00・<span class="badge badge-blue" style="font-size:10px">PAC 院內</span></div>
-        </div>
-        <button class="drawer-close" onclick="closeDrawer('inpatient')">&#10005;</button>
-      </div>
-      <div class="drawer-body">
-        <div class="drawer-section">
-          <div class="drawer-section-title">治療師資訊</div>
-          <div class="drawer-info-grid">
-            <div class="drawer-field"><label>治療師</label><span id="inpatient-det-therapist">黃志豪</span></div>
-            <div class="drawer-field"><label>職類</label><span id="inpatient-det-role"><span
-                  class="therapist-tag therapist-pt">PT</span> 物理治療師</span></div>
-            <div class="drawer-field"><label>治療時段</label><span id="inpatient-det-time">09:00 – 09:50</span></div>
-            <div class="drawer-field"><label>地點</label><span>復健治療室</span></div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">個案資訊</div>
-          <div class="drawer-info-grid" style="margin-bottom:10px">
-            <div class="drawer-field"><label>姓名</label><span id="inpatient-det-name">鄧大偉</span></div>
-            <div class="drawer-field"><label>年齡／性別</label><span id="inpatient-det-age-gender">62歲 男</span></div>
-            <div class="drawer-field"><label>疾病別</label><span id="inpatient-det-disease">脆弱性骨折</span></div>
-            <div class="drawer-field"><label>PAC 類型</label><span id="inpatient-det-pactype"><span
-                  class="badge badge-blue" style="font-size:10px">PAC 住院</span></span></div>
-            <div class="drawer-field"><label>入院日期</label><span id="inpatient-det-admit">2026/05/28</span></div>
-            <div class="drawer-field"><label>照護週次</label><span id="inpatient-det-week">第 4 週</span></div>
-            <div class="drawer-field"><label>床位</label><span id="inpatient-det-bed">301-B</span></div>
-            <div class="drawer-field"><label>主治醫師</label><span id="inpatient-det-doctor">陳醫師（復健科）</span></div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">醫囑方向</div>
-          <div class="summary-box" id="inpatient-det-summary">膈關節置換術後復健，著重步態訓練、肌力強化、關節活動度恢復。目標：6週內恢復獨立步行。</div>
-        </div>
-        <div class="divider"></div>
-        <div id="manager-actions" class="drawer-section">
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm"
-              onclick="event.stopPropagation(); openEditScheduleModal()">&#9999;&#65039;
-              編輯排班</button>
-            <button class="btn btn-danger btn-sm"
-              onclick="event.stopPropagation(); if(confirm('確定要取消此排班嗎？取消後將無法復原。')) { closeDrawer('inpatient'); alert('排班已取消，並已更新班表！'); }">&#10060;
-              取消排班</button>
-          </div>
-        </div>
-        <div id="therapist-actions" class="drawer-section" style="display:none">
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm"
-              onclick="event.stopPropagation(); closeDrawer('inpatient'); openEditScheduleModal()">&#9999;&#65039;
-              編輯排班</button>
-            <button class="btn btn-secondary btn-sm"
-              onclick="event.stopPropagation(); closeDrawer('inpatient'); openModal('modal-swap')">&#8596; 申請換班 /
-              代班</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ DETAIL MODAL：居家個案 ══ -->
-  <div id="drawer-overlay-home" class="detail-modal-overlay hidden">
-    <div id="drawer-home" class="drawer">
-      <div class="drawer-header">
-        <div>
-          <div class="drawer-title" id="home-det-title">黃建國・居家復健詳情</div>
-          <div style="font-size:12px;color:var(--gray-500);margin-top:3px" id="home-det-subtitle">2026/06/23 下班後・<span
-              class="badge badge-green" style="font-size:10px">PAC 居家</span></div>
-        </div>
-        <button class="drawer-close" onclick="closeDrawer('home')">&#10005;</button>
-      </div>
-      <div class="drawer-body">
-        <div class="drawer-section">
-          <div class="drawer-section-title">治療師資訊</div>
-          <div class="drawer-info-grid">
-            <div class="drawer-field"><label>治療師</label><span id="home-det-therapist">陳建宏</span></div>
-            <div class="drawer-field"><label>職類</label><span id="home-det-role"><span
-                  class="therapist-tag therapist-pt">PT</span> 物理治療師</span></div>
-            <div class="drawer-field"><label>前往時間</label><span id="home-det-time">下班後（約18:00）</span></div>
-            <div class="drawer-field"><label>批價狀態</label><span id="home-det-billing"><span
-                  class="badge badge-green">已批價</span></span></div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">個案基本資料</div>
-          <div class="drawer-info-grid" style="margin-bottom:10px">
-            <div class="drawer-field"><label>姓名</label><span id="home-det-name">黃建國</span></div>
-            <div class="drawer-field"><label>年齡／性別</label><span id="home-det-age-gender">55歲 男</span></div>
-            <div class="drawer-field"><label>疾病別</label><span id="home-det-disease">創傷性神經損傷</span></div>
-            <div class="drawer-field"><label>PAC 類型</label><span id="home-det-pactype"><span class="badge badge-green"
-                  style="font-size:10px">PAC 居家</span></span></div>
-            <div class="drawer-field"><label>開案日期</label><span id="home-det-startdate">2026/06/22</span></div>
-            <div class="drawer-field"><label>照護週次</label><span id="home-det-week">第 1 週</span></div>
-          </div>
-          <div class="drawer-field" style="margin-bottom:10px">
-            <label>地址</label>
-            <span id="home-det-address">彰化縣員林市○○路○○號（距醫院約 8.2 km）</span>
-          </div>
-          <div class="drawer-info-grid">
-            <div class="drawer-field"><label>個案電話</label><span id="home-det-phone">0934-567-890</span></div>
-            <div class="drawer-field"><label>家屬聯絡</label><span id="home-det-contact">黃太太 0945-678-901</span></div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">病歷摘要</div>
-          <div class="summary-box" id="home-det-summary1">創傷性神經損傷，不完全損傷（ASIA
-            B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。</div>
-        </div>
-        <div class="divider"></div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">醫囑方向</div>
-          <div class="summary-box" id="home-det-summary2">物理治療：每週 3 次，每次 50 分鐘。著重轉位訓練、呼吸肌強化、下肢被動活動。如遇呼吸困難立即停止並通報個管師。
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div id="home-actions" class="drawer-section" style="margin-bottom:8px">
-          <button class="btn btn-primary btn-sm"
-            onclick="event.stopPropagation(); localStorage.setItem('hc_target',JSON.stringify({name:document.getElementById('home-det-name').textContent})); closeDrawer('home'); window.parent.switchLegacyPage('home-care-scheduling')">🔍
-            查看居家個案詳情</button>
-        </div>
-
-        <div id="home-therapist-actions" class="drawer-section" style="display:none">
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm"
-              onclick="event.stopPropagation(); closeDrawer('home'); openEditScheduleModal()">&#9999;&#65039;
-              編輯排班</button>
-            <button class="btn btn-secondary btn-sm"
-              onclick="event.stopPropagation(); closeDrawer('home'); openModal('modal-swap')">&#8596; 申請換班 / 代班</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div><!-- /drawer-overlay-home -->
-
-
-  <!-- ══ MODALS ══ -->
-
-  <!-- 新增班表（主管）-->
-  <div id="modal-add-schedule" class="modal-overlay hidden">
-    <div class="modal">
+  <!-- 置中 Modal 0：月曆單日排班總表 (完全還原 05 截圖 cal_to_daily_0.png，指示 3) -->
+  <div class="modal-overlay" id="calDaySummaryModal">
+    <div class="center-modal-box" style="width:680px;">
       <div class="modal-header">
-        <div class="modal-title">＋ 新增班表</div><button class="modal-close"
-          onclick="closeModal('modal-add-schedule')">✕</button>
+        <div class="modal-header-title" id="calSummaryTitle">
+          2026 年 08 月 01 日（六）・ 排班總表
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn btn-primary" style="padding:4px 12px;font-size:12px" onclick="openAddScheduleModal()">+ 新增排班</button>
+          <button class="modal-close-btn" onclick="closeModal('calDaySummaryModal')">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:0">
+        <div class="cal-day-summary-row" onclick="openDetailModal('劉香香', '－', '尚未指派', '脆弱骨折', 'PAC 居家')">
+          <div><span style="color:#64748b;margin-right:12px">－</span> 可報名居家 ・ 劉香香</div>
+          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('李文雄', '08:00', '黃志豪（PT）', '腦中風(CVA)', 'PAC 住院')">
+          <div><strong style="color:#0284c7;margin-right:12px">08:00</strong> 黃志豪（PT）・ 李文雄</div>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('司徒建智', '08:15', '黃志豪（PT）', '腦中風', 'PAC 住院')">
+          <div><strong style="color:#0284c7;margin-right:12px">08:15</strong> 黃志豪（PT）・ 司徒建智</div>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('李鮭魚', '08:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')">
+          <div><strong style="color:#0284c7;margin-right:12px">08:30</strong> 黃志豪（PT）・ 李鮭魚</div>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('姜義企', '08:45', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')">
+          <div><strong style="color:#0284c7;margin-right:12px">08:45</strong> 黃志豪（PT）・ 姜義企</div>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('郝珍貴', '09:00', '黃志豪（PT）', '衰弱高齡', 'PAC 住院')">
+          <div><strong style="color:#0284c7;margin-right:12px">09:00</strong> 黃志豪（PT）・ 郝珍貴</div>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('彭春梅', '09:15', '陳怡君（PT）', '衰弱高齡', '門診復健')">
+          <div><strong style="color:#64748b;margin-right:12px">09:15</strong> 陳怡君（PT）・ 彭春梅</div>
+          <span class="status-pill" style="background:#f1f5f9;color:#475569">門診復健</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('鄭正雄', '12:30', '吳建宏（PT）', '衰弱高齡', 'PAC 居家')">
+          <div><strong style="color:#16a34a;margin-right:12px">12:30</strong> 吳建宏（PT）・ 鄭正雄 (午休)</div>
+          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+        </div>
+        <div class="cal-day-summary-row" onclick="openDetailModal('張簡麗卿', '18:30', '黃志豪（PT）', '腦中風', 'PAC 居家')">
+          <div><strong style="color:#16a34a;margin-right:12px">18:30</strong> 黃志豪（PT）・ 張簡麗卿 (下班後)</div>
+          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between">
+        <button class="btn btn-outline" onclick="switchToSelectedDateGrid()">前往當日排班網格 &gt;</button>
+        <button class="btn btn-primary" onclick="closeModal('calDaySummaryModal')">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 1：復健詳情 (05 排版，含粉色標籤有班表版本) -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="center-modal-box" style="width:880px;">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span id="modalHeaderTitle">08:00 黃志豪（PT）・李文雄 PAC 住院</span>
+          <span class="pink-capsule-badge" id="modalPinkBadge">院內個案 - 有班表版本</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('detailModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label>排班類型 <span class="required">*</span></label>
-          <div style="display:flex;gap:10px">
-            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
-                name="sched-type" checked style="accent-color:var(--blue)"> 院內</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
-                name="sched-type" style="accent-color:var(--blue)"> 居家</label>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>治療師 <span class="required">*</span></label>
-            <select class="form-control" id="add-therapist" required>
-              <option value="">請選擇治療師</option>
-              <option>黃志豪（PT）</option>
-              <option>陳建宏（PT）</option>
-              <option>李佳穎（OT）</option>
-              <option>張雅玲（OT）</option>
-              <option>吳怡君（ST）</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>個案 <span class="required">*</span></label>
-            <select class="form-control" id="add-patient" required>
-              <option value="">請選擇個案</option>
-              <option>李文雄（腦中風(CVA)・院內）</option>
-              <option>鄭大偉（脆弱性骨折・院內）</option>
-              <option>吳麗珠（腦中風(CVA)・院內）</option>
-              <option>黃建國（創傷性神經損傷・居家）</option>
-              <option>王淑芬（脆弱性骨折・居家）</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>日期 <span class="required">*</span></label>
-            <input class="form-control" type="date" id="add-date" value="2026-06-24" required>
-          </div>
-          <div class="form-group">
-            <label>時段 <span class="required">*</span></label>
-            <select class="form-control" id="add-time" required>
-              <option value="">請選擇時段</option>
-              <option>08:00 – 08:50</option>
-              <option>08:30 – 09:20</option>
-              <option>09:00 – 09:50</option>
-              <option>09:30 – 10:20</option>
-              <option>10:00 – 10:50</option>
-              <option>10:30 – 11:20</option>
-              <option>14:00 – 14:50</option>
-              <option>14:30 – 15:20</option>
-              <option>午休（居家）</option>
-              <option>下班後（居家）</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>備註（選填）</label>
-          <textarea class="form-control" id="add-remark" placeholder="填寫治療重點或特殊注意事項…"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-add-schedule')">取消</button>
-        <button class="btn btn-primary" onclick="submitAddSchedule()">確認新增</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 編輯排班（主管）-->
-  <div id="modal-edit-schedule" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">✏️ 編輯排班</div>
-        <button class="modal-close" onclick="closeModal('modal-edit-schedule')">&#10005;</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-note blue" id="edit-original-info">原排班：2026/06/23 09:00・個案 鄭大偉</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>治療師 <span class="required">*</span></label>
-            <select class="form-control" id="edit-therapist" required>
-              <option value="">請選擇治療師</option>
-              <option>黃志豪（PT）</option>
-              <option>陳建宏（PT）</option>
-              <option>李佳穎（OT）</option>
-              <option>張雅玲（OT）</option>
-              <option>吳怡君（ST）</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>個案 <span class="required">*</span></label>
-            <select class="form-control" id="edit-patient" required>
-              <option value="">請選擇個案</option>
-              <option>李文雄（腦中風(CVA)・院內）</option>
-              <option>鄭大偉（脆弱性骨折・院內）</option>
-              <option>吳麗珠（腦中風(CVA)・院內）</option>
-              <option>黃建國（創傷性神經損傷・居家）</option>
-              <option>王淑芬（脆弱性骨折・居家）</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>日期 <span class="required">*</span></label>
-            <input class="form-control" type="date" id="edit-date" required>
-          </div>
-          <div class="form-group">
-            <label>時段 <span class="required">*</span></label>
-            <select class="form-control" id="edit-time" required>
-              <option value="">請選擇時段</option>
-              <option>08:00 – 08:50</option>
-              <option>08:30 – 09:20</option>
-              <option>09:00 – 09:50</option>
-              <option>09:30 – 10:20</option>
-              <option>10:00 – 10:50</option>
-              <option>10:30 – 11:20</option>
-              <option>14:00 – 14:50</option>
-              <option>14:30 – 15:20</option>
-              <option>午休（居家）</option>
-              <option>下班後（居家）</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>備註（選填）</label>
-          <textarea class="form-control" id="edit-remark" placeholder="填寫修改原因或注意事項…"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-edit-schedule')">取消</button>
-        <button class="btn btn-primary" onclick="submitEditSchedule()">確定編輯</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 申請換班/代班（治療師）-->
-  <div id="modal-swap" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">↔ 申請換班 / 代班</div><button class="modal-close"
-          onclick="closeModal('modal-swap')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-note blue">原排班：2026/06/23 09:00・個案 鄭大偉</div>
-        <div class="form-group">
-          <label>申請類型</label>
-          <div style="display:flex;gap:10px">
-            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
-                name="swap-type" checked style="accent-color:var(--blue)"> 換班（更換日期/時段）</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio"
-                name="swap-type" style="accent-color:var(--blue)"> 代班（找人代替）</label>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>更換至日期 <span class="required">*</span></label>
-            <input class="form-control" type="date">
-          </div>
-          <div class="form-group">
-            <label>更換至時段 <span class="required">*</span></label>
-            <select class="form-control">
-              <option>08:00 – 08:50</option>
-              <option>09:00 – 09:50</option>
-              <option>10:00 – 10:50</option>
-              <option>14:00 – 14:50</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>換 / 代 班事由 <span class="required">*</span></label>
-          <textarea class="form-control" placeholder="請說明換班或代班的原因…"></textarea>
-        </div>
-        <div class="info-note amber">申請送出後需等待復健主管審核，審核通過後班表才會更新。</div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-swap')">取消</button>
-        <button class="btn btn-primary" onclick="submitSwap()">送出申請</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 換班審核（主管）-->
-  <div id="modal-approval" class="modal-overlay hidden">
-    <div class="modal modal-lg">
-      <div class="modal-header">
-        <div class="modal-title">換班審核 <span class="badge badge-red" style="margin-left:8px">4 件待審</span></div>
-        <div style="display:flex; align-items:center; gap:10px">
-          <button class="btn btn-ghost btn-sm" onclick="openModal('modal-approval-history')">🕒 審核紀錄</button>
-          <button class="modal-close" onclick="closeModal('modal-approval')">✕</button>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="approval-list">
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">黃志豪（PT）申請換班</div>
-                <div class="approval-meta">原排班：2026/06/25 09:00・鄭大偉・→ 申請換至 06/26 14:00</div>
-              </div>
-              <span class="badge badge-amber">待審核</span>
-            </div>
-            <div class="approval-reason">事由：家庭因素，06/25 上午無法出席，確認 06/26 下午可補回。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm" onclick="handleApproval(this, '拒絕')">拒絕</button>
-              <button class="btn btn-green btn-sm" onclick="handleApproval(this, '核准')">✓ 核准</button>
-            </div>
-          </div>
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">陳建宏（PT）申請代班</div>
-                <div class="approval-meta">原排班：2026/06/27 下班後・黃建國居家・→ 申請找人代班</div>
-              </div>
-              <span class="badge badge-amber">待審核</span>
-            </div>
-            <div class="approval-reason">事由：個人臨時狀況，無法前往居家個案家。已詢問李佳穎可否代班，尚未確認。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm" onclick="handleApproval(this, '拒絕')">拒絕</button>
-              <button class="btn btn-green btn-sm" onclick="handleApproval(this, '核准')">✓ 核准</button>
-            </div>
-          </div>
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">李佳穎（OT）申請換班</div>
-                <div class="approval-meta">原排班：2026/06/28 10:00・王淑芬・→ 申請換至 06/29 14:00</div>
-              </div>
-              <span class="badge badge-amber">待審核</span>
-            </div>
-            <div class="approval-reason">事由：欲參加研習課程，需調整時段。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm" onclick="handleApproval(this, '拒絕')">拒絕</button>
-              <button class="btn btn-green btn-sm" onclick="handleApproval(this, '核准')">✓ 核准</button>
-            </div>
-          </div>
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">吳怡君（ST）申請代班</div>
-                <div class="approval-meta">原排班：2026/06/28 下班後・陳志明居家・→ 申請找人代班</div>
-              </div>
-              <span class="badge badge-amber">待審核</span>
-            </div>
-            <div class="approval-reason">事由：臨時身體不適，需請病假。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm" onclick="handleApproval(this, '拒絕')">拒絕</button>
-              <button class="btn btn-green btn-sm" onclick="handleApproval(this, '核准')">✓ 核准</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-approval')">關閉</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 我的申請（治療師）-->
-  <div id="modal-my-applications" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">我的申請 <span class="badge badge-amber" style="margin-left:8px">2 件待審</span></div>
-        <div style="display:flex; align-items:center; gap:10px">
-          <button class="btn btn-ghost btn-sm" onclick="openModal('modal-application-history')">🕒 申請紀錄</button>
-          <button class="modal-close" onclick="closeModal('modal-my-applications')">✕</button>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="approval-list">
-          <div class="approval-item" id="my-app-item-1">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">申請換班</div>
-                <div class="approval-meta">原排班：2026/06/23 09:00・鄭大偉・→ 申請換至 06/24 14:00</div>
-              </div>
-              <span class="badge badge-amber" id="my-app-status-1">待審核</span>
-            </div>
-            <div class="approval-reason">事由：臨時有事，無法前往。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm"
-                onclick="cancelApplication('my-app-item-1', 'my-app-status-1')">取消申請</button>
-            </div>
-          </div>
-          <div class="approval-item" id="my-app-item-2">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">申請代班</div>
-                <div class="approval-meta">原排班：2026/06/25 10:00・吳麗珠・→ 申請找人代班</div>
-              </div>
-              <span class="badge badge-amber" id="my-app-status-2">待審核</span>
-            </div>
-            <div class="approval-reason">事由：需配合個案其他檢查時間。</div>
-            <div class="approval-actions">
-              <button class="btn btn-danger btn-sm"
-                onclick="cancelApplication('my-app-item-2', 'my-app-status-2')">取消申請</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-my-applications')">關閉</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 審核紀錄（主管）-->
-  <div id="modal-approval-history" class="modal-overlay hidden">
-    <div class="modal modal-lg">
-      <div class="modal-header">
-        <div class="modal-title">審核紀錄</div>
-        <button class="modal-close" onclick="closeModal('modal-approval-history')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="approval-list">
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">李佳穎（OT）申請換班</div>
-                <div class="approval-meta">原排班：2026/06/20 14:00・王淑芬・→ 申請換至 06/21 09:00</div>
-              </div>
-              <span class="badge badge-green">已核准</span>
-            </div>
-            <div class="approval-reason">處理結果：已改派張雅玲（OT）對調。審核時間：2026/06/18 10:30</div>
-          </div>
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">吳怡君（ST）申請代班</div>
-                <div class="approval-meta">原排班：2026/06/19 10:00・李文雄・→ 申請找人代班</div>
-              </div>
-              <span class="badge badge-gray">已拒絕</span>
-            </div>
-            <div class="approval-reason">處理結果：拒絕原因：人力不足，請協調其他時間。審核時間：2026/06/17 15:20</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-approval-history')">關閉</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 申請紀錄（治療師）-->
-  <div id="modal-application-history" class="modal-overlay hidden">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">申請紀錄</div>
-        <button class="modal-close" onclick="closeModal('modal-application-history')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="approval-list">
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">申請代班</div>
-                <div class="approval-meta">原排班：2026/06/15 14:00・吳麗珠</div>
-              </div>
-              <span class="badge badge-green">已核准</span>
-            </div>
-            <div class="approval-reason">事由：外出開會。<br>主管備註：已安排陳建宏（PT）代班。</div>
-          </div>
-          <div class="approval-item">
-            <div class="approval-item-header">
-              <div>
-                <div class="approval-name">申請換班</div>
-                <div class="approval-meta">原排班：2026/06/10 09:00・鄭大偉</div>
-              </div>
-              <span class="badge badge-gray">已拒絕</span>
-            </div>
-            <div class="approval-reason">事由：私人行程。<br>主管備註：該時段無人可替換。</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-application-history')">關閉</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 居家個案報名（治療師）-->
-  <div id="modal-register" class="modal-overlay hidden">
-    <div class="modal modal-lg">
-      <div class="modal-header">
-        <div class="modal-title" id="reg-det-title">🏡 居家個案報名・黃建國</div><button class="modal-close"
-          onclick="closeModal('modal-register')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-note amber" id="reg-det-note">報名截止：2026/06/24 12:00・若報名人數超額將進行抽籤</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:24px;">
+          <!-- 左欄：個案資訊 -->
           <div>
-            <div class="drawer-section-title">個案基本資料</div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div><span style="font-size:11px;color:var(--gray-400)">姓名：</span><span
-                  style="font-size:13px;font-weight:600" id="reg-det-name">黃建國</span></div>
-              <div><span style="font-size:11px;color:var(--gray-400)">年齡／性別：</span><span style="font-size:12px"
-                  id="reg-det-age-gender">55歲 男</span></div>
-              <div><span style="font-size:11px;color:var(--gray-400)">疾病別：</span><span style="font-size:12px"
-                  id="reg-det-disease">創傷性神經損傷</span></div>
-              <div><span style="font-size:11px;color:var(--gray-400)">地址：</span><span style="font-size:12px"
-                  id="reg-det-address">彰化縣大村鄉（距醫院約 8.2 km）</span></div>
-              <div><span style="font-size:11px;color:var(--gray-400)">聯絡：</span><span style="font-size:12px"
-                  id="reg-det-contact">0934-567-890 / 家屬黃太太</span></div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px">個案資訊</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+              <div><div style="font-size:11px;color:#64748b">姓名</div><div style="font-weight:600" id="modalPatientName">李文雄</div></div>
+              <div><div style="font-size:11px;color:#64748b">年齡 / 性別</div><div style="font-weight:600">72 歲 男</div></div>
+              <div><div style="font-size:11px;color:#64748b">疾病別</div><div style="font-weight:600" id="modalPatientDisease">腦中風(CVA)</div></div>
+              <div><div style="font-size:11px;color:#64748b">照護模式</div><div style="font-weight:600" id="modalPatientCare">住院</div></div>
+              <div><div style="font-size:11px;color:#64748b">照護週次</div><div style="font-weight:600">第 4 週 / 8 週</div></div>
+              <div><div style="font-size:11px;color:#64748b">床位</div><div style="font-weight:600">602 - A</div></div>
+              <div><div style="font-size:11px;color:#64748b">主治醫師</div><div style="font-weight:600">劉益陞（神外）</div></div>
+              <div><div style="font-size:11px;color:#64748b">聯絡人</div><div style="font-weight:600">兒子 李健康</div></div>
+            </div>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;color:#64748b">醫囑方向</div>
+              <div style="font-size:12px;color:#334155;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;margin-top:2px;line-height:1.6">
+                PT：腦中風(CVA)右側偏癱，加強患側肢體肌力、關節活動度訓練及防跌倒指導。
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-outline" style="font-size:12px;padding:4px 10px" onclick="alert('導航前往患者資料頁')">前往患者資料頁 &gt;</button>
             </div>
           </div>
+
+          <!-- 右欄：治療師資訊與三欄復健時刻表 -->
           <div>
-            <div class="drawer-section-title">所需人力</div>
-            <div class="quota-row">
-              <span class="quota-label" style="color:var(--blue);font-weight:700">PT</span>
-              <div class="quota-bar">
-                <div class="quota-fill pt" id="reg-quota-pt-bar" style="width:33%"></div>
-              </div>
-              <span class="quota-count" id="reg-quota-pt-count">1 / 3 人</span>
+            <div style="font-size:14px;font-weight:700;margin-bottom:12px">治療師資訊</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px;margin-bottom:12px">
+              <div><div style="font-size:11px;color:#64748b">治療師</div><div style="font-weight:600" id="modalTherapist">黃志豪（主管/PT）</div></div>
+              <div><div style="font-size:11px;color:#64748b">治療時段</div><div style="font-weight:600;color:var(--primary-blue)" id="modalTimeSlot">08:00 - 08:15</div></div>
             </div>
-            <div class="quota-row">
-              <span class="quota-label" style="color:var(--purple);font-weight:700">OT</span>
-              <div class="quota-bar">
-                <div class="quota-fill ot" id="reg-quota-ot-bar" style="width:0%"></div>
-              </div>
-              <span class="quota-count" id="reg-quota-ot-count">0 / 3 人</span>
-            </div>
-            <div class="quota-row">
-              <span class="quota-label" style="color:var(--green);font-weight:700">ST</span>
-              <div class="quota-bar">
-                <div class="quota-fill st" id="reg-quota-st-bar" style="width:0%"></div>
-              </div>
-              <span class="quota-count" id="reg-quota-st-count">0 / 0 人</span>
-            </div>
-            <div style="font-size:11px;color:var(--gray-400);margin-top:6px" id="reg-quota-summary">不需 ST・共需 6 名治療師
+
+            <div style="font-size:13px;font-weight:700;margin-bottom:6px">復健時刻表</div>
+            <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:6px;font-size:12px">
+              <thead>
+                <tr style="background:#f1f5f9;text-align:center">
+                  <th style="padding:6px;border-right:1px solid #e2e8f0">PT</th>
+                  <th style="padding:6px;border-right:1px solid #e2e8f0">OT</th>
+                  <th style="padding:6px">ST</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding:8px;vertical-align:top;border-right:1px solid #e2e8f0">
+                    <div style="background:#fef08a;border:1px solid #fde047;border-radius:4px;padding:4px 6px;margin-bottom:4px;color:#713f12;font-weight:600">黃志豪 08:00-08:15</div>
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;color:#475569">黃志豪 15:45-16:00</div>
+                  </td>
+                  <td style="padding:8px;vertical-align:top;border-right:1px solid #e2e8f0">
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;margin-bottom:4px;color:#475569">吳建宏 10:30-10:45</div>
+                    <div style="background:#fdf2f8;border:1px solid #f472b6;border-radius:4px;padding:4px 6px;color:#db2777"><span style="background:#0284c7;color:#fff;padding:0 3px;border-radius:2px;font-size:9px">代</span> 蔡昕妤 16:15</div>
+                  </td>
+                  <td style="padding:8px;vertical-align:top">
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:4px 6px;color:#475569">許哲銘 11:30-11:45</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:8px">
+              <button class="btn btn-outline" onclick="alert('已開啟排班編輯模式')">編輯排班</button>
+              <button class="btn" style="background:#1e293b;color:#ffffff" onclick="alert('已取消此排班！'); closeModal('detailModal')">取消排班</button>
             </div>
           </div>
         </div>
-        <div class="divider"></div>
-        <div class="drawer-section-title">病歷摘要</div>
-        <div class="summary-box" style="margin-bottom:14px" id="reg-det-summary1">創傷性神經損傷，不完全損傷（ASIA
-          B）。上肢保有部分感覺，下肢運動功能受損。建議以上肢功能強化、呼吸訓練、轉位訓練為主。注意：個案有呼吸問題，遇喘促需立即停止並通報。</div>
-        <div class="drawer-section-title" style="display: none;">醫囑</div>
-        <div class="summary-box" style="margin-bottom:14px; display: none;" id="reg-det-summary2">PT：每週 3 次，每次 50
-          分鐘。著重轉位訓練、呼吸肌強化、下肢被動活動。<br>OT：每週 3 次，每次 50 分鐘。上肢功能訓練、日常生活輔具評估。</div>
+      </div>
+    </div>
+  </div>
 
+  <!-- 置中 Modal 2：換班審核 -->
+  <div class="modal-overlay" id="shiftAuditModal">
+    <div class="center-modal-box" style="width:640px;">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span>換班審核</span>
+          <span style="font-size:12px;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:999px;font-weight:700">2 件待審</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('shiftAuditModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:12px;margin-bottom:12px">
+          <div style="font-size:11.5px;color:#64748b;margin-bottom:4px">申請時間：2026/06/18 10:30</div>
+          <div style="font-weight:700;font-size:13.5px;margin-bottom:2px">黃志豪（PT）申請換班</div>
+          <div style="font-size:12.5px;color:#334155">原排班：2026/06/25 09:00 ・ 鄭大偉（脆弱性骨折）</div>
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+            <button class="btn btn-outline" style="padding:3px 10px;font-size:12px">拒絕</button>
+            <button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="alert('已核准換班申請！'); closeModal('shiftAuditModal')">核准</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 3：新增排班 -->
+  <div class="modal-overlay" id="addScheduleModal">
+    <div class="center-modal-box" style="width:560px;">
+      <div class="modal-header">
+        <div class="modal-header-title">新增排班</div>
+        <button class="modal-close-btn" onclick="closeModal('addScheduleModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">排班類型 *</label>
+            <select class="filter-select" style="width:100%"><option>PAC 住院</option><option>PAC 居家</option></select>
+          </div>
+          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">週期 *</label>
+            <select class="filter-select" style="width:100%"><option>每天（週一至週六）</option><option>每週一三五</option></select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">復健日期 *</label>
+            <input type="text" class="search-input" value="2026/08/01 (一)">
+          </div>
+          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">時段 *</label>
+            <input type="text" class="search-input" value="14:45 - 15:00">
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-register')">取消</button>
-        <button class="btn btn-primary"
-          onclick="event.stopPropagation(); localStorage.setItem('hc_target',JSON.stringify({name:document.getElementById('reg-det-name').textContent})); closeModal('modal-register'); window.parent.switchLegacyPage('home-care-scheduling')">🔍
-          查看居家個案詳情</button>
+        <button class="btn btn-outline" onclick="closeModal('addScheduleModal')">取消</button>
+        <button class="btn btn-primary" onclick="alert('新增排班成功！'); closeModal('addScheduleModal')">確認新增</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Data Store
-    const schedules = [
-      // 6/2
-      { date: '6-2', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-2', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:30', type: 'pac-in' },
-      { date: '6-2', therapist: '陳建宏', therapistType: 'PT', patient: '王○○', time: '10:00', type: 'nonpac-in' },
-
-      // 6-3
-      { date: '6-3', therapist: '黃志豪', therapistType: 'PT', patient: '吳麗珠', time: '08:30', type: 'pac-in' },
-      { date: '6-3', therapist: '李佳穎', therapistType: 'OT', patient: '李文雄', time: '14:00', type: 'pac-in' },
-      { date: '6-3', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '17:30', type: 'pac-home' },
-
-      // 6-4
-      { date: '6-4', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-4', therapist: '張雅玲', therapistType: 'OT', patient: '蔡○○', time: '10:30', type: 'nonpac-in' },
-      { date: '6-4', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '14:00', type: 'pac-in' },
-      { date: '6-4', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '16:30', type: 'pac-home' },
-      { date: '6-4', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '15:30', type: 'pac-in' },
-
-      // 6-5
-      { date: '6-5', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '09:00', type: 'pac-in' },
-      { date: '6-5', therapist: '黃志豪', therapistType: 'PT', patient: '陳志明', time: '10:00', type: 'pac-in' },
-      { date: '6-5', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '12:30', type: 'pac-home' }, // 午休
-
-      // 6-6
-      { date: '6-6', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '08:00', type: 'pac-in' },
-      { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '黃○○', time: '09:30', type: 'nonpac-in' },
-      { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '趙美惠', time: '10:00', type: 'open' }, // 可報名
-      { date: '6-6', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '18:00', type: 'pac-home' }, // 挪移至週六
-      { date: '6-6', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' }, // 挪移至週六
-
-      // 6-8 (原 6-14)
-      { date: '6-8', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-8', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-8', therapist: '張雅玲', therapistType: 'OT', patient: '謝俊男', time: '10:00', type: 'open' }, // 可報名
-
-      // 6-9
-      { date: '6-9', therapist: '黃志豪', therapistType: 'PT', patient: '吳麗珠', time: '08:30', type: 'pac-in' },
-      { date: '6-9', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '11:00', type: 'pac-in' },
-      { date: '6-9', therapist: '張雅玲', therapistType: 'OT', patient: '李文雄', time: '14:00', type: 'pac-in' },
-      { date: '6-9', therapist: '陳建宏', therapistType: 'PT', patient: '王○○', time: '15:30', type: 'nonpac-in' },
-      { date: '6-9', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '17:30', type: 'pac-home' },
-      { date: '6-9', therapist: '吳怡君', therapistType: 'ST', patient: '蔡○○', time: '10:00', type: 'nonpac-in' },
-      { date: '6-9', therapist: '黃志豪', therapistType: 'PT', patient: '陳志明', time: '16:00', type: 'pac-in' },
-
-      // 6-10
-      { date: '6-10', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-10', therapist: '李佳穎', therapistType: 'OT', patient: '陳志明', time: '10:00', type: 'pac-in' },
-      { date: '6-10', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '12:30', type: 'pac-home' }, // 午休
-      { date: '6-10', therapist: '陳建宏', therapistType: 'PT', patient: '吳麗珠', time: '14:00', type: 'nonpac-in' },
-      { date: '6-10', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '15:30', type: 'pac-in' },
-      { date: '6-10', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-10', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '16:30', type: 'pac-home' },
-
-      // 6-11
-      { date: '6-11', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '09:00', type: 'pac-in' },
-      { date: '6-11', therapist: '陳建宏', therapistType: 'PT', patient: '蔡○○', time: '10:30', type: 'nonpac-in' },
-
-      // 6-12
-      { date: '6-12', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-12', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '09:30', type: 'pac-in' },
-      { date: '6-12', therapist: '張雅玲', therapistType: 'OT', patient: '蔡○○', time: '11:00', type: 'nonpac-in' },
-      { date: '6-12', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '17:30', type: 'pac-home' },
-      { date: '6-12', therapist: '吳怡君', therapistType: 'ST', patient: '鄭大偉', time: '14:00', type: 'pac-in' },
-
-      // 6-13
-      { date: '6-13', therapist: '陳建宏', therapistType: 'PT', patient: '吳麗珠', time: '09:00', type: 'pac-in' },
-      { date: '6-13', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
-      { date: '6-13', therapist: '李佳穎', therapistType: 'OT', patient: '林○峰', time: '10:00', type: 'open' },
-      { date: '6-13', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' }, // 挪移至週六
-      { date: '6-13', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:30', type: 'pac-home' }, // 挪移至週六
-
-      // 6-15 (原 6-21)
-      { date: '6-15', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '08:00', type: 'pac-in' },
-      { date: '6-15', therapist: '李佳穎', therapistType: 'OT', patient: '李文雄', time: '09:30', type: 'pac-in' },
-
-      // 6-16
-      { date: '6-16', therapist: '黃志豪', therapistType: 'PT', patient: '陳志明', time: '08:00', type: 'pac-in' },
-      { date: '6-16', therapist: '張雅玲', therapistType: 'OT', patient: '黃○○', time: '10:00', type: 'nonpac-in' },
-      { date: '6-16', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '13:00', type: 'pac-home' },
-      { date: '6-16', therapist: '吳怡君', therapistType: 'ST', patient: '吳麗珠', time: '15:00', type: 'pac-in' },
-
-      // 6-17
-      { date: '6-17', therapist: '吳怡君', therapistType: 'ST', patient: '吳麗珠', time: '09:00', type: 'pac-in' },
-      { date: '6-17', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '10:00', type: 'pac-in' },
-
-      // 6-18
-      { date: '6-18', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-18', therapist: '陳建宏', therapistType: 'PT', patient: '陳志明', time: '10:30', type: 'pac-in' },
-      { date: '6-18', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '12:30', type: 'pac-home' },
-
-      // 6-19
-      { date: '6-19', therapist: '黃志豪', therapistType: 'PT', patient: '吳麗珠', time: '08:00', type: 'pac-in' },
-      { date: '6-19', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '10:00', type: 'pac-in' },
-      { date: '6-19', therapist: '陳建宏', therapistType: 'PT', patient: '王淑芬', time: '15:30', type: 'pac-home' },
-      { date: '6-19', therapist: '吳怡君', therapistType: 'ST', patient: '蔡○○', time: '16:30', type: 'nonpac-in' },
-      { date: '6-19', therapist: '張雅玲', therapistType: 'OT', patient: '李文雄', time: '09:00', type: 'pac-in' },
-
-      // 6-20
-      { date: '6-20', therapist: '陳建宏', therapistType: 'PT', patient: '吳麗珠', time: '09:00', type: 'pac-in' },
-      { date: '6-20', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
-      { date: '6-20', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' },
-      { date: '6-20', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' }, // 挪移至週六
-      { date: '6-20', therapist: '李佳穎', therapistType: 'OT', patient: '黃建國', time: '18:30', type: 'pac-home' }, // 挪移至週六
-
-      // 6-22 (原 6-28)
-      { date: '6-22', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-22', therapist: '李佳穎', therapistType: 'OT', patient: '吳麗珠', time: '09:30', type: 'pac-in' },
-
-      // 6-29
-      { date: '6-29', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-
-      // 6-23 (Today)
-      { date: '6-23', therapist: '黃志豪', therapistType: 'PT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-23', therapist: '李佳穎', therapistType: 'OT', patient: '陳志明', time: '10:00', type: 'pac-in' },
-      { date: '6-23', therapist: '陳建宏', therapistType: 'PT', patient: '蔡○○', time: '10:30', type: 'nonpac-in' },
-      { date: '6-23', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '15:00', type: 'pac-in' },
-      { date: '6-23', therapist: '陳建宏', therapistType: 'PT', patient: '王○○', time: '16:00', type: 'nonpac-in' },
-      { date: '6-23', therapist: '張雅玲', therapistType: 'OT', patient: '黃建國', time: '17:30', type: 'pac-home' },
-
-      // 6-24
-      { date: '6-24', therapist: '吳怡君', therapistType: 'ST', patient: '李文雄', time: '09:00', type: 'pac-in' },
-      { date: '6-24', therapist: '黃志豪', therapistType: 'PT', patient: '吳麗珠', time: '10:00', type: 'pac-in' },
-
-      // 6-25
-      { date: '6-25', therapist: '李佳穎', therapistType: 'OT', patient: '李文雄', time: '08:00', type: 'pac-in' },
-      { date: '6-25', therapist: '陳建宏', therapistType: 'PT', patient: '鄭大偉', time: '09:30', type: 'pac-in' },
-
-      // 6-26
-      { date: '6-26', therapist: '黃志豪', therapistType: 'PT', patient: '陳志明', time: '08:00', type: 'pac-in' },
-      { date: '6-26', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '12:30', type: 'pac-home' },
-      { date: '6-26', therapist: '黃志豪', therapistType: 'PT', patient: '李文雄', time: '11:00', type: 'pac-in' },
-      { date: '6-26', therapist: '李佳穎', therapistType: 'OT', patient: '黃建國', time: '16:00', type: 'pac-home' },
-      { date: '6-26', therapist: '吳怡君', therapistType: 'ST', patient: '吳麗珠', time: '14:00', type: 'pac-in' },
-
-      // 6-27
-      { date: '6-27', therapist: '陳建宏', therapistType: 'PT', patient: '吳麗珠', time: '09:00', type: 'pac-in' },
-      { date: '6-27', therapist: '黃志豪', therapistType: 'PT', patient: '黃建國', time: '18:00', type: 'pac-home' },
-      { date: '6-27', therapist: '陳建宏', therapistType: 'PT', patient: '黃建國', time: '18:30', type: 'pac-home' },
-      { date: '6-27', therapist: '張雅玲', therapistType: 'OT', patient: '王淑芬', time: '18:00', type: 'pac-home' }, // 挪移至週六
-
-      // 6-30
-      { date: '6-30', therapist: '李佳穎', therapistType: 'OT', patient: '鄭大偉', time: '09:00', type: 'pac-in' },
-      { date: '6-30', therapist: '吳怡君', therapistType: 'ST', patient: '吳麗珠', time: '10:00', type: 'pac-in' },
-    ];
-
-    let currentRole = 'manager';
-    let currentLoggedInUser = '王復健主管'; // tracks who is logged in
-    let selectedTypes = ['all'];
-    let selectedTherapists = ['all'];
-    let selectedWeekDay = '6-23';
-
-    // Mock patient details generator
-    function getScheduleDetails(item) {
-      const isPac = item.type.startsWith('pac') || item.type === 'open';
-
-      let age = '65';
-      let gender = '男';
-      let disease = '腦中風(CVA)';
-      let physician = '張醫師（神經科）';
-      let summary = '著重肢體肌力訓練、關節活動度與日常生活功能重建。';
-      let address = '彰化縣埤頭鄉新生南路二段32號（距醫院約 4.5 km）';
-      let phone = '0912-345-678';
-      let contact = '兒子 0922-333-444';
-
-      if (item.patient.includes('文雄')) {
-        age = '72'; gender = '男'; disease = '腦中風(CVA)'; physician = '劉醫師（神經內科）';
-        summary = '腦中風(CVA)右側偏癱，加強患側肢體肌力、關節活動度訓練及防跌倒指導。';
-      } else if (item.patient.includes('大偉')) {
-        age = '62'; gender = '男'; disease = '脆弱性骨折'; physician = '陳醫師（脆弱性骨折）';
-        summary = '膝關節活動度訓練、大腿肌力強化及步態訓練。目標6週內脫離拐杖。';
-      } else if (item.patient.includes('麗珠')) {
-        age = '68'; gender = '女'; disease = '腦梗塞（左側偏癱）'; physician = '林醫師（復健科）';
-        summary = '患側上肢功能誘發、站立平衡與轉位訓練，預防跌倒。';
-      } else if (item.patient.includes('建國')) {
-        age = '55'; gender = '男'; disease = '創傷性神經損傷'; physician = '黃醫師（神經外科）';
-        summary = '創傷性神經損傷不完全癱瘓，加強雙上肢肌力與轉位技巧訓練，配合呼吸治療。';
-      } else if (item.patient.includes('淑芬')) {
-        age = '59'; gender = '女'; disease = '脆弱性骨折'; physician = '李醫師（脆弱性骨折）';
-        summary = '術後負重步態訓練、平衡功能訓練與居家生活環境無障礙評估。';
-      } else if (item.patient.includes('志明')) {
-        age = '47'; gender = '男'; disease = '腦出血後遺症'; physician = '王醫師（復健科）';
-        summary = '加強軀幹穩定度、步態對稱性調整與精細動作協調練習。';
-      } else if (item.patient.includes('趙美惠') || item.patient.includes('美惠')) {
-        age = '63'; gender = '女'; disease = '脆弱性骨折'; physician = '陳醫師（脆弱性骨折）';
-        summary = '術後膝關節活動度訓練、下肢肌力強化、步態訓練及居家無障礙環境評估。';
-        address = '彰化縣福興鄉木柵路三段88號（距醫院約 6.3 km）';
-        phone = '0923-456-789'; contact = '女兒趙小姐 0912-234-567';
-      } else if (item.patient.includes('謝俊男') || item.patient.includes('俊男')) {
-        age = '58'; gender = '男'; disease = '腦中風(CVA)'; physician = '林醫師（復健科）';
-        summary = '右側上下肢功能誘發，著重步態對稱性訓練、精細動作協調及語言溝通促進。';
-        address = '彰化縣大村鄉思源路215號（距醫院約 9.1 km）';
-        phone = '0934-678-901'; contact = '太太謝太太 0945-789-012';
-      } else if (item.patient.includes('林○峰') || item.patient.includes('○峰')) {
-        age = '70'; gender = '男'; disease = '衰弱高齡'; physician = '劉醫師（胸腔內科）';
-        summary = '呼吸肌訓練、步行耐力提升及排痰技巧指導，配合家庭氧療評估。';
-        address = '彰化縣和美鎮成功路五段320號（距醫院約 7.4 km）';
-        phone = '0956-789-012'; contact = '兒子林先生 0967-890-123';
-      }
-
-      return {
-        age, gender, disease, physician, summary, address, phone, contact,
-        bed: item.bed || '30' + (Math.floor((item.date.charCodeAt(0) || 0) % 9) + 1) + '-' + ((item.patient.charCodeAt(0) || 0) % 2 === 0 ? 'A' : 'B'),
-        week: item.week || '第 ' + (Math.floor((item.date.charCodeAt(1) || 0) % 6) + 1) + ' 週',
-        admissionDate: item.admissionDate || '2026/05/20',
-        billingStatus: item.billingStatus || '已批價',
-      };
-    }
-
-    function getEndTime(time) {
-      const [h, m] = time.split(':').map(Number);
-      if (isNaN(h) || isNaN(m)) return time;
-      let newM = m + 50;
-      let newH = h;
-      if (newM >= 60) {
-        newH += 1;
-        newM -= 60;
-      }
-      return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
-    }
-
-    // Check if schedule passes the type and therapist filters
-    function matchesFilter(item) {
-      // 周日不排班 (Exclude Sunday schedules)
-      const match = item.date.split('-');
-      if (match.length === 2) {
-        const itemDate = new Date(2026, parseInt(match[0]) - 1, parseInt(match[1]));
-        if (itemDate.getDay() === 0) return false;
-      }
-
-      // 'open' type (registerable home visits) always visible regardless of therapist filter
-      const isOpen = item.type === 'open';
-
-      // Therapist Filter (skip for open items)
-      if (!isOpen && !selectedTherapists.includes('all')) {
-        if (!selectedTherapists.includes(item.therapist)) return false;
-      }
-
-      // Type Filter
-      if (!selectedTypes.includes('all')) {
-        let typeMatched = false;
-        if (selectedTypes.includes('inpatient') && (item.type === 'pac-in' || item.type === 'nonpac-in')) {
-          typeMatched = true;
-        }
-        if (selectedTypes.includes('home') && (item.type === 'pac-home' || item.type === 'nonpac-home' || item.type === 'open')) {
-          typeMatched = true;
-        }
-        if (selectedTypes.includes('open') && item.type === 'open') {
-          typeMatched = true;
-        }
-        if (!typeMatched) return false;
-      }
-
-      return true;
-    }
-
-    // Therapist Dropdown Controls
-    function toggleTherapistDropdown(e) {
-      e.stopPropagation();
-      document.getElementById('therapist-dropdown-menu').classList.toggle('show');
-    }
-
-    function onTherapistCheckboxChange(chk) {
-      const allChk = document.getElementById('chk-therapist-all');
-      const items = Array.from(document.querySelectorAll('.chk-therapist'));
-
-      if (chk.value === 'all') {
-        items.forEach(i => i.checked = chk.checked);
+    function switchView(viewType) {
+      const btnToday = document.getElementById('btnViewToday');
+      const btnCal = document.getElementById('btnViewCalendar');
+      const viewToday = document.getElementById('todayView');
+      const viewCal = document.getElementById('calendarView');
+      if (viewType === 'today') {
+        btnToday.classList.add('active');
+        btnCal.classList.remove('active');
+        viewToday.style.display = 'block';
+        viewCal.style.display = 'none';
       } else {
-        const allChecked = items.every(i => i.checked);
-        allChk.checked = allChecked;
+        btnCal.classList.add('active');
+        btnToday.classList.remove('active');
+        viewToday.style.display = 'none';
+        viewCal.style.display = 'block';
       }
+    }
 
-      // Re-build selectedTherapists
-      if (allChk.checked) {
-        selectedTherapists = ['all'];
+    function prevDate() { document.getElementById('currentDateDisplay').textContent = '2026 年 07 月 31 日 星期日'; }
+    function nextDate() { document.getElementById('currentDateDisplay').textContent = '2026 年 08 月 02 日 星期二'; }
+    function goToday() { document.getElementById('currentDateDisplay').textContent = '2026 年 08 月 01 日 星期一'; switchView('today'); }
+
+    // 開啟月曆單格排班總表彈窗 (指示 3)
+    function openCalDaySummaryModal(dateStr, weekday, count) {
+      document.getElementById('calSummaryTitle').textContent = `2026 年 ${dateStr}（${weekday}）・ 排班總表`;
+      document.getElementById('calDaySummaryModal').classList.add('open');
+    }
+
+    function switchToSelectedDateGrid() {
+      closeModal('calDaySummaryModal');
+      switchView('today');
+    }
+
+    // 復健詳情 Modal
+    function openDetailModal(name, slot, therapist, disease, careMode) {
+      document.getElementById('modalPatientName').textContent = name;
+      document.getElementById('modalTherapist').textContent = therapist;
+      document.getElementById('modalTimeSlot').textContent = slot;
+      document.getElementById('modalPatientDisease').textContent = disease;
+      document.getElementById('modalPatientCare').textContent = careMode.includes('居家') ? '居家' : '住院';
+      document.getElementById('modalHeaderTitle').textContent = `${slot} ${therapist}・${name} ${careMode}`;
+
+      const pinkBadge = document.getElementById('modalPinkBadge');
+      if (careMode.includes('居家')) {
+        pinkBadge.textContent = '居家個案 - 有班表版本（僅供瀏覽）';
       } else {
-        selectedTherapists = items.filter(i => i.checked).map(i => i.value);
+        pinkBadge.textContent = '院內個案 - 有班表版本';
       }
 
-      // Update Dropdown Button Text
-      const btn = document.getElementById('therapist-dropdown-btn');
-      if (selectedTherapists.includes('all')) {
-        btn.textContent = '全部治療師';
-      } else if (selectedTherapists.length === 0) {
-        btn.textContent = '無選擇治療師';
-      } else if (selectedTherapists.length <= 2) {
-        btn.textContent = selectedTherapists.join(', ');
-      } else {
-        btn.textContent = `已選 ${selectedTherapists.length} 位`;
-      }
-
-      renderCalendar();
-      renderWeekView();
+      document.getElementById('detailModal').classList.add('open');
     }
 
-    // Close dropdown if clicked outside
-    window.addEventListener('click', function (e) {
-      const menu = document.getElementById('therapist-dropdown-menu');
-      const btn = document.getElementById('therapist-dropdown-btn');
-      if (menu && !menu.contains(e.target) && e.target !== btn) {
-        menu.classList.remove('show');
-      }
-    });
-
-    // Type Filter Controls
-    function toggleTypeFilter(type) {
-      const tabs = document.querySelectorAll('#type-filters .filter-tab');
-
-      if (type === 'all') {
-        selectedTypes = ['all'];
-      } else {
-        // Toggle active state
-        if (selectedTypes.includes('all')) {
-          selectedTypes = [type];
-        } else {
-          if (selectedTypes.includes(type)) {
-            selectedTypes = selectedTypes.filter(t => t !== type);
-          } else {
-            selectedTypes.push(type);
-          }
-        }
-
-        // If empty, reset to all
-        if (selectedTypes.length === 0) {
-          selectedTypes = ['all'];
-        }
-      }
-
-      // Update Tab active classes
-      tabs.forEach(tab => {
-        const tType = tab.getAttribute('data-type');
-        if (selectedTypes.includes('all')) {
-          tab.classList.toggle('active', tType === 'all');
-        } else {
-          tab.classList.toggle('active', selectedTypes.includes(tType));
-        }
-      });
-
-      renderCalendar();
-      renderWeekView();
-    }
-
-    function switchRole(role) {
-      currentRole = role;
-      const isSupervisor = (role === 'sup' || role === 'manager');
-      const btnManager = document.getElementById('btn-manager');
-      if (btnManager) btnManager.classList.toggle('active', isSupervisor);
-      const btnTherapist = document.getElementById('btn-therapist');
-      if (btnTherapist) btnTherapist.classList.toggle('active', !isSupervisor);
-
-      const allChk = document.getElementById('chk-therapist-all');
-      const chks = document.querySelectorAll('.chk-therapist');
-      const dropdownBtn = document.getElementById('therapist-dropdown-btn');
-
-      if (isSupervisor) {
-        currentLoggedInUser = '王復健主管';
-        document.getElementById('user-avatar').className = 'user-avatar manager';
-        document.getElementById('user-avatar').textContent = '王';
-        document.getElementById('user-name').textContent = '王復健主管';
-        document.getElementById('user-role-label').textContent = '復健主管';
-        document.getElementById('approval-badge').classList.remove('hidden');
-        document.getElementById('btn-add-schedule').classList.remove('hidden');
-
-        // Re-enable the therapist filter dropdown for manager
-        dropdownBtn.classList.remove('disabled');
-        allChk.disabled = false;
-        chks.forEach(c => c.disabled = false);
-
-        // Restore all-selected state
-        allChk.checked = true;
-        chks.forEach(c => c.checked = true);
-        selectedTherapists = ['all'];
-        dropdownBtn.textContent = '全部治療師';
-      } else {
-        // Therapist role: shows identity based on current sub-role but STILL shows ALL schedules
-        if (role === 'ot') {
-          currentLoggedInUser = '李佳穎';
-          document.getElementById('user-avatar').className = 'user-avatar';
-          document.getElementById('user-avatar').textContent = '李';
-          document.getElementById('user-name').textContent = '李佳穎';
-          document.getElementById('user-role-label').textContent = '職能治療師（OT）';
-        } else if (role === 'st') {
-          currentLoggedInUser = '吳怡君';
-          document.getElementById('user-avatar').className = 'user-avatar';
-          document.getElementById('user-avatar').textContent = '吳';
-          document.getElementById('user-name').textContent = '吳怡君';
-          document.getElementById('user-role-label').textContent = '語言治療師（ST）';
-        } else {
-          currentLoggedInUser = '黃志豪';
-          document.getElementById('user-avatar').className = 'user-avatar';
-          document.getElementById('user-avatar').textContent = '黃';
-          document.getElementById('user-name').textContent = '黃志豪';
-          document.getElementById('user-role-label').textContent = '物理治療師（PT）';
-        }
-        document.getElementById('approval-badge').classList.add('hidden');
-        document.getElementById('btn-add-schedule').classList.add('hidden');
-
-        // Therapist can still filter by therapist but defaults to all
-        // The dropdown remains functional so they can browse by therapist
-        dropdownBtn.classList.remove('disabled');
-        allChk.disabled = false;
-        chks.forEach(c => c.disabled = false);
-        allChk.checked = true;
-        chks.forEach(c => c.checked = true);
-        selectedTherapists = ['all'];
-        dropdownBtn.textContent = '全部治療師';
-      }
-
-      // Update drawer action buttons based on role (called dynamically in showItemDetails)
-      // Update visible drawer actions immediately if any drawer is open
-      updateDrawerActionsForRole(role);
-
-      renderCalendar();
-      renderWeekView();
-    }
-
-    function updateDrawerActionsForRole(role, itemTherapist) {
-      // Always use the authoritative module-level currentRole variable
-      const effectiveRole = currentRole;
-      const isSupervisor = (effectiveRole === 'sup' || effectiveRole === 'manager');
-      const canManageSchedule = (effectiveRole === 'sup' || effectiveRole === 'manager');
-      const isTherapist = (effectiveRole === 'pt' || effectiveRole === 'ot' || effectiveRole === 'st' || effectiveRole === 'therapist');
-
-      // 1. Header buttons
-      const approvalBadge = document.getElementById('approval-badge');
-      if (approvalBadge) {
-        if (canManageSchedule) approvalBadge.classList.remove('hidden');
-        else approvalBadge.classList.add('hidden');
-      }
-      const myAppBadge = document.getElementById('my-application-badge');
-      if (myAppBadge) {
-        if (isTherapist) myAppBadge.classList.remove('hidden');
-        else myAppBadge.classList.add('hidden');
-      }
-      const btnAddSchedule = document.getElementById('btn-add-schedule');
-      if (btnAddSchedule) {
-        if (canManageSchedule) btnAddSchedule.classList.remove('hidden');
-        else btnAddSchedule.classList.add('hidden');
-      }
-
-      // Map iframe role back to actual user name for matching
-      let resolvedUser = '王復健主管';
-      if (effectiveRole === 'pt' || effectiveRole === 'therapist') resolvedUser = '黃志豪';
-      if (effectiveRole === 'ot') resolvedUser = '李佳穎';
-      if (effectiveRole === 'st') resolvedUser = '吳怡君';
-
-      // 2. Inpatient & Home detail actions
-      let isSelf = true;
-      if (itemTherapist) {
-        isSelf = (itemTherapist.trim() === resolvedUser);
-      }
-
-      const mgrActions = document.getElementById('manager-actions');
-      const thActions = document.getElementById('therapist-actions');
-
-      // Use style.display directly — avoids .hidden !important override issue
-      if (mgrActions) mgrActions.style.display = isSupervisor ? 'block' : 'none';
-      if (thActions) {
-        thActions.style.display = (isTherapist && isSelf) ? 'block' : 'none';
-      }
-
-      const homeMgrActions = document.getElementById('home-manager-actions');
-      const homeThActions = document.getElementById('home-therapist-actions');
-      if (homeMgrActions) homeMgrActions.style.display = isSupervisor ? 'block' : 'none';
-      if (homeThActions) homeThActions.style.display = (isTherapist && isSelf) ? 'block' : 'none';
-    }
-
-    let activeView = 'month';
-
-    function switchView(el, view) {
-      document.querySelectorAll('.view-toggle .view-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('view-month').classList.toggle('hidden', view !== 'month');
-      document.getElementById('view-week').classList.toggle('hidden', view !== 'week');
-
-      activeView = view;
-
-      if (view === 'week') {
-        renderWeekView();
-      } else {
-        renderCalendar();
-      }
-    }
-
-    let currentMonthDate = new Date(2026, 5, 1);
-
-    function prevPeriod() {
-      if (activeView === 'month') {
-        currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
-        renderCalendar();
-      } else {
-        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-        renderWeekView();
-      }
-    }
-
-    function nextPeriod() {
-      if (activeView === 'month') {
-        currentMonthDate.setMonth(currentMonthDate.getMonth() + 1);
-        renderCalendar();
-      } else {
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-        renderWeekView();
-      }
-    }
-
-    function goToToday() {
-      currentMonthDate = new Date(2026, 5, 1);
-      currentWeekStart = new Date(2026, 5, 21);
-      selectedWeekDay = '6-23';
-      renderCalendar();
-      renderWeekView();
-    }
-
-    // ── Render Month View Calendar ──
-    function renderCalendar() {
-      const calGrid = document.querySelector('.cal-grid');
-      const headers = Array.from(calGrid.querySelectorAll('.cal-header'));
-      calGrid.innerHTML = '';
-      headers.forEach(h => calGrid.appendChild(h));
-
-      const year = currentMonthDate.getFullYear();
-      const month = currentMonthDate.getMonth();
-      const monthLabel = document.getElementById('current-period-label');
-      if (monthLabel && activeView === 'month') monthLabel.textContent = `${year}年 ${month + 1}月`;
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const prevMonthDays = new Date(year, month, 0).getDate();
-
-      const today = new Date(2026, 5, 23);
-      const isToday = (dObj) => dObj.getFullYear() === today.getFullYear() && dObj.getMonth() === today.getMonth() && dObj.getDate() === today.getDate();
-      const holidays = { '2026-6-1': '端午節' };
-
-      for (let i = firstDay - 1; i >= 0; i--) {
-        const d = prevMonthDays - i;
-        const cell = document.createElement('div');
-        cell.className = 'cal-cell other-month';
-        cell.innerHTML = `<div class="cal-date" style="color:var(--gray-300)">${d}</div>`;
-        calGrid.appendChild(cell);
-      }
-
-      for (let d = 1; d <= daysInMonth; d++) {
-        const cell = document.createElement('div');
-        cell.className = 'cal-cell';
-        cell.setAttribute('data-date', `${month + 1}-${d}`);
-
-        const dateStr = `${year}-${month + 1}-${d}`;
-        const dObj = new Date(year, month, d);
-        let dateHtml = `<div class="cal-date">${d}</div>`;
-
-        if (isToday(dObj)) {
-          cell.classList.add('today');
-          dateHtml = `<div class="cal-date"><span class="cal-date today-num">${d}</span> <span style="font-size:10px;color:var(--blue)">今天</span></div>`;
-        } else if (holidays[dateStr]) {
-          cell.classList.add('holiday');
-          dateHtml = `<div class="cal-date">${d} <span class="holiday-label">${holidays[dateStr]}</span></div>`;
-        }
-
-        cell.innerHTML = dateHtml;
-        cell.addEventListener('click', function (e) {
-          const dateAttr = this.getAttribute('data-date');
-          if (dateAttr) openDayModal(dateAttr);
-        });
-        calGrid.appendChild(cell);
-      }
-
-      const totalCells = firstDay + daysInMonth;
-      const remainingCells = (7 - (totalCells % 7)) % 7;
-      if (remainingCells > 0) {
-        for (let d = 1; d <= remainingCells; d++) {
-          const cell = document.createElement('div');
-          cell.className = 'cal-cell other-month';
-          cell.innerHTML = `<div class="cal-date" style="color:var(--gray-300)">${d}</div>`;
-          calGrid.appendChild(cell);
-        }
-      }
-
-      // Clear calendar cells first
-      document.querySelectorAll('.cal-cell').forEach(cell => {
-        // Remove all previous cal-events and more-tags
-        cell.querySelectorAll('.cal-event, .more-tag').forEach(el => el.remove());
-
-        const dateAttr = cell.getAttribute('data-date');
-        if (!dateAttr) return;
-
-        // Find all schedules on this day
-        const daySchedules = schedules.filter(s => s.date === dateAttr);
-        // Apply filters
-        const filteredSchedules = daySchedules.filter(matchesFilter);
-        // Sort schedules by time
-        filteredSchedules.sort((a, b) => a.time.localeCompare(b.time));
-
-        // Render first 3
-        const maxVisible = 3;
-        const visibleSchedules = filteredSchedules.slice(0, maxVisible);
-
-        visibleSchedules.forEach(item => {
-          const ev = document.createElement('div');
-          ev.className = `cal-event ${item.type}`;
-
-          let typeLabel = '';
-          if (item.type === 'pac-home' || item.type === 'nonpac-home') {
-            typeLabel = ' 🏡';
-          }
-
-          if (item.type === 'open') {
-            ev.innerHTML = `🏡 ${item.patient} 可報名居家`;
-          } else {
-            ev.innerHTML = `${item.therapist}(${item.therapistType}) ${item.patient} ${item.time}${typeLabel}`;
-          }
-
-          // Let clicks bubble up to the cell to open the Day Modal
-          cell.appendChild(ev);
-        });
-
-        // More tag
-        if (filteredSchedules.length > maxVisible) {
-          const moreTag = document.createElement('div');
-          moreTag.className = 'more-tag';
-          moreTag.textContent = `＋${filteredSchedules.length - maxVisible} 更多`;
-          // Let clicks bubble up to the cell
-          cell.appendChild(moreTag);
-        }
-      });
-
-      // Update register counts badge
-      const openCount = schedules.filter(s => s.type === 'open').length;
-      document.getElementById('open-count-badge').textContent = openCount;
-    }
-
-    // Open dynamic Day Modal showing all events of that day
-    function openDayModal(dateStr) {
-      // Parse date into readable string
-      let displayDate = dateStr;
-      let weekdayText = '';
-      const match = dateStr.split('-');
-      if (match.length === 2) {
-        const month = match[0];
-        const day = match[1];
-
-        // We assume 2026 June
-        const dateObj = new Date(2026, 5, parseInt(day));
-        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-        weekdayText = weekdays[dateObj.getDay()];
-        displayDate = `${month}月${day}日（${weekdayText}）`;
-      }
-
-      const daySchedules = schedules.filter(s => s.date === dateStr);
-      const filtered = daySchedules.filter(matchesFilter);
-      filtered.sort((a, b) => a.time.localeCompare(b.time));
-
-      document.getElementById('day-modal-title').textContent = `📅 ${displayDate}・排班總表`;
-      document.getElementById('day-modal-subtitle').textContent = `共 ${filtered.length} 筆排班・點選查看詳情`;
-
-      const listContainer = document.getElementById('day-modal-list');
-      listContainer.innerHTML = '';
-
-      if (filtered.length === 0) {
-        listContainer.innerHTML = `<p style="color:var(--gray-500);font-size:13px;text-align:center;padding:16px 0">該時段尚未排班</p>`;
-      } else {
-        filtered.forEach(item => {
-          const row = document.createElement('div');
-          row.style.display = 'flex';
-          row.style.alignItems = 'center';
-          row.style.gap = '10px';
-          row.style.padding = '9px 10px';
-          row.style.borderRadius = '8px';
-          row.style.cursor = 'pointer';
-          row.style.marginBottom = '6px';
-
-          let borderCol = 'var(--blue)';
-          let bgCol = 'var(--blue-light)';
-          let typeText = 'PAC 院內';
-          let badgeClass = 'badge-blue';
-
-          if (item.type === 'nonpac-in') {
-            borderCol = 'var(--gray-400)';
-            bgCol = 'var(--gray-50)';
-            typeText = '一般院內';
-            badgeClass = 'badge-gray';
-          } else if (item.type === 'pac-home') {
-            borderCol = 'var(--green)';
-            bgCol = 'var(--green-light)';
-            typeText = 'PAC 居家';
-            badgeClass = 'badge-green';
-          } else if (item.type === 'nonpac-home') {
-            borderCol = 'var(--teal)';
-            bgCol = 'var(--teal-light)';
-            typeText = '一般居家';
-            badgeClass = 'badge-green';
-          } else if (item.type === 'open') {
-            borderCol = 'var(--amber)';
-            bgCol = 'var(--amber-light)';
-            typeText = '可報名居家';
-            badgeClass = 'badge-amber';
-          }
-
-          row.style.background = bgCol;
-          row.style.borderLeft = `3px solid ${borderCol}`;
-
-          let displayTime = item.time;
-          if (displayTime === '12:30') displayTime = '午休';
-          if (displayTime === '18:00' || displayTime === '18:30') displayTime = '下班後';
-
-          let contentStr = '';
-          if (item.type === 'open') {
-            contentStr = `🏡 ${item.patient} 可報名居家`;
-          } else {
-            const homeIcon = item.type.includes('home') ? ' 🏡' : '';
-            contentStr = `${item.therapist}(${item.therapistType})・${item.patient}${homeIcon}`;
-          }
-
-          row.innerHTML = `
-        <span style="font-size:11px;font-weight:600;color:var(--gray-700);white-space:nowrap;width:50px">${displayTime}</span>
-        <span style="font-size:12px;flex:1">${contentStr}</span>
-        <span class="badge ${badgeClass}" style="font-size:10px">${typeText}</span>
-      `;
-
-          row.addEventListener('click', () => {
-            closeDayModal();
-            showItemDetails(item);
-          });
-          listContainer.appendChild(row);
-        });
-      }
-
-      if (currentRole === 'manager' || currentRole === 'sup') {
-        const addBtnDiv = document.createElement('div');
-        addBtnDiv.style.textAlign = 'center';
-        addBtnDiv.style.marginTop = '12px';
-        addBtnDiv.style.marginBottom = '6px';
-        addBtnDiv.innerHTML = `<button class="btn btn-primary btn-sm" onclick="closeDayModal(); openModal('modal-add-schedule')">＋ 新增班表</button>`;
-        listContainer.appendChild(addBtnDiv);
-      }
-
-      openModal('day-modal');
-    }
-
-    function closeDayModal() {
-      closeModal('day-modal');
-    }
-
-    // ── Item Details Launcher ──
-    let currentSelectedItem = null;
-
-    function openEditScheduleModal() {
-      if (currentSelectedItem) {
-        document.getElementById('edit-original-info').textContent = `原排班：2026年${currentSelectedItem.date.replace('-', '月')}日 ${currentSelectedItem.time}・個案 ${currentSelectedItem.patient}`;
-      }
-
-      const therapistSelect = document.getElementById('edit-therapist');
-      if (therapistSelect) {
-        const isSupervisor = (currentRole === 'sup' || currentRole === 'manager');
-        if (isSupervisor) {
-          therapistSelect.disabled = false;
-          if (currentSelectedItem) {
-            therapistSelect.value = currentSelectedItem.therapist.includes('黃志豪') ? '黃志豪（PT）' :
-              currentSelectedItem.therapist.includes('陳建宏') ? '陳建宏（PT）' :
-                currentSelectedItem.therapist.includes('李佳穎') ? '李佳穎（OT）' :
-                  currentSelectedItem.therapist.includes('張雅玲') ? '張雅玲（OT）' :
-                    currentSelectedItem.therapist.includes('吳怡君') ? '吳怡君（ST）' : '';
-          }
-        } else {
-          const titleSuffix = currentLoggedInUser === '黃志豪' ? '（PT）' : (currentLoggedInUser === '李佳穎' ? '（OT）' : '（ST）');
-          therapistSelect.value = currentLoggedInUser + titleSuffix;
-          therapistSelect.disabled = true;
-        }
-      }
-
-      if (currentSelectedItem) {
-        const patientSelect = document.getElementById('edit-patient');
-        if (patientSelect) {
-          for (let opt of patientSelect.options) {
-            if (opt.text.includes(currentSelectedItem.patient)) {
-              patientSelect.value = opt.value;
-              break;
-            }
-          }
-        }
-
-        const dateInput = document.getElementById('edit-date');
-        if (dateInput) {
-          const parts = currentSelectedItem.date.split('-');
-          if (parts.length === 2) {
-            const mm = parts[0].padStart(2, '0');
-            const dd = parts[1].padStart(2, '0');
-            dateInput.value = `2026-${mm}-${dd}`;
-          } else {
-            dateInput.value = currentSelectedItem.date;
-          }
-        }
-
-        const timeSelect = document.getElementById('edit-time');
-        if (timeSelect) {
-          for (let opt of timeSelect.options) {
-            if (opt.text.includes(currentSelectedItem.time)) {
-              timeSelect.value = opt.value;
-              break;
-            }
-          }
-        }
-      }
-
-      closeDrawer('inpatient');
-      closeDrawer('home');
-      openModal('modal-edit-schedule');
-    }
-
-    function showItemDetails(item) {
-      currentSelectedItem = item;
-      const details = getScheduleDetails(item);
-
-      if (item.type === 'open') {
-        // Open Registration modal
-        document.getElementById('reg-det-title').textContent = `🏡 居家個案報名・${item.patient}`;
-        document.getElementById('reg-det-note').textContent = `報名截止：2026/06/24 12:00・若報名人數超額將進行抽籤`;
-        document.getElementById('reg-det-name').textContent = item.patient;
-        document.getElementById('reg-det-age-gender').textContent = `${details.age}歲 ${details.gender}`;
-        document.getElementById('reg-det-disease').textContent = details.disease;
-        document.getElementById('reg-det-address').textContent = details.address;
-        document.getElementById('reg-det-contact').textContent = `${details.phone} / 家屬${details.contact}`;
-
-        // Set custom quota fills
-        let ptPercent = '33%'; let ptCount = '1 / 3 人';
-        let otPercent = '0%'; let otCount = '0 / 3 人';
-        let stPercent = '0%'; let stCount = '0 / 0 人';
-        let summaryText = '不需 ST・共需 6 名治療師';
-
-        if (item.patient.includes('王淑芬') || item.patient.includes('淑芬')) {
-          ptPercent = '66%'; ptCount = '2 / 3 人';
-          otPercent = '33%'; otCount = '1 / 3 人';
-        } else if (item.patient.includes('陳志明') || item.patient.includes('志明')) {
-          ptPercent = '0%'; ptCount = '0 / 3 人';
-          otPercent = '66%'; otCount = '2 / 3 人';
-        }
-
-        document.getElementById('reg-quota-pt-bar').style.width = ptPercent;
-        document.getElementById('reg-quota-pt-count').textContent = ptCount;
-        document.getElementById('reg-quota-ot-bar').style.width = otPercent;
-        document.getElementById('reg-quota-ot-count').textContent = otCount;
-        document.getElementById('reg-quota-st-bar').style.width = stPercent;
-        document.getElementById('reg-quota-st-count').textContent = stCount;
-        document.getElementById('reg-quota-summary').textContent = summaryText;
-
-        document.getElementById('reg-det-summary1').textContent = details.summary;
-        document.getElementById('reg-det-summary2').innerHTML = `PT：每週 3 次，每次 50 分鐘。著重肌力與平衡訓練。<br>OT：每週 2 次，每次 50 分鐘。著重日常生活自理重建。`;
-
-        openModal('modal-register');
-      }
-      else if (item.type === 'pac-in' || item.type === 'nonpac-in') {
-        // Open Inpatient drawer
-        document.getElementById('inpatient-det-title').textContent = `${item.patient}・復健排班詳情`;
-        document.getElementById('inpatient-det-subtitle').innerHTML = `${item.date} ${item.time}・<span class="badge ${item.type === 'pac-in' ? 'badge-blue' : 'badge-gray'}" style="font-size:10px">${item.type === 'pac-in' ? 'PAC 院內' : '一般院內'}</span>`;
-        document.getElementById('inpatient-det-therapist').textContent = item.therapist;
-        document.getElementById('inpatient-det-role').innerHTML = `<span class="therapist-tag therapist-${item.therapistType.toLowerCase()}">${item.therapistType}</span> ${item.therapistType === 'PT' ? '物理治療師' : item.therapistType === 'OT' ? '職能治療師' : '語言治療師'}`;
-        document.getElementById('inpatient-det-time').textContent = `${item.time} – ${getEndTime(item.time)}`;
-        document.getElementById('inpatient-det-name').textContent = item.patient;
-        document.getElementById('inpatient-det-age-gender').textContent = `${details.age}歲 ${details.gender}`;
-        document.getElementById('inpatient-det-disease').textContent = details.disease;
-        document.getElementById('inpatient-det-pactype').innerHTML = `<span class="badge badge-blue" style="font-size:10px">${item.type === 'pac-in' ? 'PAC 院內' : '一般院內'}</span>`;
-        document.getElementById('inpatient-det-admit').textContent = details.admissionDate;
-        document.getElementById('inpatient-det-week').textContent = details.week;
-        document.getElementById('inpatient-det-bed').textContent = details.bed;
-        document.getElementById('inpatient-det-doctor').textContent = details.physician;
-        document.getElementById('inpatient-det-summary').textContent = details.summary;
-
-        openDrawer('inpatient');
-        updateDrawerActionsForRole(currentRole, item.therapist);
-      }
-      else if (item.type === 'pac-home' || item.type === 'nonpac-home') {
-        // Open Home drawer
-        document.getElementById('home-det-title').textContent = `${item.patient}・居家復健詳情`;
-
-        let badgeText = item.type === 'pac-home' ? 'PAC 居家' : '一般居家';
-        document.getElementById('home-det-subtitle').innerHTML = `${item.date} ${item.time}・<span class="badge badge-green" style="font-size:10px">${badgeText}</span>`;
-        document.getElementById('home-det-therapist').textContent = item.therapist;
-        document.getElementById('home-det-role').innerHTML = `<span class="therapist-tag therapist-${item.therapistType.toLowerCase()}">${item.therapistType}</span> ${item.therapistType === 'PT' ? '物理治療師' : item.therapistType === 'OT' ? '職能治療師' : '語言治療師'}`;
-
-        let displayTime = item.time;
-        if (displayTime === '12:30') displayTime = '午休（約12:30）';
-        if (displayTime === '18:00' || displayTime === '18:30') displayTime = '下班後（約18:00）';
-        document.getElementById('home-det-time').textContent = displayTime;
-
-        document.getElementById('home-det-billing').innerHTML = `<span class="badge badge-green">${details.billingStatus}</span>`;
-        document.getElementById('home-det-name').textContent = item.patient;
-        document.getElementById('home-det-age-gender').textContent = `${details.age}歲 ${details.gender}`;
-        document.getElementById('home-det-disease').textContent = details.disease;
-        document.getElementById('home-det-pactype').innerHTML = `<span class="badge badge-green" style="font-size:10px">${badgeText}</span>`;
-        document.getElementById('home-det-startdate').textContent = details.admissionDate;
-        document.getElementById('home-det-week').textContent = details.week;
-        document.getElementById('home-det-address').textContent = details.address;
-        document.getElementById('home-det-phone').textContent = details.phone;
-        document.getElementById('home-det-contact').textContent = details.contact;
-        document.getElementById('home-det-summary1').textContent = details.summary;
-        document.getElementById('home-det-summary2').textContent = `${item.therapistType === 'PT' ? '物理治療：每週 3 次，每次 50 分鐘。著重防跌訓練與轉位練習。' : '職能治療：每週 2 次，每次 50 分鐘。著重日常生活精細功能誘發與輔具使用評估。'}`;
-
-        openDrawer('home');
-        updateDrawerActionsForRole(currentRole, item.therapist);
-      }
-    }
-
-    // ── Week View dynamic generation ──
-    const times = [
-      '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
-      '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-      '午休', '下班後'
-    ];
-
-    const allTherapists = [
-      { name: '黃志豪', type: 'PT' },
-      { name: '陳建宏', type: 'PT' },
-      { name: '李佳穎', type: 'OT' },
-      { name: '張雅玲', type: 'OT' },
-      { name: '吳怡君', type: 'ST' }
-    ];
-
-    let currentWeekStart = new Date(2026, 5, 21); // 2026/06/21 (Sunday)
-
-    function selectWeekDay(day) {
-      selectedWeekDay = day;
-      renderWeekView();
-    }
-
-    function renderWeekView() {
-      // Render Weekday tabs first
-      const tabsContainer = document.getElementById('week-day-tabs');
-      if (!tabsContainer) return;
-      tabsContainer.innerHTML = '';
-
-      const weekdays = [];
-      const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(currentWeekStart);
-        d.setDate(d.getDate() + i);
-        const month = d.getMonth() + 1;
-        const date = d.getDate();
-        const dayName = dayNames[d.getDay()];
-        weekdays.push({
-          label: `週${dayName} ${month}/${date}`,
-          value: `${month}-${date}`,
-          dateObj: d
-        });
-      }
-
-      const firstD = weekdays[0].dateObj;
-      const lastD = weekdays[6].dateObj;
-      const firstStr = `${firstD.getFullYear()}/${String(firstD.getMonth() + 1).padStart(2, '0')}/${String(firstD.getDate()).padStart(2, '0')}（${dayNames[firstD.getDay()]}）`;
-      const lastStr = `${lastD.getFullYear()}/${String(lastD.getMonth() + 1).padStart(2, '0')}/${String(lastD.getDate()).padStart(2, '0')}（${dayNames[lastD.getDay()]}）`;
-      const labelEl = document.getElementById('current-period-label');
-      if (labelEl && activeView === 'week') {
-        labelEl.textContent = `${firstStr} ～ ${lastStr}`;
-      }
-
-      if (!weekdays.find(d => d.value === selectedWeekDay)) {
-        selectedWeekDay = weekdays[0].value;
-      }
-
-      weekdays.forEach(day => {
-        const tab = document.createElement('div');
-        tab.className = `filter-tab ${selectedWeekDay === day.value ? 'active' : ''}`;
-
-        let suffixText = '';
-        if (day.value === '6-23') {
-          suffixText = ' (今)';
-        }
-        tab.textContent = day.label + suffixText;
-        tab.addEventListener('click', () => selectWeekDay(day.value));
-        tabsContainer.appendChild(tab);
-      });
-
-      // Render Table Matrix
-      const matrixContainer = document.getElementById('week-matrix-container');
-      if (!matrixContainer) return;
-      matrixContainer.innerHTML = '';
-
-      // Filter active therapists
-      const activeTherapists = allTherapists.filter(t => {
-        if (selectedTherapists.includes('all')) return true;
-        return selectedTherapists.includes(t.name);
-      });
-
-      if (activeTherapists.length === 0) {
-        matrixContainer.innerHTML = `<p style="color:var(--gray-500);font-size:13px;text-align:center;padding:24px 0">無選擇任何治療師，請於右上角篩選</p>`;
-        return;
-      }
-
-      const table = document.createElement('table');
-      table.className = 'week-matrix';
-
-      // Thead
-      let theadHTML = `
-    <thead>
-      <tr>
-        <th class="time-col">時間</th>
-  `;
-      activeTherapists.forEach(t => {
-        theadHTML += `
-      <th class="therapist-header">
-        <span class="therapist-tag therapist-${t.type.toLowerCase()}">${t.type}</span><br>${t.name}
-      </th>
-    `;
-      });
-      theadHTML += `
-      </tr>
-    </thead>
-  `;
-
-      // Tbody
-      let tbodyHTML = '<tbody>';
-
-      times.forEach(time => {
-        let rowHTML = `<tr><td class="time-col">${time}</td>`;
-
-        activeTherapists.forEach(t => {
-          // Find event
-          const event = schedules.find(s => {
-            if (s.date !== selectedWeekDay) return false;
-            if (s.therapist !== t.name) return false;
-
-            // Time matching rules
-            if (time === '午休') {
-              return s.time === '12:30' || s.time.includes('午休');
-            } else if (time === '下班後') {
-              return s.time === '17:30' || s.time === '18:00' || s.time === '18:30' || s.time.includes('下班後');
-            } else {
-              return s.time === time;
-            }
-          });
-
-          if (event && matchesFilter(event)) {
-            let tdBgStyle = '';
-            if (event.type.includes('home')) {
-              tdBgStyle = 'background:#F0FDF4';
-            } else if (event.type === 'open') {
-              tdBgStyle = 'background:var(--amber-light)';
-            }
-
-            let displayContent = '';
-            if (event.type === 'open') {
-              displayContent = `<div class="week-event open">🏡 ${event.patient} 可報名</div>`;
-            } else {
-              const isPac = event.type.startsWith('pac');
-              const pacTag = isPac ? ` <span class="pac-tag">P</span>` : '';
-              const homeTag = event.type.includes('home') ? '🏡 ' : '';
-              const className = event.type;
-              displayContent = `<div class="week-event ${className}">${homeTag}${event.patient}${pacTag}</div>`;
-            }
-
-            rowHTML += `
-          <td style="${tdBgStyle}; cursor:pointer" onclick="showWeekItem(${JSON.stringify(event).replace(/"/g, '&quot;')})">
-            ${displayContent}
-          </td>
-        `;
-          } else {
-            rowHTML += `<td></td>`;
-          }
-        });
-
-        rowHTML += '</tr>';
-        tbodyHTML += rowHTML;
-      });
-
-      tbodyHTML += '</tbody>';
-      table.innerHTML = theadHTML + tbodyHTML;
-      matrixContainer.appendChild(table);
-    }
-
-    // Global hook for event details popup in Week view
-    window.showWeekItem = function (item) {
-      showItemDetails(item);
-    };
-
-    // Drawer controls (now uses centered modal overlay)
-    // ── Close everything helper ──
-    function closeAllOverlays() {
-      document.querySelectorAll('.day-modal-overlay, .detail-modal-overlay, .modal-overlay')
-        .forEach(el => el.classList.add('hidden'));
-    }
-
-    // Drawer controls
-    function openDrawer(type) {
-      closeAllOverlays();
-      document.getElementById('drawer-overlay-' + type).classList.remove('hidden');
-    }
-
-    function closeDrawer(type) {
-      document.getElementById('drawer-overlay-' + type).classList.add('hidden');
-    }
-
-    function openModal(id) {
-      // Close all drawers first, then show the target modal
-      document.querySelectorAll('.detail-modal-overlay').forEach(el => el.classList.add('hidden'));
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('hidden');
-    }
-
-    function closeModal(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    }
-
-    // Backdrop click: close day-modal on outside click
-    document.querySelectorAll('.day-modal-overlay').forEach(o => {
-      o.addEventListener('click', function (e) {
-        if (e.target === this) this.classList.add('hidden');
-      });
-    });
-
-    // Backdrop click: close detail drawers on outside click
-    document.querySelectorAll('.detail-modal-overlay').forEach(o => {
-      o.addEventListener('click', function (e) {
-        if (e.target === this) this.classList.add('hidden');
-      });
-    });
-
-    // Backdrop click: close modals on outside click
-    document.querySelectorAll('.modal-overlay').forEach(o => {
-      o.addEventListener('click', function (e) {
-        if (e.target === this) this.classList.add('hidden');
-      });
-    });
-
-
-
-    // Validation & Actions
-    function validateForm(modalId) {
-      const modal = document.getElementById(modalId);
-      if (!modal) return true;
-      let isValid = true;
-      let firstError = null;
-
-      modal.querySelectorAll('.form-control').forEach(input => {
-        const group = input.closest('.form-group');
-        if (!group) return;
-        const label = group.querySelector('label');
-        const isRequired = label && label.querySelector('.required');
-
-        if (isRequired) {
-          if (!input.value || input.value === '請選擇治療師' || input.value === '請選擇個案') {
-            input.style.borderColor = 'var(--red)';
-            isValid = false;
-            if (!firstError) firstError = label.textContent.replace('*', '').trim();
-          } else {
-            input.style.borderColor = '';
-          }
-        }
-      });
-
-      if (!isValid) {
-        alert('請完整填寫必填欄位：' + firstError);
-      }
-      return isValid;
-    }
-
-    function checkScheduleConflict(dateVal, timeVal, therapistVal) {
-      if (!dateVal || !timeVal || !therapistVal) return false;
-      const dateParts = dateVal.split('-');
-      const shortDate = parseInt(dateParts[1]) + '-' + parseInt(dateParts[2]);
-
-      let shortTime = timeVal.split(' ')[0];
-      if (timeVal.includes('午休')) shortTime = '12:30';
-      if (timeVal.includes('下班後')) shortTime = '18:00';
-
-      const therapistName = therapistVal.split('（')[0];
-
-      return schedules.some(s => s.date === shortDate && s.time === shortTime && s.therapist === therapistName);
-    }
-
-    function submitAddSchedule() {
-      if (validateForm('modal-add-schedule')) {
-        const dateVal = document.getElementById('add-date').value;
-        const timeVal = document.getElementById('add-time').value;
-        const therapistVal = document.getElementById('add-therapist').value;
-
-        if (checkScheduleConflict(dateVal, timeVal, therapistVal)) {
-          alert('該治療師於此時段已有其他排班，不可選擇');
-          return;
-        }
-
-        alert('班表已成功新增！系統將更新班表總覽頁內容。');
-        closeModal('modal-add-schedule');
-        renderCalendar(); // mock refresh
-      }
-    }
-
-    function submitEditSchedule() {
-      if (validateForm('modal-edit-schedule')) {
-        const dateVal = document.getElementById('edit-date').value;
-        const timeVal = document.getElementById('edit-time').value;
-        const therapistVal = document.getElementById('edit-therapist').value;
-
-        if (checkScheduleConflict(dateVal, timeVal, therapistVal)) {
-          alert('該治療師於此時段已有其他排班，不可選擇');
-          return;
-        }
-
-        alert('班表已成功更新！已發送班表異動通知給被調整的治療師。');
-        closeModal('modal-edit-schedule');
-        renderCalendar(); // mock refresh
-      }
-    }
-
-    function submitSwap() {
-      if (validateForm('modal-swap')) {
-        alert('已送出申請，並已通知復健主管。');
-        closeModal('modal-swap');
-      }
-    }
-
-    function cancelApplication(itemId, statusId) {
-      if (confirm('確定要在主管核准前自行取消此申請嗎？')) {
-        document.getElementById(statusId).textContent = '已取消';
-        document.getElementById(statusId).className = 'badge badge-gray';
-        const actions = document.querySelector(`#${itemId} .approval-actions`);
-        if (actions) actions.innerHTML = '';
-        alert('已取消申請。');
-      }
-    }
-
-    function handleApproval(btn, action) {
-      const item = btn.closest('.approval-item');
-      const nameElem = item.querySelector('.approval-name');
-      const isSwap = nameElem && nameElem.textContent.includes('換班');
-      const reqType = isSwap ? '換班' : '代班';
-
-      if (action === '拒絕') {
-        const reason = prompt('請填寫拒絕原因：');
-        if (reason === null) return; // cancelled
-
-        const statusBadge = item.querySelector('.badge-amber');
-        if (statusBadge) {
-          statusBadge.textContent = '已拒絕';
-          statusBadge.className = 'badge badge-gray';
-        }
-        item.querySelector('.approval-actions').innerHTML = '';
-
-        alert(`換班申請已被拒絕，原因：${reason}\n已發送通知給申請人。`);
-        updatePendingCount();
-
-      } else if (action === '核准') {
-        const actionsDiv = item.querySelector('.approval-actions');
-        // Save original buttons
-        actionsDiv.dataset.origHtml = actionsDiv.innerHTML;
-
-        actionsDiv.innerHTML = `
-          <div style="display:flex; align-items:center; gap:8px; width:100%">
-            <span style="font-size:12px;color:var(--gray-700)">請選擇${isSwap ? '對調' : '代班'}治療師：</span>
-            <select class="form-control" style="width:140px; padding:4px 8px" id="approve-therapist-select">
-              <option value="">請選擇...</option>
-              <option>黃志豪（PT）</option>
-              <option>陳建宏（PT）</option>
-              <option>李佳穎（OT）</option>
-              <option>張雅玲（OT）</option>
-              <option>吳怡君（ST）</option>
-            </select>
-            <button class="btn btn-green btn-sm" onclick="confirmApprove(this, '${reqType}')">確定</button>
-            <button class="btn btn-secondary btn-sm" onclick="cancelApprove(this)">取消</button>
-          </div>
-        `;
-      }
-    }
-
-    function cancelApprove(btn) {
-      const actionsDiv = btn.closest('.approval-actions');
-      actionsDiv.innerHTML = actionsDiv.dataset.origHtml;
-    }
-
-    function confirmApprove(btn, reqType) {
-      const item = btn.closest('.approval-item');
-      const select = item.querySelector('#approve-therapist-select');
-      if (!select || select.value === '') {
-        alert('請選擇治療師！');
-        return;
-      }
-      const selectedTherapist = select.value;
-
-      const statusBadge = item.querySelector('.badge-amber');
-      if (statusBadge) {
-        statusBadge.textContent = '已核准';
-        statusBadge.className = 'badge badge-green';
-      }
-
-      item.querySelector('.approval-actions').innerHTML = '';
-
-      if (reqType === '換班') {
-        alert(`已核准換班！原時段已改派給 ${selectedTherapist}。\n已發送通知給治療師，班表總覽頁已更新。`);
-      } else {
-        alert(`已核准代班！執行人改為 ${selectedTherapist}。\n已發送通知給治療師，班表總覽頁已更新。`);
-      }
-
-      updatePendingCount();
-      renderCalendar(); // mock refresh
-    }
-
-    function updatePendingCount() {
-      // update modal title badge
-      const countElems = document.querySelectorAll('.badge-red');
-      countElems.forEach(el => {
-        if (el.textContent.includes('件待審')) {
-          let count = parseInt(el.textContent);
-          if (!isNaN(count) && count > 0) {
-            count--;
-            if (count === 0) {
-              el.style.display = 'none';
-            } else {
-              el.textContent = `${count} 件待審`;
-            }
-          }
-        }
-      });
-      // update topbar notif dot
-      const notifDot = document.querySelector('#approval-badge .notif-dot');
-      if (notifDot) {
-        let dotCount = parseInt(notifDot.textContent);
-        if (!isNaN(dotCount) && dotCount > 0) {
-          dotCount--;
-          if (dotCount === 0) {
-            notifDot.style.display = 'none';
-          } else {
-            notifDot.textContent = dotCount;
-          }
-        }
-      }
-    }
-
-    // Initialization
-    function initPage() {
-      switchRole(currentRole);
-    }
-
-    document.addEventListener('DOMContentLoaded', initPage);
-    // Fallback if DOMContentLoaded already fired (iframe srcDoc context)
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      initPage();
-    }
+    function openShiftAuditModal() { document.getElementById('shiftAuditModal').classList.add('open'); }
+    function openAddScheduleModal() { document.getElementById('addScheduleModal').classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
   </script>
 </body>
-
 </html>
