@@ -310,8 +310,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans
 // ── 角色設定 ──
 const ROLES = {
   mgr:  {name:'林美惠', label:'個案管理師', av:'av-mgr', ch:'林'},
-  sup:  {name:'王大明', label:'復健主管', av:'av-sup', ch:'王'},
-  pt:   {name:'黃志豪', label:'PT（物理治療師）', av:'av-pt', ch:'黃'},
+  sup:  {name:'黃志豪', label:'復健主管', av:'av-sup', ch:'黃'},
+  pt:   {name:'陳建宏', label:'PT（物理治療師）', av:'av-pt', ch:'陳'},
   ot:   {name:'李佳穎', label:'OT（職能治療師）', av:'av-ot', ch:'李'},
   st:   {name:'吳怡君', label:'ST（語言治療師）', av:'av-st', ch:'吳'},
   nur:  {name:'陳玉玲', label:'護理師', av:'av-nur', ch:'陳'},
@@ -327,7 +327,7 @@ const NOTIFS = {
     {type:'urgent', icon:'⚠️', ic:'ni-red', title:'展延即將到期', desc:'陳建國・CVA・第 4 週，應於 2 天內送展延', time:'今天 09:15', unread:true},
     {type:'urgent', icon:'⚠️', ic:'ni-red', title:'展延即將到期', desc:'王淑芬・TKR・第 6 週，應於 3 天內送展延', time:'今天 09:15', unread:true},
     {type:'unread', icon:'📝', ic:'ni-purple', title:'待審核：評估修改申請', desc:'黃志豪（PT）申請修改・陳建國複評 1', time:'今天 08:42', unread:true},
-    {type:'unread', icon:'💰', ic:'ni-amber', title:'待審核：批價申請', desc:'王大明（復健主管）已審核・劉家豪 6 月批價', time:'昨天 17:20', unread:true},
+    {type:'unread', icon:'💰', ic:'ni-amber', title:'待審核：批價申請', desc:'黃志豪（復健主管）已審核・劉家豪 6 月批價', time:'昨天 17:20', unread:true},
     {type:'', icon:'👤', ic:'ni-blue', title:'新轉介個案', desc:'上游：臺大醫院・李○○・CVA，待收案判斷', time:'昨天 14:05', unread:false},
     {type:'', icon:'✓', ic:'ni-green', title:'展延通過', desc:'張明輝・Hip Fx，健保署已通過展延', time:'昨天 11:30', unread:false},
   ],
@@ -475,7 +475,7 @@ function renderMgr() {
           <div class="todo-icon ni-purple">📝</div>
           <div class="todo-body">
             <div class="todo-title">待審核：評估修改申請</div>
-            <div class="todo-meta">復健主管 王大明 已審核・陳建國複評 1（PT）</div>
+            <div class="todo-meta">復健主管 黃志豪 已審核・陳建國複評 1（PT）</div>
           </div>
           <div class="todo-badge"><span class="badge badge-purple">待我審核</span></div>
         </div>

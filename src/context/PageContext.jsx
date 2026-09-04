@@ -5,7 +5,7 @@ import { getHtmlTitle } from '../utils/htmlAnalysis';
 export const roles = [
   { code: 'mgr', label: '個管師', name: '林美惠', ch: '林', av: 'av-mgr', pages: ['personal-dashboard', 'case-management', 'bed-management', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'indicator-export', 'user-profile'] },
   { code: 'sup', label: '復健主管', name: '黃志豪', ch: '黃', av: 'av-sup', pages: ['personal-dashboard', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
-  { code: 'pt', label: 'PT (物理治療)', name: '王大明', ch: '王', av: 'av-pt', pages: ['personal-dashboard', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
+  { code: 'pt', label: 'PT (物理治療)', name: '陳建宏', ch: '陳', av: 'av-pt', pages: ['personal-dashboard', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
   { code: 'ot', label: 'OT (職能治療)', name: '李佳穎', ch: '李', av: 'av-ot', pages: ['personal-dashboard', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
   { code: 'st', label: 'ST (語言治療)', name: '吳怡君', ch: '吳', av: 'av-st', pages: ['personal-dashboard', 'rehab-scheduling', 'home-care-scheduling', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
   { code: 'nur', label: '護理師', name: '陳玉玲', ch: '陳', av: 'av-nur', pages: ['personal-dashboard', 'bed-management', 'comprehensive-assessment-report', 'assessment-forms', 'user-profile'] },
@@ -49,7 +49,7 @@ export function PageProvider({ children }) {
       roles,
       activeId: activePage?.id || '',
       activePage,
-      activeTitle: activePage ? getHtmlTitle(activePage.html, activePage.label) : '',
+      activeTitle: activePage?.label || (activePage ? getHtmlTitle(activePage.html, activePage.label) : ''),
       pages: allowedPages,
       setActiveId,
       selectRole: (roleCode) => {

@@ -42,3 +42,6 @@ file/
 *.pdf
 private/
 temp/
+
+# Local Skills & Customizations (本地配置，不輸出)
+.agents/
