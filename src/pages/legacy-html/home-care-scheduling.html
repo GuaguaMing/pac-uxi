@@ -9,37 +9,36 @@
     :root {
       --primary-blue: #1681c6;
       --primary-hover: #126fa9;
-      --header-blue-bg: #f8fafc;
-      --tab-active-text: #1681c6;
+      --header-bg: #f8fafc;
       --card-bg: #ffffff;
-      --page-bg: #f8fafc;
+      --page-bg: #ffffff;
       --text-main: #1e293b;
       --text-sub: #64748b;
       --border-color: #e2e8f0;
       --pill-blue-bg: #e0f2fe;
       --pill-blue-text: #0284c7;
-      --pill-yellow-bg: #fef9c3;
-      --pill-yellow-text: #854d0e;
       --pill-green-bg: #dcfce7;
       --pill-green-text: #166534;
+      --pill-yellow-bg: #fef9c3;
+      --pill-yellow-text: #854d0e;
       --pill-purple-bg: #f3e8ff;
       --pill-purple-text: #7e22ce;
       --pill-orange-bg: #ffedd5;
       --pill-orange-text: #c2410c;
-      --pill-red-bg: #fee2e2;
-      --pill-red-text: #b91c1c;
+      --pill-gray-bg: #f1f5f9;
+      --pill-gray-text: #475569;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
-      background: #ffffff;
+      background: var(--page-bg);
       color: var(--text-main);
-      padding: 24px;
-      font-size: 14px;
+      padding: 20px 24px;
+      font-size: 13.5px;
       line-height: 1.5;
     }
 
-    /* 頂部搜尋與功能按鈕列 (還原 05 截圖) */
-    .top-controls-bar {
+    /* 頂部功能與角色切換列 (落實指示 4：主管 vs 治療師畫面) */
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -47,123 +46,110 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-    .search-filter-group {
+    .top-left-filter {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex: 1;
-      max-width: 560px;
+      max-width: 600px;
     }
-    .search-box-wrap {
+    .search-input-wrap {
       position: relative;
       flex: 1;
     }
-    .search-icon {
+    .search-input-wrap span {
       position: absolute;
-      left: 12px;
+      left: 10px;
       top: 50%;
       transform: translateY(-50%);
       color: #94a3b8;
     }
-    .search-input {
+    .search-input-wrap input {
       width: 100%;
-      padding: 7px 12px 7px 34px;
+      padding: 6px 12px 6px 32px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12.5px;
       outline: none;
     }
-    .search-input:focus {
-      border-color: var(--primary-blue);
-    }
-    .disease-select {
-      padding: 7px 12px;
+    .filter-select {
+      padding: 6px 10px;
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      font-size: 13px;
-      color: var(--text-main);
+      font-size: 12.5px;
       background: #fff;
-      cursor: pointer;
-      outline: none;
+      color: var(--text-main);
     }
-    .btn-top-group {
+    .role-toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: #eef7fc;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .top-right-actions {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
     }
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
       padding: 6px 14px;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s ease;
-      text-decoration: none;
     }
-    .btn-primary {
-      background: var(--primary-blue);
-      color: #ffffff;
-    }
-    .btn-primary:hover {
-      background: var(--primary-hover);
-    }
-    .btn-outline {
-      background: #ffffff;
-      border-color: var(--border-color);
-      color: var(--text-main);
-    }
-    .btn-outline:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-    }
-    .btn-danger {
-      background: #ef4444;
-      color: #fff;
-    }
-    .btn-danger:hover {
-      background: #dc2626;
-    }
+    .btn-primary { background: var(--primary-blue); color: #ffffff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: #ffffff; border-color: var(--border-color); color: var(--text-main); }
+    .btn-outline:hover { background: #f1f5f9; }
 
-    /* 05 原樣分頁標籤列 (含圓形數字徽章與排序方式) */
-    .tabs-and-sort-bar {
+    /* 05 原稿 Tabs 列 */
+    .tabs-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 18px;
       padding-bottom: 8px;
-      position: relative;
+      margin-bottom: 14px;
+      overflow-x: auto;
     }
-    .tabs-list {
+    .tab-list {
       display: flex;
-      gap: 18px;
       align-items: center;
+      gap: 12px;
     }
-    .tab-btn {
+    .tab-item {
       background: transparent;
       border: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       color: var(--text-sub);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 2px;
+      padding: 4px 6px;
       position: relative;
     }
-    .tab-btn:hover {
-      color: var(--primary-blue);
-    }
-    .tab-btn.active {
+    .tab-item:hover { color: var(--primary-blue); }
+    .tab-item.active {
       color: var(--primary-blue);
       font-weight: 700;
     }
-    .tab-btn.active::after {
+    .tab-item.active::after {
       content: '';
       position: absolute;
       bottom: -9px;
@@ -185,112 +171,54 @@
       font-size: 11px;
       font-weight: 700;
     }
-    .sort-dropdown-wrap {
-      position: relative;
-    }
-    .sort-dropdown-btn {
-      background: transparent;
-      border: none;
-      font-size: 13px;
-      color: #64748b;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
-    .sort-dropdown-btn:hover {
-      background: #f1f5f9;
-      color: #1e293b;
-    }
-    .sort-menu-popover {
-      position: absolute;
-      right: 0;
-      top: 100%;
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      padding: 6px 0;
-      min-width: 160px;
-      z-index: 50;
-      display: none;
-    }
-    .sort-menu-popover.open {
-      display: block;
-    }
-    .sort-item {
-      padding: 8px 14px;
-      font-size: 12.5px;
-      color: #334155;
-      cursor: pointer;
-      display: block;
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-    }
-    .sort-item:hover {
-      background: #f1f5f9;
-      color: var(--primary-blue);
-    }
 
-    /* 資料表格 */
-    .table-box {
+    /* 05 原稿資料表格 */
+    .table-wrap {
       border: 1px solid var(--border-color);
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
-    .data-table {
+    .hc-table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
     }
-    .data-table th {
+    .hc-table th {
       background: #f8fafc;
       color: #475569;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border-color);
     }
-    .data-table td {
-      padding: 14px 16px;
+    .hc-table td {
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border-color);
-      font-size: 13px;
+      font-size: 12.5px;
       vertical-align: middle;
       background: #ffffff;
-    }
-    .data-table tr:last-child td {
-      border-bottom: none;
-    }
-    .data-table tr:hover td {
-      background: #fafcff;
-    }
-    .patient-cell {
-      font-weight: 600;
-      color: #1e293b;
       cursor: pointer;
     }
-    .patient-cell:hover {
-      color: var(--primary-blue);
-      text-decoration: underline;
-    }
-    .patient-age {
-      font-weight: 400;
-      color: #64748b;
-      margin-left: 4px;
-    }
+    .hc-table tr:hover td { background: #fafcff; }
+    .hc-table tr:last-child td { border-bottom: none; }
 
-    /* 05 狀態膠囊 */
+    .patient-cell {
+      font-weight: 700;
+      color: #1e293b;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .patient-cell:hover { color: var(--primary-blue); }
+
     .status-pill {
       display: inline-flex;
       align-items: center;
       padding: 3px 10px;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
       white-space: nowrap;
     }
     .pill-blue { background: var(--pill-blue-bg); color: var(--pill-blue-text); }
@@ -298,10 +226,9 @@
     .pill-green { background: var(--pill-green-bg); color: var(--pill-green-text); }
     .pill-purple { background: var(--pill-purple-bg); color: var(--pill-purple-text); }
     .pill-orange { background: var(--pill-orange-bg); color: var(--pill-orange-text); }
-    .pill-red { background: var(--pill-red-bg); color: var(--pill-red-text); }
-    .pill-gray { background: #f1f5f9; color: #475569; }
+    .pill-gray { background: var(--pill-gray-bg); color: var(--pill-gray-text); }
 
-    /* 置中 Modal 系統 */
+    /* 置中 Modal 系統 (通用) */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -313,9 +240,7 @@
       justify-content: center;
       padding: 20px;
     }
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
     .center-modal-box {
       background: #ffffff;
       border-radius: 10px;
@@ -331,209 +256,94 @@
       to { transform: scale(1); opacity: 1; }
     }
     .modal-header {
-      padding: 16px 22px;
+      padding: 14px 20px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #ffffff;
     }
-    .modal-header-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .modal-close-btn {
-      background: transparent;
-      border: none;
-      font-size: 18px;
-      color: #64748b;
-      cursor: pointer;
-      padding: 4px;
-    }
-    .modal-body {
-      padding: 22px;
-      overflow-y: auto;
-      flex: 1;
-    }
-    .modal-footer {
-      padding: 14px 22px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      background: #ffffff;
-    }
+    .modal-header-title { font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .modal-close-btn { background: transparent; border: none; font-size: 18px; color: #64748b; cursor: pointer; }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
 
-    /* 雙欄佈局 (05 原樣) */
-    .two-cols-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-    .section-subhead {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 12px;
-    }
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 14px;
-      font-size: 13px;
-    }
-    .field-item .f-label {
-      font-size: 11.5px;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-    .field-item .f-val {
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 4px;
-    }
-    .form-control {
-      width: 100%;
-      padding: 7px 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 13px;
-      outline: none;
-    }
-    .form-control:focus {
-      border-color: var(--primary-blue);
-    }
-
-    /* 週次排班卡 */
+    /* 吳淑珍排班時段卡片 */
     .week-card {
       border: 1px solid var(--border-color);
       border-radius: 8px;
       margin-bottom: 12px;
       overflow: hidden;
     }
-    .week-card-head {
+    .week-card-header {
       background: #f8fafc;
-      padding: 10px 14px;
+      padding: 8px 14px;
       font-weight: 700;
-      font-size: 13px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-    .week-card-row {
-      padding: 9px 14px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-size: 12.5px;
-    }
-
-    /* 置中小對話確認框 */
-    .confirm-dialog-box {
-      width: 440px;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 20px 30px rgba(0,0,0,0.25);
-    }
-    .confirm-icon-circle {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 14px;
-    }
-    .icon-green { background: #dcfce7; color: #16a34a; }
-    .icon-yellow { background: #fef9c3; color: #ca8a04; }
-    .icon-red { background: #fee2e2; color: #dc2626; }
-    .confirm-dialog-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 8px;
-    }
-    .confirm-dialog-desc {
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-    .confirm-dialog-actions {
+      color: #334155;
       display: flex;
-      justify-content: center;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
     }
+    .slot-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12px;
+    }
+    .slot-row:last-child { border-bottom: none; }
   </style>
 </head>
 <body>
 
-  <!-- 頂部搜尋框與功能按鈕列 (還原 05 截圖) -->
-  <div class="top-controls-bar">
-    <div class="search-filter-group">
-      <div class="search-box-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" class="search-input" placeholder="搜尋個案姓名 / 電話 / 病歷號 / 身分證" oninput="handleSearch()">
+  <!-- 頂部功能列 -->
+  <div class="top-bar">
+    <div class="top-left-filter">
+      <div class="search-input-wrap">
+        <span>🔍</span>
+        <input type="text" id="caseSearchInput" placeholder="搜尋個案姓名 / 電話 / 病歷號 / 身分證" oninput="renderTable()">
       </div>
-      <select id="diseaseSelect" class="disease-select" onchange="handleFilter()">
+      <select id="diseaseSelect" class="filter-select" onchange="renderTable()">
         <option value="all">全部疾病別</option>
-        <option value="創傷性神經損傷">創傷性神經損傷</option>
         <option value="腦中風">腦中風</option>
         <option value="脆弱性骨折">脆弱性骨折</option>
+        <option value="創傷性神經損傷">創傷性神經損傷</option>
         <option value="衰弱高齡">衰弱高齡</option>
       </select>
-    </div>
-    <div class="btn-top-group">
-      <button class="btn btn-primary" onclick="openHistoryModal()">歷史紀錄</button>
-      <button class="btn btn-primary" onclick="openStatsModal()">時數統計</button>
-    </div>
-  </div>
-
-  <!-- 05 原樣分頁標籤列 (含圓形數字徽章與排序方式) -->
-  <div class="tabs-and-sort-bar">
-    <div class="tabs-list">
-      <button class="tab-btn active" onclick="switchTab(this, 'all')">全部</button>
-      <button class="tab-btn" onclick="switchTab(this, 'publishable')">可發佈 <span class="tab-badge">1</span></button>
-      <button class="tab-btn" onclick="switchTab(this, 'recruiting')">報名中 <span class="tab-badge">3</span></button>
-      <button class="tab-btn" onclick="switchTab(this, 'pending')">待開案 <span class="tab-badge">1</span></button>
-      <button class="tab-btn" onclick="switchTab(this, 'active')">執行中 <span class="tab-badge">14</span></button>
-      <button class="tab-btn" onclick="switchTab(this, 'my-cases')">我的個案 <span class="tab-badge">3</span></button>
-    </div>
-    <div class="sort-dropdown-wrap">
-      <button class="sort-dropdown-btn" onclick="toggleSortMenu()">≡ 排序方式 ▾</button>
-      <div class="sort-menu-popover" id="sortPopover">
-        <button class="sort-item" onclick="applySort('開案日期：近→遠')">開案日期：近→遠</button>
-        <button class="sort-item" onclick="applySort('開案日期：遠→近')">開案日期：遠→近</button>
-        <button class="sort-item" onclick="applySort('結案日期：近→遠')">結案日期：近→遠</button>
-        <button class="sort-item" onclick="applySort('結案日期：遠→近')">結案日期：遠→近</button>
-        <button class="sort-item" onclick="applySort('執行週次：多→少')">執行週次：多→少</button>
-        <button class="sort-item" onclick="applySort('執行週次：少→多')">執行週次：少→多</button>
+      <!-- 角色切換標籤 (指示 4：主管 vs 治療師視角) -->
+      <div class="role-toggle-pill" id="roleToggleBtn" onclick="toggleRoleView()">
+        <span>視角：<strong id="roleViewLabel">復健主管（黃志豪）</strong></span>
+        <span style="font-size:10px">▾ 切換</span>
       </div>
     </div>
+
+    <!-- 右上角按鈕 (主管有時數統計，治療師僅有歷史紀錄，落實指示 4) -->
+    <div class="top-right-actions">
+      <button class="btn btn-primary" onclick="openHistoryModal()">歷史紀錄</button>
+      <button class="btn btn-primary" id="btnBonusStats" onclick="openBonusStatsModal()">時數統計</button>
+    </div>
   </div>
 
-  <!-- 資料表格 (完全對齊 05 欄位與文案) -->
-  <div class="table-box">
-    <table class="data-table">
+  <!-- 05 原稿 Tabs 列 (治療師隱藏「可發佈」，落實指示 4) -->
+  <div class="tabs-bar">
+    <div class="tab-list">
+      <button class="tab-item active" onclick="switchTab(this, 'all')">全部</button>
+      <button class="tab-item" id="tabPublishable" onclick="switchTab(this, 'publishable')">可發佈 <span class="tab-badge">1</span></button>
+      <button class="tab-item" onclick="switchTab(this, 'recruiting')">報名中 <span class="tab-badge" id="badgeRecruiting">3</span></button>
+      <button class="tab-item" onclick="switchTab(this, 'pending')">待開案 <span class="tab-badge">1</span></button>
+      <button class="tab-item" onclick="switchTab(this, 'active')">執行中 <span class="tab-badge">14</span></button>
+      <button class="tab-item" onclick="switchTab(this, 'mine')">我的個案 <span class="tab-badge">3</span></button>
+    </div>
+    <div style="font-size:12px;color:#64748b;cursor:pointer" onclick="toggleSortMenu()">
+      ≡ 排序方式
+    </div>
+  </div>
+
+  <!-- 05 原稿資料表格 (每個個案點開來都有專屬彈窗資訊，落實指示 5) -->
+  <div class="table-wrap">
+    <table class="hc-table">
       <thead>
         <tr>
           <th>姓名</th>
@@ -545,15 +355,15 @@
           <th>快速操作</th>
         </tr>
       </thead>
-      <tbody id="tableBody">
-        <!-- 資料列由 JS 渲染 -->
+      <tbody id="caseTableBody">
+        <!-- JS 動態渲染 -->
       </tbody>
     </table>
   </div>
 
-  <!-- 置中 Modal 1：發佈報名 (陳志明 ・ 居家 復健詳情，完全還原 05 截圖) -->
+  <!-- 置中 Modal 1：陳志明・發佈報名大彈窗 -->
   <div class="modal-overlay" id="publishModal">
-    <div class="center-modal-box" style="width:780px;">
+    <div class="center-modal-box" style="width:840px;">
       <div class="modal-header">
         <div class="modal-header-title">
           <span>陳志明 ・ 居家 復健詳情</span>
@@ -562,692 +372,579 @@
         <button class="modal-close-btn" onclick="closeModal('publishModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="two-cols-layout">
-          <!-- 左欄：個案資訊 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
           <div>
-            <div class="section-subhead">個案資訊</div>
-            <div class="field-grid">
-              <div class="field-item"><div class="f-label">姓名</div><div class="f-val">陳志明</div></div>
-              <div class="field-item"><div class="f-label">年齡 / 性別</div><div class="f-val">68 歲 男</div></div>
-              <div class="field-item"><div class="f-label">疾病別</div><div class="f-val">創傷性神經損傷</div></div>
-              <div class="field-item"><div class="f-label">照護模式</div><div class="f-val">居家</div></div>
-              <div class="field-item"><div class="f-label">預計開始日期</div><div class="f-val">2026 / 08 / 10</div></div>
-              <div class="field-item"><div class="f-label">照護週次</div><div class="f-val">6 週</div></div>
-              <div class="field-item" style="grid-column:span 2"><div class="f-label">地點</div><div class="f-val">彰化縣永靖鄉那條路二段32號</div></div>
-              <div class="field-item"><div class="f-label">照顧方式</div><div class="f-val">家屬</div></div>
-              <div class="field-item"><div class="f-label">聯絡人</div><div class="f-val">太太 吳小姐</div></div>
-              <div class="field-item"><div class="f-label">聯絡電話</div><div class="f-val">09xx - xxx - xxx</div></div>
-              <div class="field-item"><div class="f-label">Line</div><div class="f-val">123456aaa</div></div>
-              <div class="field-item" style="grid-column:span 2"><div class="f-label">方便復健時間</div><div class="f-val">平日 中午 12:00 - 13:00</div></div>
+            <div style="font-size:13.5px;font-weight:700;margin-bottom:12px">個案資訊</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+              <div><div style="font-size:11px;color:#64748b">姓名</div><strong>陳志明</strong></div>
+              <div><div style="font-size:11px;color:#64748b">年齡 / 性別</div>68 歲 男</div>
+              <div><div style="font-size:11px;color:#64748b">疾病別</div>創傷性神經損傷</div>
+              <div><div style="font-size:11px;color:#64748b">照護模式</div>PAC 居家</div>
+              <div><div style="font-size:11px;color:#64748b">預計開始日期</div>2026/08/10</div>
+              <div><div style="font-size:11px;color:#64748b">地點</div>彰化縣員林市中山路二段100號</div>
+              <div><div style="font-size:11px;color:#64748b">聯絡人</div>陳大偉 (兒子)</div>
+              <div><div style="font-size:11px;color:#64748b">方便時間</div>下午 14:00 - 17:00</div>
+            </div>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;color:#64748b">醫囑方向</div>
+              <div style="font-size:12px;color:#334155;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;margin-top:2px">
+                加強下肢動作控制、本體感覺刺激與轉位防跌訓練。
+              </div>
             </div>
           </div>
-
-          <!-- 右欄：設定人力與時間 -->
           <div>
-            <div class="section-subhead">設定人力與時間</div>
-            <div style="font-size:12px;color:#0284c7;background:#e0f2fe;padding:8px 10px;border-radius:6px;margin-bottom:12px">
-              需在 <strong>2026 / 08 / 03 下午 14 : 00</strong> 前回覆個管師
+            <div style="font-size:13.5px;font-weight:700;margin-bottom:12px">設定人力與截止時間</div>
+            <div style="margin-bottom:12px">
+              <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">報名截止時間 *</label>
+              <input type="text" class="search-input" value="2026/08/03 12:00" style="width:100%">
             </div>
-            <div class="form-group">
-              <label>報名截止日期 *</label>
-              <div style="display:flex;gap:8px">
-                <input type="text" class="form-control" value="2026 / 08 / 03（三）">
-                <input type="text" class="form-control" style="width:120px" value="下午 12 : 00">
-              </div>
+            <div style="margin-bottom:12px">
+              <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">物理治療師 (PT) 需求人數</label>
+              <input type="number" class="search-input" value="1" style="width:100%">
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-              <div class="form-group">
-                <label>所需 PT 人數</label>
-                <input type="number" class="form-control" value="3">
-              </div>
-              <div class="form-group">
-                <label>所需 OT 人數</label>
-                <input type="number" class="form-control" value="1">
-              </div>
-              <div class="form-group">
-                <label>所需 ST 人數</label>
-                <input type="number" class="form-control" value="0">
-              </div>
+            <div style="margin-bottom:12px">
+              <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">職能治療師 (OT) 需求人數</label>
+              <input type="number" class="search-input" value="1" style="width:100%">
+            </div>
+            <div style="background:#fef9c3;padding:10px;border-radius:6px;border:1px solid #fde047;font-size:12px;color:#854d0e">
+              提示：發佈後系統將發送推播通知全體 PT/OT 治療師進行承接報名。
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:space-between">
-        <button class="btn btn-outline" onclick="openNotice('導航前往個案資料頁')">前往患者資料頁 &gt;</button>
-        <button class="btn btn-primary" onclick="confirmPublish()">確認發佈</button>
+        <button class="btn btn-outline" onclick="alert('導航前往患者資料頁')">前往患者資料頁 &gt;</button>
+        <button class="btn btn-primary" onclick="alert('報名已成功發佈！'); closeModal('publishModal')">確認發佈</button>
       </div>
     </div>
   </div>
 
-  <!-- 置中 Modal 2：查看報名 (趙美惠 ・ 可報名居家，完全還原 05 截圖) -->
+  <!-- 置中 Modal 2：可報名居家大彈窗 (趙美惠 / 鄭國華 / 歐陽安妮) -->
   <div class="modal-overlay" id="recruitingModal">
-    <div class="center-modal-box" style="width:740px;">
+    <div class="center-modal-box" style="width:840px;">
       <div class="modal-header">
         <div class="modal-header-title">
-          <span>趙美惠 ・ 可報名居家</span>
+          <span id="recruitingModalTitle">趙美惠 ・ 可報名居家</span>
           <span class="status-pill pill-yellow">報名中</span>
         </div>
         <button class="modal-close-btn" onclick="closeModal('recruitingModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="two-cols-layout" style="margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
           <div>
-            <div class="section-subhead">個案資訊</div>
-            <div class="field-grid">
-              <div class="field-item"><div class="f-label">姓名</div><div class="f-val">趙美惠</div></div>
-              <div class="field-item"><div class="f-label">年齡 / 性別</div><div class="f-val">63 歲 女</div></div>
-              <div class="field-item"><div class="f-label">疾病別</div><div class="f-val">脆弱性骨折</div></div>
-              <div class="field-item"><div class="f-label">照護模式</div><div class="f-val">居家</div></div>
-              <div class="field-item" style="grid-column:span 2"><div class="f-label">地點</div><div class="f-val">彰化縣埤頭鄉新生南路二段32號</div></div>
-              <div class="field-item"><div class="f-label">方便復健時間</div><div class="f-val">平日 中午 12:00 - 13:00</div></div>
+            <div style="font-size:13.5px;font-weight:700;margin-bottom:12px">個案資訊</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+              <div><div style="font-size:11px;color:#64748b">姓名</div><strong id="recPatientName">趙美惠</strong></div>
+              <div><div style="font-size:11px;color:#64748b">年齡 / 性別</div>75 歲 女</div>
+              <div><div style="font-size:11px;color:#64748b">疾病別</div>腦中風(CVA)</div>
+              <div><div style="font-size:11px;color:#64748b">執行週數</div>預計 3 週</div>
+              <div><div style="font-size:11px;color:#64748b">地點</div>彰化縣員林市大同路二段</div>
+              <div><div style="font-size:11px;color:#64748b">截止時間</div>2026/08/04 18:00</div>
             </div>
           </div>
           <div>
-            <div class="section-subhead">報名資訊</div>
-            <div style="font-size:12.5px;background:#f8fafc;padding:10px;border-radius:6px;border:1px solid #e2e8f0;line-height:1.6">
-              報名截止：<strong>2026/06/24 12:00</strong>，若報名人數超額將進行抽籤<br>
-              所需人力：<strong>PT 2 人、OT 2 人</strong>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13.5px;font-weight:700">報名名單 (需求 PT 2人、OT 2人)</span>
+              <button class="btn btn-outline" style="font-size:11.5px;padding:3px 8px" onclick="openModifyConditionModal()">修改條件</button>
             </div>
-          </div>
-        </div>
-
-        <div class="section-subhead">報名狀態名單</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px">
-            <div style="font-weight:700;margin-bottom:6px;color:#0369a1">PT 報名 (4人)</div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>陳建宏 (PT)</span><span class="status-pill pill-green">已報名</span></div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>黃志豪 (PT)</span><span class="status-pill pill-green">已報名</span></div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>張大華 (PT)</span><span class="status-pill pill-green">已報名</span></div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>李小朋 (PT)</span><span class="status-pill pill-green">已報名</span></div>
-          </div>
-          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px">
-            <div style="font-weight:700;margin-bottom:6px;color:#0369a1">OT 報名 (2人)</div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>李佳穎 (OT)</span><span class="status-pill pill-green">已報名</span></div>
-            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>張雅玲 (OT)</span><span class="status-pill pill-blue">居訪負責人</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer" style="justify-content:space-between">
-        <div>
-          <button class="btn btn-outline" onclick="openModifyConditionsModal()">修改報名條件</button>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-outline" style="color:#0284c7" onclick="openConfirmApplyModal()">我要報名</button>
-          <button class="btn btn-outline" style="color:#dc2626" onclick="openConfirmCancelApplyModal()">取消報名</button>
-          <button class="btn btn-primary" onclick="openNotice('執行抽籤完畢！中選名單已確立，進入待開案狀態。'); closeModal('recruitingModal');">抽籤名單確認</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 3：修改報名條件 -->
-  <div class="modal-overlay" id="modifyConditionsModal">
-    <div class="center-modal-box" style="width:520px;">
-      <div class="modal-header">
-        <div class="modal-header-title">修改報名條件</div>
-        <button class="modal-close-btn" onclick="closeModal('modifyConditionsModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>報名截止日期 *</label>
-          <input type="text" class="form-control" value="2026 / 08 / 05（五） 下午 12 : 00">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="form-group">
-            <label>所需 PT 人數</label>
-            <input type="number" class="form-control" value="2">
-          </div>
-          <div class="form-group">
-            <label>所需 OT 人數</label>
-            <input type="number" class="form-control" value="2">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('modifyConditionsModal')">取消</button>
-        <button class="btn btn-primary" onclick="openNotice('報名條件已更新！'); closeModal('modifyConditionsModal');">儲存修改</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 4：確認報名對話框 (05 原樣) -->
-  <div class="modal-overlay" id="confirmApplyModal">
-    <div class="confirm-dialog-box">
-      <div class="confirm-icon-circle icon-green">✓</div>
-      <div class="confirm-dialog-title">確定要報名趙美惠居家個案？</div>
-      <div class="confirm-dialog-desc">
-        治療師：陳建宏（PT）<br>
-        地點：彰化縣埤頭鄉新生南路二段32號<br>
-        預計執行週數：3 週
-      </div>
-      <div class="confirm-dialog-actions">
-        <button class="btn btn-outline" onclick="closeModal('confirmApplyModal')">取消</button>
-        <button class="btn btn-primary" onclick="openNotice('您已成功報名趙美惠居家個案！'); closeModal('confirmApplyModal');">確認報名</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 5：確認取消報名對話框 (05 原樣) -->
-  <div class="modal-overlay" id="confirmCancelApplyModal">
-    <div class="confirm-dialog-box">
-      <div class="confirm-icon-circle icon-yellow">!</div>
-      <div class="confirm-dialog-title">確定要取消報名？</div>
-      <div class="confirm-dialog-desc">
-        治療師：陳建宏（PT）<br>
-        地點：彰化縣埤頭鄉新生南路二段32號<br>
-        預計執行週數：3 週
-      </div>
-      <div class="confirm-dialog-actions">
-        <button class="btn btn-outline" onclick="closeModal('confirmCancelApplyModal')">取消</button>
-        <button class="btn btn-danger" onclick="openNotice('已取消報名。'); closeModal('confirmCancelApplyModal');">確認取消</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 6：張簡慧玲 (重新發佈 / 回報不承接，05 原樣) -->
-  <div class="modal-overlay" id="unfilledModal">
-    <div class="center-modal-box" style="width:720px;">
-      <div class="modal-header">
-        <div class="modal-header-title">
-          <span>張簡慧玲 ・ 可報名居家</span>
-          <span class="status-pill pill-yellow">報名未滿額</span>
-        </div>
-        <button class="modal-close-btn" onclick="closeModal('unfilledModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="background:#fef2f2;border:1px solid #fecaca;padding:12px;border-radius:6px;color:#991b1b;margin-bottom:14px;font-size:13px">
-          <strong>報名已於 2026/06/24 12:00 截止</strong><br>
-          所需人力：PT 2 人、OT 1 人，目前報名人數未達標（尚無人報名）。
-        </div>
-        <div class="field-grid" style="font-size:13px">
-          <div class="field-item"><div class="f-label">姓名</div><div class="f-val">張簡慧玲 (81歲 女)</div></div>
-          <div class="field-item"><div class="f-label">疾病別</div><div class="f-val">衰弱高齡</div></div>
-          <div class="field-item" style="grid-column:span 2"><div class="f-label">地點</div><div class="f-val">彰化縣溪湖鎮員鹿路三段12號</div></div>
-        </div>
-      </div>
-      <div class="modal-footer" style="justify-content:space-between">
-        <button class="btn btn-danger" onclick="openReportRejectModal()">回報不承接</button>
-        <button class="btn btn-primary" onclick="openNotice('已重新發佈報名！截止時間已延長至下週三。'); closeModal('unfilledModal');">重新發佈報名</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 7：確認回報不承接對話框 (05 原樣) -->
-  <div class="modal-overlay" id="reportRejectModal">
-    <div class="confirm-dialog-box">
-      <div class="confirm-icon-circle icon-red">✕</div>
-      <div class="confirm-dialog-title">確認回報不承接？</div>
-      <div class="confirm-dialog-desc">
-        人力招募未達設定人數，系統將通知個管師<br>
-        <strong>「此個案無法承接」</strong>，並將個案狀態標記為未成立。
-      </div>
-      <div class="confirm-dialog-actions">
-        <button class="btn btn-outline" onclick="closeModal('reportRejectModal')">取消</button>
-        <button class="btn btn-danger" onclick="confirmRejectCase()">確認回報</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 8：發送排班提醒對話框 (05 原樣) -->
-  <div class="modal-overlay" id="sendReminderModal">
-    <div class="center-modal-box" style="width:480px;">
-      <div class="modal-header">
-        <div class="modal-header-title">發送排班提醒</div>
-        <button class="modal-close-btn" onclick="closeModal('sendReminderModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="font-size:13px;margin-bottom:12px;font-weight:600">
-          <label><input type="checkbox" checked id="checkAllTherapists" onchange="toggleAllTherapists(this)"> 全選未排班人員 (3)</label>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;background:#f8fafc;padding:12px;border-radius:6px;border:1px solid #e2e8f0">
-          <label><input type="checkbox" class="th-check" checked> 1. 張大華（PT）</label>
-          <label><input type="checkbox" class="th-check" checked> 2. 張雅玲（OT） - 居家訪視人員</label>
-          <label><input type="checkbox" class="th-check" checked> 3. 黃志豪（PT）</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('sendReminderModal')">取消</button>
-        <button class="btn btn-primary" onclick="openNotice('排班提醒推播已發送給選取之治療師！'); closeModal('sendReminderModal');">發送提醒</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 9：吳淑珍 ・ 居家復健詳情 (排班時段展開，05 原樣) -->
-  <div class="modal-overlay" id="activeScheduleModal">
-    <div class="center-modal-box" style="width:820px;">
-      <div class="modal-header">
-        <div class="modal-header-title">
-          <span>吳淑珍 ・ 居家復健詳情</span>
-          <span class="status-pill pill-green">PAC 居家</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="btn btn-outline" style="padding:3px 8px;font-size:11px" onclick="openNotice('抽籤紀錄：2026/06/24 12:05 系統自動隨機中選名單PT:張大華,OT:張雅玲')">抽籤紀錄</button>
-          <button class="btn btn-outline" style="padding:3px 8px;font-size:11px" onclick="openNotice('執行人員名單：張大華(PT)、張雅玲(OT)')">執行人員名單 ▾</button>
-          <button class="modal-close-btn" onclick="closeModal('activeScheduleModal')">✕</button>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div class="two-cols-layout">
-          <!-- 左欄：個案資訊 -->
-          <div>
-            <div class="section-subhead">個案資訊</div>
-            <div class="field-grid">
-              <div class="field-item"><div class="f-label">姓名</div><div class="f-val">吳淑珍</div></div>
-              <div class="field-item"><div class="f-label">年齡 / 性別</div><div class="f-val">63 歲 女</div></div>
-              <div class="field-item"><div class="f-label">疾病別</div><div class="f-val">創傷性神經損傷</div></div>
-              <div class="field-item"><div class="f-label">照護模式</div><div class="f-val">居家</div></div>
-              <div class="field-item"><div class="f-label">開案日期</div><div class="f-val">2026 / 07 / 27</div></div>
-              <div class="field-item"><div class="f-label">照護週次</div><div class="f-val">第 1 週 / 3 週</div></div>
-              <div class="field-item" style="grid-column:span 2"><div class="f-label">地點</div><div class="f-val">彰化縣大村鄉這條路一段32-1號</div></div>
-              <div class="field-item"><div class="f-label">照顧方式</div><div class="f-val">家屬</div></div>
-              <div class="field-item"><div class="f-label">聯絡人</div><div class="f-val">女兒 陳小姐</div></div>
-              <div class="field-item"><div class="f-label">聯絡電話</div><div class="f-val">09xx - xxx - xxx</div></div>
-              <div class="field-item"><div class="f-label">Line</div><div class="f-val">123456aaa</div></div>
-              <div class="field-item" style="grid-column:span 2"><div class="f-label">方便復健時間</div><div class="f-val">平日 中午 12:00 - 13:00</div></div>
+            <div style="border:1px solid #e2e8f0;border-radius:6px;padding:8px;font-size:12px;margin-bottom:12px">
+              <div style="font-weight:700;color:#0284c7;margin-bottom:4px">物理治療師 PT (4 人報名 / 抽 2 人)</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="status-pill pill-blue">陳建宏</span>
+                <span class="status-pill pill-blue">黃志豪</span>
+                <span class="status-pill pill-blue">張大華</span>
+                <span class="status-pill pill-blue">李小朋</span>
+              </div>
             </div>
-
-            <div style="margin-top:14px;">
-              <div class="f-label" style="font-size:11.5px;color:#64748b">醫囑方向</div>
-              <div style="font-size:12.5px;color:#0f4c75;background:#eef7fc;padding:8px;border-radius:6px;line-height:1.6;margin-top:2px">
-                腦中風(CVA)右側偏癱，加強患側肢體肌力、關節活動度訓練及防跌倒指導。居訪、預收兩千。
+            <div style="border:1px solid #e2e8f0;border-radius:6px;padding:8px;font-size:12px">
+              <div style="font-weight:700;color:#7e22ce;margin-bottom:4px">職能治療師 OT (2 人報名 / 已滿額)</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="status-pill pill-purple">李佳穎</span>
+                <span class="status-pill pill-purple">張雅玲 (居訪負責人)</span>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between">
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline" style="color:#b91c1c;border-color:#fca5a5" onclick="openCancelSignupModal()">取消我的報名</button>
+          <button class="btn btn-outline" style="color:#166534;border-color:#86efac" onclick="openApplySignupModal()">我要報名</button>
+        </div>
+        <button class="btn btn-primary" onclick="alert('已執行抽籤，結果已通知治療師！'); closeModal('recruitingModal')">抽籤名單確認</button>
+      </div>
+    </div>
+  </div>
 
-          <!-- 右欄：排班時段 -->
+  <!-- 置中 Modal 3：通用的居家復健詳情大彈窗 (黃世傑、吳淑珍、司徒慶隆、諸葛素芬、廖花花、端木素雲等，落實指示 5) -->
+  <div class="modal-overlay" id="genericDetailModal">
+    <div class="center-modal-box" style="width:880px;">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span id="genModalTitle">吳淑珍 ・ 居家復健詳情</span>
+          <span class="status-pill pill-green" id="genModalStatusPill">執行中</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('genericDetailModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:24px;">
+          <!-- 左欄：個案資訊 -->
           <div>
-            <div class="section-subhead" style="display:flex;justify-content:space-between;align-items:center">
-              <span>排班時段</span>
-              <button class="btn btn-primary" style="padding:3px 10px;font-size:11.5px" onclick="openAddSlotInModal()">+ 新增時段</button>
+            <div style="font-size:13.5px;font-weight:700;margin-bottom:12px">個案基本資訊</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
+              <div><div style="font-size:11px;color:#64748b">姓名</div><strong id="genName">吳淑珍</strong></div>
+              <div><div style="font-size:11px;color:#64748b">年齡 / 性別</div><span id="genAgeGender">74 歲 女</span></div>
+              <div><div style="font-size:11px;color:#64748b">疾病別</div><span id="genDisease">衰弱高齡</span></div>
+              <div><div style="font-size:11px;color:#64748b">執行進度</div><span id="genWeeks">第 2 週 / 8 週</span></div>
+              <div><div style="font-size:11px;color:#64748b">主治醫師</div>劉益陞（神外）</div>
+              <div><div style="font-size:11px;color:#64748b">聯絡電話</div>0921-345-678</div>
+            </div>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;color:#64748b">居訪負責治療師</div>
+              <div style="font-size:12.5px;font-weight:600;color:#1e293b;margin-top:2px">
+                PT 吳建宏 ｜ OT 劉思妤
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;color:#64748b">醫囑目標</div>
+              <div style="font-size:12px;color:#334155;background:#f8fafc;padding:8px;border-radius:6px;border:1px solid #e2e8f0;margin-top:2px;line-height:1.6">
+                加強個案居家環境障礙排除、步態平衡與自主翻身轉位能力。
+              </div>
+            </div>
+            <div style="margin-top:18px">
+              <button class="btn btn-outline" style="font-size:12px;padding:4px 10px" onclick="alert('導航前往患者資料頁')">前往患者資料頁 &gt;</button>
+            </div>
+          </div>
+
+          <!-- 右欄：排班時段卡片清單與新增時段 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13.5px;font-weight:700">每週排班時段</span>
+              <button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="openAddSlotModal()">+ 新增時段</button>
             </div>
 
             <!-- 第 1 週 -->
             <div class="week-card">
-              <div class="week-card-head">
-                <span>第 1 週（07/27 - 08/02）</span>
-                <span class="status-pill pill-green">執行中</span>
+              <div class="week-card-header">
+                <span>第 1 週 (2026/08/03 - 08/09)</span>
+                <span class="status-pill pill-green" style="font-size:10px;padding:1px 6px">已完成</span>
               </div>
-              <div class="week-card-row">
-                <div>07/27 (一) 18:30 ｜ 張大華（PT）</div>
-                <div style="display:flex;gap:6px;align-items:center">
-                  <span class="status-pill pill-green" style="cursor:pointer" onclick="openNotice('執行紀錄：18:30-19:10 完成行走訓練、肌力訓練')">已完成 18:30-19:10 &gt;</span>
-                </div>
+              <div class="slot-row">
+                <div><strong>08/04 (二) 12:30 - 13:30</strong> ｜ 吳建宏 (PT)</div>
+                <span style="color:#166534;font-weight:700">✓ 已執行</span>
               </div>
-              <div class="week-card-row">
-                <div>07/27 (一) 19:00 ｜ 張雅玲（OT）</div>
-                <div style="display:flex;gap:6px;align-items:center">
-                  <span class="status-pill pill-green" style="cursor:pointer" onclick="openNotice('執行紀錄：19:20-20:00 完成平衡訓練、日常生活動作指導')">已完成 19:20-20:00 &gt;</span>
-                </div>
-              </div>
-              <div class="week-card-row">
-                <div>07/28 (二) 18:00 ｜ 黃志豪（PT）</div>
-                <div style="display:flex;gap:6px;align-items:center">
-                  <button class="btn btn-outline" style="padding:2px 8px;font-size:11px" onclick="openNotice('開啟編輯時段')">編輯</button>
-                  <button class="btn btn-primary" style="padding:2px 8px;font-size:11px" onclick="openCompleteFillModal()">完成執行</button>
-                </div>
+              <div class="slot-row">
+                <div><strong>08/06 (四) 18:30 - 19:30</strong> ｜ 劉思妤 (OT)</div>
+                <span style="color:#166534;font-weight:700">✓ 已執行</span>
               </div>
             </div>
 
             <!-- 第 2 週 -->
             <div class="week-card">
-              <div class="week-card-head">
-                <span>第 2 週（08/03 - 08/09）</span>
-                <span style="color:#64748b;font-weight:400;font-size:11.5px">未排班</span>
+              <div class="week-card-header">
+                <span>第 2 週 (2026/08/10 - 08/16)</span>
+                <span class="status-pill pill-blue" style="font-size:10px;padding:1px 6px">本週執行中</span>
               </div>
-              <div style="padding:10px;text-align:center;color:#94a3b8;font-size:12px">
-                本週尚無排班時段
-                <button class="btn btn-outline" style="margin-left:6px;padding:2px 8px;font-size:11px" onclick="openAddSlotInModal()">+ 新增排班</button>
+              <div class="slot-row">
+                <div><strong>08/11 (二) 12:30 - 13:30</strong> ｜ 吳建宏 (PT)</div>
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-outline" style="font-size:11px;padding:2px 6px" onclick="openExecutionFillModal()">完成執行</button>
+                  <button class="btn btn-outline" style="font-size:11px;padding:2px 6px" onclick="openPauseReportModal()">回報暫停</button>
+                </div>
+              </div>
+              <div class="slot-row">
+                <div><strong>08/13 (四) 18:30 - 19:30</strong> ｜ 劉思妤 (OT)</div>
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-outline" style="font-size:11px;padding:2px 6px" onclick="openExecutionFillModal()">完成執行</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="justify-content:space-between">
-        <button class="btn btn-outline" style="color:#dc2626" onclick="openPauseModal()">回報暫停</button>
-        <div>
-          <button class="btn btn-outline" onclick="openSendReminderModal()">發送排班提醒</button>
-          <button class="btn btn-primary" onclick="closeModal('activeScheduleModal')">關閉</button>
-        </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('genericDetailModal')">關閉</button>
       </div>
     </div>
   </div>
 
-  <!-- 置中 Modal 10：新增時段表單 (彈中彈或單獨彈窗) -->
+  <!-- 置中 Modal 4：確認報名確認框 -->
+  <div class="modal-overlay" id="applySignupModal">
+    <div class="center-modal-box" style="width:460px;text-align:center;padding:24px">
+      <div style="width:50px;height:50px;border-radius:50%;background:#dcfce7;color:#16a34a;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px">✓</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px">確定要報名個案？</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:16px">
+        您將報名物理治療師（PT）人力，預計執行 3 週。<br>系統將於截止時進行抽籤並發送結果通知。
+      </div>
+      <div style="display:flex;justify-content:center;gap:12px">
+        <button class="btn btn-outline" onclick="closeModal('applySignupModal')">取消</button>
+        <button class="btn btn-primary" onclick="alert('報名成功！'); closeModal('applySignupModal'); closeModal('recruitingModal')">確認報名</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 5：取消報名確認框 -->
+  <div class="modal-overlay" id="cancelSignupModal">
+    <div class="center-modal-box" style="width:460px;text-align:center;padding:24px">
+      <div style="width:50px;height:50px;border-radius:50%;background:#fef9c3;color:#ca8a04;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px">!</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px">確定要取消報名？</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:16px">取消後您將退出本次抽籤名單。</div>
+      <div style="display:flex;justify-content:center;gap:12px">
+        <button class="btn btn-outline" onclick="closeModal('cancelSignupModal')">返回</button>
+        <button class="btn" style="background:#dc2626;color:#fff" onclick="alert('已取消報名！'); closeModal('cancelSignupModal'); closeModal('recruitingModal')">確認取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 6：修改報名條件 -->
+  <div class="modal-overlay" id="modifyConditionModal">
+    <div class="center-modal-box" style="width:500px">
+      <div class="modal-header">
+        <div class="modal-header-title">修改報名條件</div>
+        <button class="modal-close-btn" onclick="closeModal('modifyConditionModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">截止時間</label>
+          <input type="text" class="search-input" value="2026/08/04 18:00" style="width:100%">
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">PT 需求人數</label>
+          <input type="number" class="search-input" value="2" style="width:100%">
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">OT 需求人數</label>
+          <input type="number" class="search-input" value="2" style="width:100%">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('modifyConditionModal')">取消</button>
+        <button class="btn btn-primary" onclick="alert('條件修改已儲存！'); closeModal('modifyConditionModal')">儲存條件</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 7：張簡慧玲・報名未滿額彈窗 -->
+  <div class="modal-overlay" id="underModal">
+    <div class="center-modal-box" style="width:680px">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span>張簡慧玲 ・ 可報名居家（未滿額）</span>
+          <span class="status-pill pill-orange">報名未滿額</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('underModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:#fff7ed;padding:12px;border-radius:6px;border:1px solid #ffedd5;color:#c2410c;font-size:13px;margin-bottom:14px">
+          截止時間已過，目前 PT 僅 0 人報名（需求 1 人），OT 0 人報名（需求 1 人）。
+        </div>
+        <div style="font-size:13px">您可選擇重新發佈延長報名期限，或回報個管師此個案暫無人力承接。</div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between">
+        <button class="btn btn-outline" style="color:#dc2626;border-color:#fca5a5" onclick="openRejectReportModal()">回報不承接</button>
+        <button class="btn btn-primary" onclick="alert('已重新發佈報名通知！'); closeModal('underModal')">重新發佈</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 8：回報不承接確認框 -->
+  <div class="modal-overlay" id="rejectReportModal">
+    <div class="center-modal-box" style="width:460px;text-align:center;padding:24px">
+      <div style="width:50px;height:50px;border-radius:50%;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px">!</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px">確認回報不承接？</div>
+      <div style="font-size:13px;color:#64748b;margin-bottom:16px">回報後系統將通知個管師，此個案將轉回轉介評估或另尋資源。</div>
+      <div style="display:flex;justify-content:center;gap:12px">
+        <button class="btn btn-outline" onclick="closeModal('rejectReportModal')">取消</button>
+        <button class="btn" style="background:#dc2626;color:#fff" onclick="alert('已回報個管師！'); closeModal('rejectReportModal'); closeModal('underModal')">確認回報</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 9：林偉・待開案發送提醒 -->
+  <div class="modal-overlay" id="pendingRemindModal">
+    <div class="center-modal-box" style="width:540px">
+      <div class="modal-header">
+        <div class="modal-header-title">林偉 ・ 發送排班提醒</div>
+        <button class="modal-close-btn" onclick="closeModal('pendingRemindModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:13px;margin-bottom:12px">請勾選欲發送排班提醒之治療師：</div>
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:10px">
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 0"><input type="checkbox" checked> 張大華（PT）- 尚未排定時段</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:6px 0"><input type="checkbox" checked> 張雅玲（OT）- 尚未排定時段</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('pendingRemindModal')">取消</button>
+        <button class="btn btn-primary" onclick="alert('排班提醒推播已發送！'); closeModal('pendingRemindModal')">發送提醒</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 10：完成執行填寫 -->
+  <div class="modal-overlay" id="executionFillModal">
+    <div class="center-modal-box" style="width:540px">
+      <div class="modal-header">
+        <div class="modal-header-title">完成執行填寫</div>
+        <button class="modal-close-btn" onclick="closeModal('executionFillModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:12.5px;font-weight:700;margin-bottom:8px">請勾選本次居家治療執行項目（PT）：</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12.5px;margin-bottom:12px">
+          <label><input type="checkbox" checked> 心肺耐力訓練</label>
+          <label><input type="checkbox" checked> 關節活動度訓練</label>
+          <label><input type="checkbox" checked> 平衡及協調訓練</label>
+          <label><input type="checkbox" checked> 肌力強化訓練</label>
+          <label><input type="checkbox" checked> 移位及步行訓練</label>
+          <label><input type="checkbox"> 防跌居家衛教</label>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#64748b;display:block;margin-bottom:4px">補充紀錄說明</label>
+          <textarea class="search-input" style="width:100%;height:60px;resize:none" placeholder="個案今日配合度佳，血壓脈搏穩定..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('executionFillModal')">取消</button>
+        <button class="btn btn-primary" onclick="alert('執行紀錄已完成存檔！'); closeModal('executionFillModal')">確認送出</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 11：回報暫停 -->
+  <div class="modal-overlay" id="pauseReportModal">
+    <div class="center-modal-box" style="width:500px">
+      <div class="modal-header">
+        <div class="modal-header-title">回報暫停居家復健</div>
+        <button class="modal-close-btn" onclick="closeModal('pauseReportModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:12.5px;font-weight:700;margin-bottom:8px">請選擇暫停原因：</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px;margin-bottom:14px">
+          <label><input type="radio" name="pReason" checked> 急性病情變化 / 需再次住院</label>
+          <label><input type="radio" name="pReason"> 個案病情不適合繼續 PAC 訓練</label>
+          <label><input type="radio" name="pReason"> 家屬照顧因素 / 暫停訓練</label>
+          <label><input type="radio" name="pReason"> 其他因素</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('pauseReportModal')">取消</button>
+        <button class="btn" style="background:#dc2626;color:#fff" onclick="alert('已回報暫停！'); closeModal('pauseReportModal')">確認暫停</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 置中 Modal 12：新增排班時段 -->
   <div class="modal-overlay" id="addSlotModal">
-    <div class="center-modal-box" style="width:480px;">
+    <div class="center-modal-box" style="width:500px">
       <div class="modal-header">
         <div class="modal-header-title">新增居家排班時段</div>
         <button class="modal-close-btn" onclick="closeModal('addSlotModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label>日期 *</label>
-          <input type="text" class="form-control" value="2026/08/03 (一)">
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">日期 *</label>
+          <input type="text" class="search-input" value="2026/08/18 (二)" style="width:100%">
         </div>
-        <div class="form-group">
-          <label>時段 *</label>
-          <input type="text" class="form-control" value="18:30 - 19:10">
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">時段 *</label>
+          <input type="text" class="search-input" value="12:30 - 13:30 (午休)" style="width:100%">
         </div>
-        <div class="form-group">
-          <label>指派治療師 *</label>
-          <select class="form-control">
-            <option>張大華（PT）</option>
-            <option>黃志豪（PT）</option>
-            <option>張雅玲（OT）</option>
-            <option>李佳穎（OT）</option>
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">指派治療師 *</label>
+          <select class="filter-select" style="width:100%">
+            <option>吳建宏（PT）</option>
+            <option>劉思妤（OT）</option>
           </select>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeModal('addSlotModal')">取消</button>
-        <button class="btn btn-primary" onclick="openNotice('新增排班時段成功！已同步至治療師單日行事曆。'); closeModal('addSlotModal');">確定新增</button>
+        <button class="btn btn-primary" onclick="alert('時段新增成功！'); closeModal('addSlotModal')">確認新增</button>
       </div>
     </div>
   </div>
 
-  <!-- 置中 Modal 11：回報暫停 (05 原樣) -->
-  <div class="modal-overlay" id="pauseModal">
-    <div class="center-modal-box" style="width:480px;">
-      <div class="modal-header">
-        <div class="modal-header-title">居家排班 - 回報暫停</div>
-        <button class="modal-close-btn" onclick="closeModal('pauseModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <p style="color:#dc2626;font-size:12.5px;margin-bottom:12px">暫停後所有後續排班將取消，請確認暫停原因：</p>
-        <div class="form-group">
-          <label>暫停原因 *</label>
-          <select class="form-control" id="pauseSelect">
-            <option value="">請選擇原因</option>
-            <option value="急性病情變化">急性病情變化</option>
-            <option value="個案病情不適合繼續 PAC">個案病情不適合繼續 PAC</option>
-            <option value="家屬照顧因素">家屬照顧因素</option>
-            <option value="其他">其他</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>補充說明</label>
-          <textarea class="form-control" rows="3" placeholder="輸入原因，如患者遇突發狀況送醫"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('pauseModal')">取消</button>
-        <button class="btn btn-danger" onclick="confirmPause()">確認暫停</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 12：完成執行填寫 (05 原樣) -->
-  <div class="modal-overlay" id="completeFillModal">
-    <div class="center-modal-box" style="width:520px;">
-      <div class="modal-header">
-        <div class="modal-header-title">居家排班 - 完成執行</div>
-        <button class="modal-close-btn" onclick="closeModal('completeFillModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>執行治療師 *</label>
-          <input type="text" class="form-control" value="黃志豪（PT）" readonly>
-        </div>
-        <div class="form-group">
-          <label>排班日期與時段 *</label>
-          <input type="text" class="form-control" value="2026/07/28 (二) 18:00" readonly>
-        </div>
-        <div class="form-group">
-          <label>治療內容（PT） * 可複選</label>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
-            <label><input type="checkbox" checked> 加強心肺耐力</label>
-            <label><input type="checkbox" checked> 改善關節活動度</label>
-            <label><input type="checkbox" checked> 改善平衡能力</label>
-            <label><input type="checkbox"> 輔具追蹤評估</label>
-            <label><input type="checkbox" checked> 增加肌力</label>
-            <label><input type="checkbox"> 床上翻身擺位</label>
-            <label><input type="checkbox" checked> 行走訓練</label>
-            <label><input type="checkbox"> 其他</label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('completeFillModal')">取消</button>
-        <button class="btn btn-primary" onclick="openNotice('已完成填寫並成功儲存執行紀錄！'); closeModal('completeFillModal');">儲存</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 置中 Modal 13：歷史紀錄 (已結案 / 未成立) -->
+  <!-- 置中 Modal 13：歷史紀錄 -->
   <div class="modal-overlay" id="historyModal">
-    <div class="center-modal-box" style="width:640px;">
+    <div class="center-modal-box" style="width:720px">
       <div class="modal-header">
-        <div class="modal-header-title">居家排班管理 - 歷史紀錄</div>
+        <div class="modal-header-title">居家復健歷史紀錄</div>
         <button class="modal-close-btn" onclick="closeModal('historyModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div style="display:flex;gap:12px;margin-bottom:14px">
-          <button class="tab-btn active" id="histClosed" onclick="setHistTab('closed')">結案成功 (已結案)</button>
-          <button class="tab-btn" id="histFailed" onclick="setHistTab('failed')">未成立 (未成案)</button>
-        </div>
-        <table class="data-table" style="font-size:12.5px">
-          <thead>
-            <tr>
-              <th>姓名</th>
-              <th>疾病別</th>
-              <th>開案日期</th>
-              <th>結案日期</th>
-              <th>執行週次</th>
-            </tr>
-          </thead>
-          <tbody id="histBody">
-            <tr><td>許月池 (60)</td><td>脆弱性骨折</td><td>26/04/06</td><td>26/05/04</td><td>4 週</td></tr>
-            <tr><td>歐陽國華 (64)</td><td>衰弱高齡</td><td>26/03/16</td><td>26/05/11</td><td>8 週</td></tr>
-            <tr><td>陳志明 (58)</td><td>創傷性神經損傷</td><td>26/03/02</td><td>26/04/27</td><td>12 週</td></tr>
+        <table class="hc-table">
+          <thead><tr><th>個案姓名</th><th>疾病別</th><th>執行總週數</th><th>結案日期</th><th>結案狀態</th></tr></thead>
+          <tbody>
+            <tr><td><strong>林進德</strong></td><td>腦中風</td><td>6 週 / 18 次</td><td>2026/05/20</td><td><span class="status-pill pill-green">結案成功</span></td></tr>
+            <tr><td><strong>王素蘭</strong></td><td>脆弱性骨折</td><td>4 週 / 12 次</td><td>2026/04/15</td><td><span class="status-pill pill-green">結案成功</span></td></tr>
+            <tr><td><strong>陳美麗</strong></td><td>衰弱高齡</td><td>2 週 / 4 次</td><td>2026/03/10</td><td><span class="status-pill pill-orange">提前結案 (返家自理)</span></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('historyModal')">關閉</button>
-      </div>
+      <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('historyModal')">關閉</button></div>
     </div>
   </div>
 
-  <!-- 置中 Modal 14：時數統計 -->
-  <div class="modal-overlay" id="statsModal">
-    <div class="center-modal-box" style="width:620px;">
+  <!-- 置中 Modal 14：時數統計 (主管專屬) -->
+  <div class="modal-overlay" id="bonusStatsModal">
+    <div class="center-modal-box" style="width:760px">
       <div class="modal-header">
-        <div class="modal-header-title">時數統計</div>
-        <button class="modal-close-btn" onclick="closeModal('statsModal')">✕</button>
+        <div class="modal-header-title">居家復健時數與獎金統計</div>
+        <button class="modal-close-btn" onclick="closeModal('bonusStatsModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
-          <div style="background:#f8fafc;padding:14px;border-radius:6px;border:1px solid #e2e8f0">
-            <div style="font-size:12px;color:#64748b">執行累計次數</div>
-            <div style="font-size:26px;font-weight:800;color:#0f4c75">240</div>
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:14px;margin-bottom:16px">
+          <div style="background:#f8fafc;padding:12px;border-radius:6px;border:1px solid #e2e8f0;text-align:center">
+            <div style="font-size:11px;color:#64748b">本月執行總次數</div>
+            <div style="font-size:22px;font-weight:800;color:#0284c7">240 <span style="font-size:13px">次</span></div>
           </div>
-          <div style="background:#f8fafc;padding:14px;border-radius:6px;border:1px solid #e2e8f0">
-            <div style="font-size:12px;color:#64748b">獎金</div>
-            <div style="font-size:26px;font-weight:800;color:#0f4c75">NT$ 240,000</div>
+          <div style="background:#f8fafc;padding:12px;border-radius:6px;border:1px solid #e2e8f0;text-align:center">
+            <div style="font-size:11px;color:#64748b">本月發放總獎金</div>
+            <div style="font-size:22px;font-weight:800;color:#166534">NT$ 240,000</div>
+          </div>
+          <div style="background:#f8fafc;padding:12px;border-radius:6px;border:1px solid #e2e8f0;text-align:center">
+            <div style="font-size:11px;color:#64748b">平均每次津貼</div>
+            <div style="font-size:22px;font-weight:800;color:#7e22ce">NT$ 1,000</div>
           </div>
         </div>
-        <div style="font-weight:700;margin-bottom:8px;font-size:13px">我的個案明細</div>
-        <table class="data-table" style="font-size:12.5px">
-          <thead>
-            <tr><th>姓名</th><th>疾病別</th><th>開案日期</th><th>結案日期</th><th>執行治療</th><th>獎金</th></tr>
-          </thead>
+        <table class="hc-table">
+          <thead><tr><th>治療師</th><th>職類</th><th>執行次數</th><th>居家時數</th><th>累計獎金</th></tr></thead>
           <tbody>
-            <tr><td>許月池 (60)</td><td>脆弱性骨折</td><td>26/04/06</td><td>26/05/04</td><td>8</td><td>NT$ 8,000</td></tr>
-            <tr><td>歐陽國華 (64)</td><td>腦中風</td><td>26/03/16</td><td>26/05/11</td><td>16</td><td>NT$ 16,000</td></tr>
-            <tr><td>陳志明 (58)</td><td>創傷性神經損傷</td><td>26/03/02</td><td>26/04/27</td><td>24</td><td>NT$ 24,000</td></tr>
+            <tr><td>黃志豪</td><td>PT (主管)</td><td>42 次</td><td>42 小時</td><td>NT$ 42,000</td></tr>
+            <tr><td>吳建宏</td><td>PT</td><td>38 次</td><td>38 小時</td><td>NT$ 38,000</td></tr>
+            <tr><td>劉思妤</td><td>OT</td><td>35 次</td><td>35 小時</td><td>NT$ 35,000</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('statsModal')">關閉</button>
-      </div>
+      <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('bonusStatsModal')">關閉</button></div>
     </div>
   </div>
 
   <script>
-    // 05 完整真實個案名單
+    let curRole = 'supervisor'; // 'supervisor' or 'therapist'
+    let curTab = 'all';
+
+    // 完整個案資料庫 (包含 05 原稿所有個案)
     const cases = [
-      { id: '1', name: '陳志明', age: 68, disease: '創傷性神經損傷', status: '可發佈報名', start: '－', end: '－', week: '－', type: 'publishable' },
-      { id: '2', name: '鄭國華', age: 72, disease: '腦中風', status: '報名中', start: '－', end: '－', week: '－', type: 'recruiting' },
-      { id: '3', name: '歐陽安妮', age: 53, disease: '脆弱性骨折', status: '報名中', start: '－', end: '－', week: '－', type: 'recruiting' },
-      { id: '4', name: '張簡慧玲', age: 81, disease: '衰弱高齡', status: '報名未滿額', start: '－', end: '－', week: '－', type: 'recruiting' },
-      { id: '5', name: '林偉', age: 88, disease: '衰弱高齡', status: '待開案', start: '26/08/03', end: '26/08/31', week: '第 0 週 / 4 週', type: 'pending', isMy: true },
-      { id: '6', name: '黃世傑', age: 55, disease: '腦中風', status: '執行中', start: '26/08/10', end: '26/09/21', week: '第 1 週 / 6 週', type: 'active', isMy: true },
-      { id: '7', name: '諸葛素芬', age: 74, disease: '腦中風', status: '執行中', start: '26/08/03', end: '26/09/28', week: '第 2 週 / 8 週', type: 'active', isMy: true },
-      { id: '8', name: '司徒慶隆', age: 78, disease: '衰弱高齡', status: '執行中', start: '26/08/17', end: '26/09/14', week: '第 1 週 / 4 週', type: 'active' },
-      { id: '9', name: '廖花花', age: 68, disease: '脆弱性骨折', status: '展延審核中', start: '26/07/20', end: '26/08/31', week: '第 4 週 / 6 週', type: 'active' },
-      { id: '10', name: '范姜忠義', age: 67, disease: '創傷性神經損傷', status: '即將結案', start: '26/07/13', end: '26/08/24', week: '第 5 週 / 6 週', type: 'active' },
-      { id: '11', name: '端木素雲', age: 85, disease: '腦中風', status: '即將結案', start: '26/06/01', end: '26/08/24', week: '第 11 週 / 12 週', type: 'active' },
-      { id: '12', name: '許願池', age: 90, disease: '衰弱高齡', status: '已暫停', start: '26/06/15', end: '26/07/13', week: '第 4 週 / 4 週', type: 'active' }
+      { name: '陳志明', age: 68, disease: '創傷性神經損傷', status: '可發佈報名', start: '－', end: '－', week: '－', type: 'publishable', action: '發佈報名', pill: 'pill-blue' },
+      { name: '鄭國華', age: 72, disease: '腦中風', status: '報名中', start: '－', end: '－', week: '－', type: 'recruiting', action: '查看報名', pill: 'pill-yellow' },
+      { name: '歐陽安妮', age: 53, disease: '脆弱性骨折', status: '報名中', start: '－', end: '－', week: '－', type: 'recruiting', action: '查看報名', pill: 'pill-yellow' },
+      { name: '趙美惠', age: 75, disease: '腦中風', status: '報名中', start: '－', end: '－', week: '－', type: 'recruiting', action: '查看報名', pill: 'pill-yellow' },
+      { name: '張簡慧玲', age: 81, disease: '衰弱高齡', status: '報名未滿額', start: '－', end: '－', week: '－', type: 'recruiting', action: '重新發佈', pill: 'pill-orange' },
+      { name: '林偉', age: 88, disease: '衰弱高齡', status: '待開案', start: '26/08/03', end: '26/08/31', week: '第 0 週 / 4 週', type: 'pending', action: '發送提醒', pill: 'pill-green' },
+      { name: '黃世傑', age: 55, disease: '腦中風', status: '執行中', start: '26/08/10', end: '26/09/21', week: '第 1 週 / 6 週', type: 'active', action: '查看排班', pill: 'pill-green' },
+      { name: '諸葛素芬', age: 74, disease: '腦中風', status: '執行中', start: '26/08/03', end: '26/09/28', week: '第 2 週 / 8 週', type: 'active', action: '查看排班', pill: 'pill-green' },
+      { name: '司徒慶隆', age: 78, disease: '衰弱高齡', status: '執行中', start: '26/08/17', end: '26/09/14', week: '第 1 週 / 4 週', type: 'active', action: '查看排班', pill: 'pill-green' },
+      { name: '廖花花', age: 68, disease: '脆弱性骨折', status: '展延審核中', start: '26/07/20', end: '26/08/31', week: '第 4 週 / 6 週', type: 'active', action: '查看排班', pill: 'pill-purple' },
+      { name: '范姜忠義', age: 67, disease: '創傷性神經損傷', status: '即將結案', start: '26/07/13', end: '26/08/24', week: '第 5 週 / 6 週', type: 'active', action: '查看排班', pill: 'pill-orange' },
+      { name: '端木素雲', age: 85, disease: '腦中風', status: '即將結案', start: '26/06/01', end: '26/08/24', week: '第 11 週 / 12 週', type: 'active', action: '查看排班', pill: 'pill-orange' },
+      { name: '蔣糸汨', age: 55, disease: '創傷性神經損傷', status: '即將結案', start: '26/09/10', end: '26/10/01', week: '第 3 週 / 3 週', type: 'active', action: '查看排班', pill: 'pill-orange' },
+      { name: '許順池', age: 90, disease: '衰弱高齡', status: '已暫停', start: '26/06/15', end: '26/07/13', week: '第 4 週 / 4 週', type: 'active', action: '查看排班', pill: 'pill-gray' },
+      { name: '吳淑珍', age: 74, disease: '衰弱高齡', status: '執行中', start: '26/08/03', end: '26/09/28', week: '第 2 週 / 8 週', type: 'active', action: '查看排班', pill: 'pill-green' }
     ];
 
-    let currentFilter = 'all';
-
-    function getPillClass(status) {
-      if (status === '可發佈報名') return 'pill-blue';
-      if (status === '報名中') return 'pill-yellow';
-      if (status === '報名未滿額') return 'pill-yellow';
-      if (status === '待開案') return 'pill-green';
-      if (status === '執行中') return 'pill-green';
-      if (status === '展延審核中') return 'pill-purple';
-      if (status === '即將結案') return 'pill-orange';
-      if (status === '已暫停') return 'pill-red';
-      return 'pill-gray';
-    }
-
-    function renderTable() {
-      const tbody = document.getElementById('tableBody');
-      const kw = document.getElementById('searchInput').value.trim().toLowerCase();
-      const dis = document.getElementById('diseaseSelect').value;
-
-      const list = cases.filter(c => {
-        if (currentFilter === 'publishable' && c.status !== '可發佈報名') return false;
-        if (currentFilter === 'recruiting' && !c.status.includes('報名')) return false;
-        if (currentFilter === 'pending' && c.status !== '待開案') return false;
-        if (currentFilter === 'active' && !['執行中', '展延審核中', '即將結案', '已暫停'].includes(c.status)) return false;
-        if (currentFilter === 'my-cases' && !c.isMy) return false;
-
-        if (dis !== 'all' && c.disease !== dis) return false;
-        if (kw && !c.name.toLowerCase().includes(kw) && !c.disease.toLowerCase().includes(kw)) return false;
-        return true;
-      });
-
-      tbody.innerHTML = list.map(c => {
-        let opBtn = '';
-        if (c.status === '可發佈報名') {
-          opBtn = `<button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="openPublishModal()">發佈報名</button>`;
-        } else if (c.status === '報名中') {
-          opBtn = `<button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="openRecruitingModal()">查看報名</button>`;
-        } else if (c.status === '報名未滿額') {
-          opBtn = `<button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="openUnfilledModal()">重新發佈</button>`;
-        } else if (c.status === '待開案') {
-          opBtn = `<button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="openSendReminderModal()">發送提醒</button>`;
-        } else {
-          opBtn = `<button class="btn btn-outline" style="padding:3px 10px;font-size:12px" onclick="openActiveScheduleModal()">查看排班</button>`;
-        }
-
-        return `
-          <tr>
-            <td><span class="patient-cell" onclick="handleCaseClick('${c.status}')">${c.name}</span><span class="patient-age">(${c.age})</span></td>
-            <td>${c.disease}</td>
-            <td><span class="status-pill ${getPillClass(c.status)}">${c.status}</span></td>
-            <td>${c.start}</td>
-            <td>${c.end}</td>
-            <td>${c.week}</td>
-            <td>${opBtn}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function handleCaseClick(status) {
-      if (status === '可發佈報名') openPublishModal();
-      else if (status.includes('報名')) openRecruitingModal();
-      else if (status === '待開案') openSendReminderModal();
-      else openActiveScheduleModal();
-    }
-
-    function switchTab(btn, type) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentFilter = type;
+    function toggleRoleView() {
+      if (curRole === 'supervisor') {
+        curRole = 'therapist';
+        document.getElementById('roleViewLabel').textContent = '復健治療師（王大明）';
+        document.getElementById('tabPublishable').style.display = 'none';
+        document.getElementById('btnBonusStats').style.display = 'none';
+        if (curTab === 'publishable') curTab = 'all';
+      } else {
+        curRole = 'supervisor';
+        document.getElementById('roleViewLabel').textContent = '復健主管（黃志豪）';
+        document.getElementById('tabPublishable').style.display = 'inline-flex';
+        document.getElementById('btnBonusStats').style.display = 'inline-flex';
+      }
       renderTable();
     }
 
-    function handleSearch() { renderTable(); }
-    function handleFilter() { renderTable(); }
-
-    function toggleSortMenu() {
-      document.getElementById('sortPopover').classList.toggle('open');
-    }
-    function applySort(label) {
-      openNotice('已依照「' + label + '」排序完成');
-      document.getElementById('sortPopover').classList.remove('open');
+    function switchTab(btn, tab) {
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      curTab = tab;
+      renderTable();
     }
 
-    // Modal 開關
-    function openPublishModal() { document.getElementById('publishModal').classList.add('open'); }
-    function confirmPublish() {
-      openNotice('確認發佈居家排班招募成功！已通知治療師進行報名。');
-      closeModal('publishModal');
-    }
-    function openRecruitingModal() { document.getElementById('recruitingModal').classList.add('open'); }
-    function openModifyConditionsModal() { document.getElementById('modifyConditionsModal').classList.add('open'); }
-    function openConfirmApplyModal() { document.getElementById('confirmApplyModal').classList.add('open'); }
-    function openConfirmCancelApplyModal() { document.getElementById('confirmCancelApplyModal').classList.add('open'); }
-    function openUnfilledModal() { document.getElementById('unfilledModal').classList.add('open'); }
-    function openReportRejectModal() { document.getElementById('reportRejectModal').classList.add('open'); }
-    function confirmRejectCase() {
-      openNotice('已確認回報不承接！系統已通知個管師。');
-      closeModal('reportRejectModal');
-      closeModal('unfilledModal');
-    }
-    function openSendReminderModal() { document.getElementById('sendReminderModal').classList.add('open'); }
-    function toggleAllTherapists(master) {
-      document.querySelectorAll('.th-check').forEach(cb => cb.checked = master.checked);
+    function renderTable() {
+      const tbody = document.getElementById('caseTableBody');
+      const kw = document.getElementById('caseSearchInput').value.trim().toLowerCase();
+      const dis = document.getElementById('diseaseSelect').value;
+
+      const filtered = cases.filter(c => {
+        // 治療師視角看不到可發佈個案
+        if (curRole === 'therapist' && c.type === 'publishable') return false;
+
+        if (curTab !== 'all' && curTab !== 'mine') {
+          if (curTab === 'publishable' && c.type !== 'publishable') return false;
+          if (curTab === 'recruiting' && c.type !== 'recruiting') return false;
+          if (curTab === 'pending' && c.type !== 'pending') return false;
+          if (curTab === 'active' && c.type !== 'active') return false;
+        } else if (curTab === 'mine') {
+          if (!['黃世傑', '諸葛素芬', '吳淑珍'].includes(c.name)) return false;
+        }
+
+        if (dis !== 'all' && c.disease !== dis) return false;
+        if (kw && !c.name.toLowerCase().includes(kw)) return false;
+        return true;
+      });
+
+      tbody.innerHTML = filtered.map(c => `
+        <tr onclick="handleCaseClick('${c.name}', '${c.status}', '${c.age}', '${c.disease}', '${c.week}')">
+          <td><div class="patient-cell">${c.name} <small style="font-weight:400;color:#64748b">(${c.age})</small></div></td>
+          <td>${c.disease}</td>
+          <td><span class="status-pill ${c.pill}">${c.status}</span></td>
+          <td>${c.start}</td>
+          <td>${c.end}</td>
+          <td>${c.week}</td>
+          <td>
+            <button class="btn btn-primary" style="padding:3px 10px;font-size:12px" onclick="event.stopPropagation(); handleCaseClick('${c.name}', '${c.status}', '${c.age}', '${c.disease}', '${c.week}')">
+              ${c.action}
+            </button>
+          </td>
+        </tr>
+      `).join('');
     }
 
-    function openActiveScheduleModal() { document.getElementById('activeScheduleModal').classList.add('open'); }
-    function openAddSlotInModal() { document.getElementById('addSlotModal').classList.add('open'); }
-    function openPauseModal() { document.getElementById('pauseModal').classList.add('open'); }
-    function openCompleteFillModal() { document.getElementById('completeFillModal').classList.add('open'); }
-    function openHistoryModal() { document.getElementById('historyModal').classList.add('open'); }
-    function openStatsModal() { document.getElementById('statsModal').classList.add('open'); }
+    // 每個個案點開來都有專屬彈窗 (指示 5)
+    function handleCaseClick(name, status, age, disease, week) {
+      if (status === '可發佈報名') {
+        openModal('publishModal');
+      } else if (status === '報名中') {
+        document.getElementById('recruitingModalTitle').textContent = `${name} ・ 可報名居家`;
+        document.getElementById('recPatientName').textContent = name;
+        openModal('recruitingModal');
+      } else if (status === '報名未滿額') {
+        openModal('underModal');
+      } else if (status === '待開案') {
+        openModal('pendingRemindModal');
+      } else {
+        // 執行中 / 展延 / 即將結案 / 已暫停 -> 開啟專屬居家復健詳情彈窗
+        document.getElementById('genModalTitle').textContent = `${name} ・ 居家復健詳情`;
+        document.getElementById('genName').textContent = name;
+        document.getElementById('genAgeGender').textContent = `${age} 歲`;
+        document.getElementById('genDisease').textContent = disease;
+        document.getElementById('genWeeks').textContent = week;
+        document.getElementById('genModalStatusPill').textContent = status;
+        openModal('genericDetailModal');
+      }
+    }
 
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-    function openNotice(msg) {
-      alert(msg);
-    }
+    function openHistoryModal() { openModal('historyModal'); }
+    function openBonusStatsModal() { openModal('bonusStatsModal'); }
+    function openModifyConditionModal() { openModal('modifyConditionModal'); }
+    function openApplySignupModal() { openModal('applySignupModal'); }
+    function openCancelSignupModal() { openModal('cancelSignupModal'); }
+    function openRejectReportModal() { openModal('rejectReportModal'); }
+    function openAddSlotModal() { openModal('addSlotModal'); }
+    function openExecutionFillModal() { openModal('executionFillModal'); }
+    function openPauseReportModal() { openModal('pauseReportModal'); }
 
-    function confirmPause() {
-      const reason = document.getElementById('pauseSelect').value;
-      if (!reason) { alert('請選擇暫停原因！'); return; }
-      openNotice('已成功回報暫停！所有後續排班已取消。');
-      closeModal('pauseModal');
-      closeModal('activeScheduleModal');
-    }
-
-    function setHistTab(type) {
-      const b1 = document.getElementById('histClosed');
-      const b2 = document.getElementById('histFailed');
-      const tbody = document.getElementById('histBody');
-      if (type === 'closed') {
-        b1.classList.add('active');
-        b2.classList.remove('active');
-        tbody.innerHTML = `
-          <tr><td>許月池 (60)</td><td>脆弱性骨折</td><td>26/04/06</td><td>26/05/04</td><td>4 週</td></tr>
-          <tr><td>歐陽國華 (64)</td><td>衰弱高齡</td><td>26/03/16</td><td>26/05/11</td><td>8 週</td></tr>
-          <tr><td>陳志明 (58)</td><td>創傷性神經損傷</td><td>26/03/02</td><td>26/04/27</td><td>12 週</td></tr>
-        `;
-      } else {
-        b2.classList.add('active');
-        b1.classList.remove('active');
-        tbody.innerHTML = `
-          <tr><td>張簡慧玲 (81)</td><td>衰弱高齡</td><td>－</td><td>－</td><td>報名未滿額</td></tr>
-          <tr><td>劉大為 (77)</td><td>腦中風</td><td>－</td><td>－</td><td>個案未報到</td></tr>
-        `;
-      }
+    function toggleSortMenu() {
+      alert('已依開案日期與執行週次重新排序！');
     }
 
     window.addEventListener('DOMContentLoaded', () => {

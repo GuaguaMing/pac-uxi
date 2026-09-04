@@ -15,26 +15,24 @@
       --text-main: #1e293b;
       --text-sub: #64748b;
       --border-color: #e2e8f0;
-      --current-row-bg: #e0f2fe;
-      --current-row-border: #0284c7;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
       background: var(--page-bg);
       color: var(--text-main);
-      padding: 20px;
+      padding: 18px 24px;
       font-size: 13.5px;
       line-height: 1.5;
     }
 
-    /* 頂部操作與視圖切換列 */
+    /* 頂部功能與角色指示列 */
     .top-action-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
     .view-toggle-group {
       display: flex;
@@ -108,16 +106,9 @@
       border: 1px solid transparent;
       transition: all 0.15s ease;
     }
-    .btn-primary {
-      background: var(--primary-blue);
-      color: #ffffff;
-    }
+    .btn-primary { background: var(--primary-blue); color: #ffffff; }
     .btn-primary:hover { background: var(--primary-hover); }
-    .btn-outline {
-      background: #ffffff;
-      border-color: var(--border-color);
-      color: var(--text-main);
-    }
+    .btn-outline { background: #ffffff; border-color: var(--border-color); color: var(--text-main); }
     .btn-outline:hover { background: #f1f5f9; }
     .badge-count {
       background: #ef4444;
@@ -127,6 +118,21 @@
       padding: 1px 6px;
       border-radius: 999px;
       margin-left: 4px;
+    }
+
+    /* 角色視角指示切換標籤 (主管 vs 治療師，落實指示 4) */
+    .role-view-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: #eef7fc;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     /* 05 原稿 7 類圓點標籤列 */
@@ -181,7 +187,7 @@
       background: #fff;
     }
 
-    /* 單日排班矩陣 (支援完整每小時 4 格、午休/下班後獨立格子、當前時段高亮) */
+    /* 單日排班矩陣 */
     .schedule-matrix-wrap {
       background: #ffffff;
       border: 1px solid var(--border-color);
@@ -217,8 +223,8 @@
       background: #ffffff;
     }
     .time-col {
-      width: 85px;
-      min-width: 85px;
+      width: 95px;
+      min-width: 95px;
       background: #f8fafc !important;
       font-weight: 700;
       color: #64748b;
@@ -229,7 +235,7 @@
       border-right: 2px solid #cbd5e1 !important;
     }
 
-    /* 配合現在時辰 (下午 2:47 -> 14:45)，整條 row 高亮 (指示 6) */
+    /* 配合現在時辰 (14:45) 整條 row 高亮 (指示 6) */
     .current-hour-highlight td {
       background: #e0f2fe !important;
       border-top: 2px solid #0284c7 !important;
@@ -241,7 +247,7 @@
       font-weight: 800;
     }
 
-    /* 午休與下班後 row (正常中性底色，不再特別標黃) */
+    /* 午休與下班後 row (中性底色不標黃) */
     .noon-row td, .after-work-row td {
       background: #f8fafc;
       height: 42px;
@@ -282,7 +288,7 @@
     }
     .p-tag.home { background: #16a34a; }
 
-    /* 月曆視圖 (完全展開不遮擋，指示 2) */
+    /* 月曆視圖 (完全比照 05 原稿 ov_cal_1.png：週一開頭，原稿排版，不遮擋，指示 1) */
     .calendar-container {
       background: #ffffff;
       border: 1px solid var(--border-color);
@@ -290,51 +296,83 @@
       display: none;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
       margin-bottom: 30px;
+      overflow: visible;
     }
     .calendar-weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      background: var(--header-blue-bg);
+      background: #ffffff;
       text-align: center;
       font-weight: 700;
-      color: #0f4c75;
-      padding: 10px 0;
-      border-bottom: 1px solid #bae6fd;
+      color: #475569;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
     }
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
     }
     .calendar-day-cell {
-      min-height: 120px;
+      min-height: 140px;
       border-right: 1px solid var(--border-color);
       border-bottom: 1px solid var(--border-color);
-      padding: 8px;
+      padding: 8px 10px;
       background: #ffffff;
       cursor: pointer;
       transition: background 0.15s;
       position: relative;
     }
+    .calendar-day-cell:nth-child(7n) { border-right: none; }
     .calendar-day-cell:hover { background: #f8fafc; }
-    .calendar-day-cell.other-month { background: #f8fafc; opacity: 0.45; }
-    .day-num { font-weight: 700; font-size: 13px; color: #334155; margin-bottom: 4px; }
-    .day-num.today { color: var(--primary-blue); font-weight: 800; }
+    .calendar-day-cell.other-month { background: #fafafa; opacity: 0.35; }
+    .day-num-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .day-num {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #334155;
+    }
+    .day-num.today {
+      background: #0284c7;
+      color: #ffffff;
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
     .cal-event-pill {
       font-size: 11px;
-      padding: 2px 5px;
+      padding: 2px 4px;
       border-radius: 4px;
       margin-bottom: 3px;
-      background: #eef7fc;
-      color: #0369a1;
+      color: #1e293b;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
+      background: transparent;
     }
-    .cal-event-pill.home-event { background: #dcfce7; color: #15803d; }
-    .cal-event-more { font-size: 11px; color: #94a3b8; font-weight: 600; }
+    .cal-event-pill:hover { background: #f1f5f9; }
+    .cal-event-pill.home-recruiting {
+      background: #dcfce7;
+      color: #15803d;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+    .cal-event-more {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .cal-event-more:hover { color: var(--primary-blue); text-decoration: underline; }
 
     /* 置中 Modal 系統 */
     .modal-overlay {
@@ -353,11 +391,12 @@
       background: #ffffff;
       border-radius: 10px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
+      overflow: visible;
       display: flex;
       flex-direction: column;
       max-height: 90vh;
       animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     @keyframes modalFadeIn {
       from { transform: scale(0.96); opacity: 0; }
@@ -375,17 +414,67 @@
     .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
     .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
 
-    .pink-capsule-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
-      background: #fdf2f8;
-      border: 1px solid #f472b6;
-      color: #be185d;
+    /* 新增排班之時段選單 (Time Picker Popover，完全還原 ov_add_popup_0.png，指示 2) */
+    .time-picker-popover {
+      position: absolute;
+      top: 190px;
+      left: 270px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      z-index: 1200;
+      width: 220px;
+      display: none;
+      padding: 12px;
     }
+    .time-picker-popover.open { display: block; }
+    .tp-columns {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    .tp-ampm-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      padding-right: 8px;
+    }
+    .tp-ampm-btn {
+      padding: 5px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .tp-ampm-btn.active { background: #e0f2fe; color: #0284c7; font-weight: 700; border-color: #7dd3fc; }
+    .tp-scroll-col {
+      flex: 1;
+      height: 140px;
+      overflow-y: auto;
+      text-align: center;
+    }
+    .tp-col-title { font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 4px; position: sticky; top: 0; background: #fff; }
+    .tp-option-item {
+      padding: 4px 0;
+      font-size: 12.5px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .tp-option-item:hover { background: #f1f5f9; }
+    .tp-option-item.selected { background: #0284c7; color: #fff; font-weight: 700; }
+    .tp-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tp-btn-clear { background: transparent; border: none; font-size: 12px; color: #64748b; cursor: pointer; }
+    .tp-btn-confirm { background: var(--primary-blue); color: #fff; border: none; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
 
     /* 月曆單日排班總表彈窗 (指示 3) */
     .cal-day-summary-row {
@@ -418,12 +507,21 @@
       <button class="btn-today" onclick="goToday()">回到今天</button>
     </div>
 
+    <!-- 角色視角指示 (指示 4：復健主管 vs 復健治療師) -->
+    <div class="role-view-indicator" id="roleViewBadge" onclick="toggleRoleView()">
+      <span>當前視角：<strong id="roleViewText">復健主管（黃志豪）</strong></span>
+      <span style="font-size:10px;color:#0284c7">▾ 切換視角</span>
+    </div>
+
     <div class="top-right-actions">
-      <button class="btn btn-outline" onclick="openShiftAuditModal()">
+      <!-- 主管視角專屬按鈕 -->
+      <button class="btn btn-outline" id="btnShiftAudit" onclick="openShiftAuditModal()">
         <span>換班審核</span>
         <span class="badge-count">2 件待審</span>
       </button>
-      <button class="btn btn-primary" onclick="openAddScheduleModal()">+ 新增排班</button>
+      <button class="btn btn-primary" id="btnAddSchedule" onclick="openAddScheduleModal()">+ 新增排班</button>
+      <!-- 治療師視角專屬按鈕 -->
+      <button class="btn btn-outline" id="btnApplyShift" style="display:none" onclick="alert('已送出申請換班表單！')">申請換班</button>
     </div>
   </div>
 
@@ -449,7 +547,7 @@
       <option value="一般復健">一般復健</option>
       <option value="門診復健">門診復健</option>
     </select>
-    <select class="filter-select">
+    <select class="filter-select" id="therapistFilterSelect">
       <option value="all">全部治療師</option>
       <option value="黃志豪">黃志豪（主管/PT）</option>
       <option value="陳怡君">陳怡君（PT）</option>
@@ -537,7 +635,7 @@
           <td><div class="booking-card" onclick="openDetailModal('歐陽國華', '08:45', '謝宗霖（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td>
         </tr>
 
-        <!-- 09:00 - 09:45 (補齊，無偷工減料) -->
+        <!-- 09:00 - 09:45 -->
         <tr><td class="time-col">09:00</td><td><div class="booking-card" onclick="openDetailModal('司徒建智', '09:00', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 司徒建智</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('陳蘭梓', '09:00', '黃雅婷（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 陳蘭梓</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '09:00', '劉思妤（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td></tr>
         <tr><td class="time-col">09:15</td><td></td><td><div class="booking-card" onclick="openDetailModal('彭春梅', '09:15', '陳怡君（PT）', '衰弱高齡', '門診復健')">● 彭春梅</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('郭琬棻', '09:15', '蔡昕妤（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 郭琬棻</div></td><td></td><td></td><td></td><td></td></tr>
         <tr><td class="time-col">09:30</td><td><div class="booking-card" onclick="openDetailModal('姜義企', '09:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 姜義企</div></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('簡麗卿', '09:30', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 簡麗卿</div></td><td></td><td></td><td></td></tr>
@@ -555,13 +653,10 @@
         <tr><td class="time-col">11:30</td><td><div class="booking-card" onclick="openDetailModal('林偉', '11:30', '黃志豪（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td><div class="booking-card" onclick="openDetailModal('詹富貴', '11:30', '陳怡君（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 詹富貴</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '林承翰（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '蔡昕妤（PT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('李文雄', '11:30', '許哲銘（ST）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 李文雄</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '劉思妤（OT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('蔣義雄', '11:30', '鄭佩芬（OT）', '創傷神經', 'PAC 住院')"><span class="p-tag">P</span> 蔣義雄</div></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '11:30', '謝宗霖（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td></tr>
         <tr><td class="time-col">11:45</td><td><div class="booking-card" onclick="openDetailModal('劉香香', '11:45', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('林偉', '11:45', '鄭佩芬（OT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 林偉</div></td><td></td></tr>
 
-        <!-- 午休列：僅 PAC 居家，無門診，中性底色不標黃 (指示 2、6) -->
+        <!-- 午休列：僅 PAC 居家，中性底色 (指示 2、6) -->
         <tr class="noon-row">
           <td class="time-col">午休</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td><td></td><td></td>
           <td>
             <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('鄭正雄', '午休 12:30', '吳建宏（PT）', '衰弱高齡', 'PAC 居家')">
               <span class="p-tag home">P</span> <strong>鄭正雄</strong> (居家)
@@ -572,13 +667,10 @@
               <span class="p-tag home">P</span> <strong>蔣義雄</strong> (居家)
             </div>
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td><td></td><td></td>
         </tr>
 
-        <!-- 14:00 - 14:45 (下午時段，配合現在時辰 14:45 整條 highlight，指示 6) -->
+        <!-- 14:00 - 14:45 -->
         <tr>
           <td class="time-col">14:00</td>
           <td></td><td></td><td><div class="booking-card" onclick="openDetailModal('張簡麗卿', '14:00', '林承翰（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 張簡麗卿</div></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:00', '許哲銘（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '14:00', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td>
@@ -591,19 +683,13 @@
           <td class="time-col">14:30</td>
           <td></td><td></td><td><div class="booking-card" onclick="openDetailModal('黃莉英', '14:30', '林承翰（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 黃莉英</div></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '蔡昕妤（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '劉思妤（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td><div class="booking-card" onclick="openDetailModal('劉香香', '14:30', '謝宗霖（OT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td>
         </tr>
-        <!-- 當前時辰 14:45 (下午 2:47) 整條藍色 highlight，方便即時對照班表 (指示 6) -->
+        <!-- 當前時辰 14:45 整條藍色 highlight (指示 6) -->
         <tr class="current-hour-highlight">
           <td class="time-col">● 14:45 (現在)</td>
           <td><div class="booking-card" style="background:#fff;border:1.5px solid #0284c7" onclick="openDetailModal('歐陽國華', '14:45', '黃志豪（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> <strong>歐陽國華</strong></div></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td>
           <td><div class="booking-card" style="background:#fff;border:1.5px solid #0284c7" onclick="openDetailModal('鄭正雄', '14:45', '黃雅婷（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> <strong>鄭正雄</strong></div></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
         </tr>
 
         <!-- 15:00 - 15:45 -->
@@ -624,7 +710,7 @@
         <tr><td class="time-col">17:30</td><td><div class="booking-card" onclick="openDetailModal('劉香香', '17:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')"><span class="p-tag">P</span> 劉香香</div></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '17:30', '鄭佩芬（OT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td></tr>
         <tr><td class="time-col">17:45</td><td></td><td><div class="booking-card" onclick="openDetailModal('詹富貴', '17:45', '陳怡君（PT）', '衰弱高齡', 'PAC 住院')"><span class="p-tag">P</span> 詹富貴</div></td><td></td><td></td><td></td><td></td><td><div class="booking-card" onclick="openDetailModal('歐陽國華', '17:45', '許哲銘（PT）', '腦中風', 'PAC 住院')"><span class="p-tag">P</span> 歐陽國華</div></td><td></td><td></td><td></td></tr>
 
-        <!-- 下班後列：僅 PAC 居家，無門診，中性底色不標黃 (指示 2、6) -->
+        <!-- 下班後列：僅 PAC 居家 (指示 2、6) -->
         <tr class="after-work-row">
           <td class="time-col">下班後</td>
           <td>
@@ -632,142 +718,231 @@
               <span class="p-tag home">P</span> <strong>張簡麗卿</strong> (居家)
             </div>
           </td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td><td></td>
           <td>
             <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('歐陽國華', '下班後 18:30', '吳建宏（PT）', '腦中風', 'PAC 居家')">
               <span class="p-tag home">P</span> <strong>歐陽國華</strong> (居家)
             </div>
           </td>
-          <td></td>
-          <td></td>
+          <td></td><td></td>
           <td>
             <div class="booking-card" style="background:#dcfce7;border:1px solid #86efac" onclick="openDetailModal('林偉', '下班後 18:30', '劉思妤（OT）', '腦中風', 'PAC 居家')">
               <span class="p-tag home">P</span> <strong>林偉</strong> (居家)
             </div>
           </td>
-          <td></td>
-          <td></td>
+          <td></td><td></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- 2. 月曆總覽視圖 (完整 35 天不遮擋，點擊格子開啟「xx月xx日 排班總表」彈窗，指示 2、3) -->
+  <!-- 2. 月曆總覽視圖 (週一開頭，完全對齊 05 原稿 ov_cal_1.png，點擊格子開啟「xx月xx日 排班總表」彈窗，指示 1、3) -->
   <div class="calendar-container" id="calendarView">
+    <!-- 週一至週日表頭 (原稿原樣) -->
     <div class="calendar-weekdays">
-      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+      <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
     </div>
     <div class="calendar-grid">
-      <!-- 第 1 週 (7/26 - 8/1) -->
-      <div class="calendar-day-cell other-month"><div class="day-num">26</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">27</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">28</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">29</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">30</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">31</div></div>
+      <!-- 2026/08 前置天數 (7/27 一 至 7/31 五) -->
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">27</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">28</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">29</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">30</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">31</span></div></div>
+      <!-- 8/1 (六) 今日 -->
       <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/01', '星期六', 15)">
-        <div class="day-num today">01 (今日)</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・李鮭魚... 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</span>
+        <div class="day-num-header">
+          <span class="day-num today">01 (今日)</span>
+        </div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・李鮭魚... 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</div>
         <div class="cal-event-more">還有 12 個 &gt;</div>
       </div>
-
-      <!-- 第 2 週 (8/2 - 8/8) -->
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/02', '星期日', 12)">
-        <div class="day-num">02</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・賴文雄 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・詹富勇 08:30</span>
-        <div class="cal-event-more">還有 9 個 &gt;</div>
-      </div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/03', '星期一', 10)">
-        <div class="day-num">03</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・林偉 08:45</span>
+      <!-- 8/2 (日) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/02', '星期日', 10)">
+        <div class="day-num-header"><span class="day-num">02</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・賴文雄 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・詹富勇 08:30</div>
         <div class="cal-event-more">還有 7 個 &gt;</div>
       </div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/04', '星期二', 8)">
-        <div class="day-num">04</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:30</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:45</span>
+
+      <!-- 第 2 週 (8/3 一 - 8/9 日) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/03', '星期一', 12)">
+        <div class="day-num-header"><span class="day-num">03</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・林偉 08:45</div>
+        <div class="cal-event-more">還有 9 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/04', '星期二', 14)">
+        <div class="day-num-header"><span class="day-num">04</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:45</div>
+        <div class="cal-event-more">還有 11 個 &gt;</div>
       </div>
       <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/05', '星期三', 9)">
-        <div class="day-num">05</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・張美玲 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・嚴長憲 08:30</span>
+        <div class="day-num-header"><span class="day-num">05</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・張美玲 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・嚴長憲 08:30</div>
         <div class="cal-event-more">還有 6 個 &gt;</div>
       </div>
       <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/06', '星期四', 13)">
-        <div class="day-num">06</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:30</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:45</span>
+        <div class="day-num-header"><span class="day-num">06</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:30</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:45</div>
         <div class="cal-event-more">還有 10 個 &gt;</div>
       </div>
       <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/07', '星期五', 10)">
-        <div class="day-num">07</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:30</span>
+        <div class="day-num-header"><span class="day-num">07</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:30</div>
         <div class="cal-event-more">還有 7 個 &gt;</div>
       </div>
       <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/08', '星期六', 15)">
-        <div class="day-num">08</div>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</span>
+        <div class="day-num-header"><span class="day-num">08</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・姜義企 08:30</div>
         <div class="cal-event-more">還有 12 個 &gt;</div>
       </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/09', '星期日', 5)">
+        <div class="day-num-header"><span class="day-num">09</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</div>
+      </div>
 
-      <!-- 第 3 週 (8/9 - 8/15) -->
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/09', '星期日', 5)"><div class="day-num">09</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/10', '星期一', 6)"><div class="day-num">10</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/11', '星期二', 7)"><div class="day-num">11</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/12', '星期三', 5)"><div class="day-num">12</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/13', '星期四', 14)"><div class="day-num">13</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</span><div class="cal-event-more">還有 11 個 &gt;</div></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/14', '星期五', 6)"><div class="day-num">14</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/15', '星期六', 15)"><div class="day-num">15</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 12 個 &gt;</div></div>
+      <!-- 第 3 週 (8/10 一 - 8/16 日) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/10', '星期一', 14)">
+        <div class="day-num-header"><span class="day-num">10</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:15</div>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/11', '星期二', 14)">
+        <div class="day-num-header"><span class="day-num">11</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</div>
+        <div class="cal-event-more">還有 11 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/12', '星期三', 5)">
+        <div class="day-num-header"><span class="day-num">12</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/13', '星期四', 14)">
+        <div class="day-num-header"><span class="day-num">13</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</div>
+        <div class="cal-event-more">還有 11 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/14', '星期五', 6)">
+        <div class="day-num-header"><span class="day-num">14</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/15', '星期六', 15)">
+        <div class="day-num-header"><span class="day-num">15</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</div>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/16', '星期日', 4)">
+        <div class="day-num-header"><span class="day-num">16</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</div>
+      </div>
 
-      <!-- 第 4 週 (8/16 - 8/22) -->
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/16', '星期日', 4)"><div class="day-num">16</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span></div>
-      <div class="calendar-day-cell" style="background:#f0fdf4" onclick="openCalDaySummaryModal('08/17', '星期一', 11)">
-        <div class="day-num">17</div>
-        <span class="cal-event-pill home-event" style="font-weight:700">可報名居家・鄭正雄</span>
-        <span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span>
+      <!-- 第 4 週 (8/17 一 - 8/23 日) (8/17 特殊綠色膠囊可報名居家) -->
+      <div class="calendar-day-cell" style="background:#f0fdf4" onclick="openCalDaySummaryModal('08/17', '星期一', 12)">
+        <div class="day-num-header"><span class="day-num">17</span></div>
+        <div class="cal-event-pill home-recruiting">● 可報名居家・鄭正雄</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</div>
+        <div class="cal-event-more">還有 10 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/18', '星期二', 15)">
+        <div class="day-num-header"><span class="day-num">18</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</div>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/19', '星期三', 15)">
+        <div class="day-num-header"><span class="day-num">19</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</div>
+        <div class="cal-event-more">還有 13 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/20', '星期四', 5)">
+        <div class="day-num-header"><span class="day-num">20</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/21', '星期五', 7)">
+        <div class="day-num-header"><span class="day-num">21</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/22', '星期六', 11)">
+        <div class="day-num-header"><span class="day-num">22</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</div>
         <div class="cal-event-more">還有 8 個 &gt;</div>
       </div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/18', '星期二', 6)"><div class="day-num">18</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/19', '星期三', 15)"><div class="day-num">19</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・洪順惠 08:00</span><div class="cal-event-more">還有 13 個 &gt;</div></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/20', '星期四', 5)"><div class="day-num">20</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:15</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/21', '星期五', 7)"><div class="day-num">21</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・劉香香 08:15</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/22', '星期六', 11)"><div class="day-num">22</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 8 個 &gt;</div></div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/23', '星期日', 4)">
+        <div class="day-num-header"><span class="day-num">23</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</div>
+      </div>
 
-      <!-- 第 5 週 (8/23 - 8/29) -->
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/23', '星期日', 4)"><div class="day-num">23</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/24', '星期一', 6)"><div class="day-num">24</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/25', '星期二', 7)"><div class="day-num">25</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/26', '星期三', 5)"><div class="day-num">26</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/27', '星期四', 9)"><div class="day-num">27</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</span><div class="cal-event-more">還有 6 個 &gt;</div></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/28', '星期五', 13)"><div class="day-num">28</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</span><div class="cal-event-more">還有 10 個 &gt;</div></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/29', '星期六', 15)"><div class="day-num">29</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</span><div class="cal-event-more">還有 12 個 &gt;</div></div>
+      <!-- 第 5 週 (8/24 一 - 8/30 日) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/24', '星期一', 11)">
+        <div class="day-num-header"><span class="day-num">24</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・蔣義雄 08:30</div>
+        <div class="cal-event-more">還有 9 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/25', '星期二', 14)">
+        <div class="day-num-header"><span class="day-num">25</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・金津亮 08:00</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・簡麗卿 08:15</div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・歐陽國華 08:30</div>
+        <div class="cal-event-more">還有 11 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/26', '星期三', 5)">
+        <div class="day-num-header"><span class="day-num">26</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・黃律宏 08:00</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/27', '星期四', 9)">
+        <div class="day-num-header"><span class="day-num">27</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・陳蘭梓 08:15</div>
+        <div class="cal-event-more">還有 6 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/28', '星期五', 13)">
+        <div class="day-num-header"><span class="day-num">28</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郭琬棻 08:30</div>
+        <div class="cal-event-more">還有 10 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/29', '星期六', 15)">
+        <div class="day-num-header"><span class="day-num">29</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・司徒建智 08:00</div>
+        <div class="cal-event-more">還有 12 個 &gt;</div>
+      </div>
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/30', '星期日', 4)">
+        <div class="day-num-header"><span class="day-num">30</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</div>
+      </div>
 
-      <!-- 第 6 週 (8/30 - 9/5) -->
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/30', '星期日', 4)"><div class="day-num">30</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・郝珍貴 08:00</span></div>
-      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/31', '星期一', 5)"><div class="day-num">31</div><span class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</span></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">01</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">02</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">03</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">04</div></div>
-      <div class="calendar-day-cell other-month"><div class="day-num">05</div></div>
+      <!-- 第 6 週 (8/31 一 及 9 月補白) -->
+      <div class="calendar-day-cell" onclick="openCalDaySummaryModal('08/31', '星期一', 5)">
+        <div class="day-num-header"><span class="day-num">31</span></div>
+        <div class="cal-event-pill"><span class="p-tag">P</span> 黃志豪(PT)・彭春梅 08:15</div>
+      </div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">01</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">02</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">03</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">04</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">05</span></div></div>
+      <div class="calendar-day-cell other-month"><div class="day-num-header"><span class="day-num">06</span></div></div>
     </div>
   </div>
 
-  <!-- 置中 Modal 0：月曆單日排班總表 (完全還原 05 截圖 cal_to_daily_0.png，指示 3) -->
+  <!-- 置中 Modal 0：月曆單日排班總表 (按鈕嚴格修改為「前往查看單日排班」，指示 3) -->
   <div class="modal-overlay" id="calDaySummaryModal">
     <div class="center-modal-box" style="width:680px;">
       <div class="modal-header">
@@ -775,68 +950,64 @@
           2026 年 08 月 01 日（六）・ 排班總表
         </div>
         <div style="display:flex;align-items:center;gap:10px">
-          <button class="btn btn-primary" style="padding:4px 12px;font-size:12px" onclick="openAddScheduleModal()">+ 新增排班</button>
+          <button class="btn btn-primary" id="btnModalAddSchedule" style="padding:4px 12px;font-size:12px" onclick="openAddScheduleModal()">+ 新增排班</button>
           <button class="modal-close-btn" onclick="closeModal('calDaySummaryModal')">✕</button>
         </div>
       </div>
       <div class="modal-body" style="padding:0">
         <div class="cal-day-summary-row" onclick="openDetailModal('劉香香', '－', '尚未指派', '脆弱骨折', 'PAC 居家')">
           <div><span style="color:#64748b;margin-right:12px">－</span> 可報名居家 ・ 劉香香</div>
-          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+          <span class="status-pill" style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:11px">PAC 居家</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('李文雄', '08:00', '黃志豪（PT）', '腦中風(CVA)', 'PAC 住院')">
           <div><strong style="color:#0284c7;margin-right:12px">08:00</strong> 黃志豪（PT）・ 李文雄</div>
-          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:4px;font-size:11px">PAC 住院</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('司徒建智', '08:15', '黃志豪（PT）', '腦中風', 'PAC 住院')">
           <div><strong style="color:#0284c7;margin-right:12px">08:15</strong> 黃志豪（PT）・ 司徒建智</div>
-          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:4px;font-size:11px">PAC 住院</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('李鮭魚', '08:30', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')">
           <div><strong style="color:#0284c7;margin-right:12px">08:30</strong> 黃志豪（PT）・ 李鮭魚</div>
-          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:4px;font-size:11px">PAC 住院</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('姜義企', '08:45', '黃志豪（PT）', '脆弱骨折', 'PAC 住院')">
           <div><strong style="color:#0284c7;margin-right:12px">08:45</strong> 黃志豪（PT）・ 姜義企</div>
-          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:4px;font-size:11px">PAC 住院</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('郝珍貴', '09:00', '黃志豪（PT）', '衰弱高齡', 'PAC 住院')">
           <div><strong style="color:#0284c7;margin-right:12px">09:00</strong> 黃志豪（PT）・ 郝珍貴</div>
-          <span class="status-pill" style="background:#e0f2fe;color:#0284c7">PAC 住院</span>
-        </div>
-        <div class="cal-day-summary-row" onclick="openDetailModal('彭春梅', '09:15', '陳怡君（PT）', '衰弱高齡', '門診復健')">
-          <div><strong style="color:#64748b;margin-right:12px">09:15</strong> 陳怡君（PT）・ 彭春梅</div>
-          <span class="status-pill" style="background:#f1f5f9;color:#475569">門診復健</span>
+          <span class="status-pill" style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:4px;font-size:11px">PAC 住院</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('鄭正雄', '12:30', '吳建宏（PT）', '衰弱高齡', 'PAC 居家')">
           <div><strong style="color:#16a34a;margin-right:12px">12:30</strong> 吳建宏（PT）・ 鄭正雄 (午休)</div>
-          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+          <span class="status-pill" style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:11px">PAC 居家</span>
         </div>
         <div class="cal-day-summary-row" onclick="openDetailModal('張簡麗卿', '18:30', '黃志豪（PT）', '腦中風', 'PAC 居家')">
           <div><strong style="color:#16a34a;margin-right:12px">18:30</strong> 黃志豪（PT）・ 張簡麗卿 (下班後)</div>
-          <span class="status-pill" style="background:#dcfce7;color:#166534">PAC 居家</span>
+          <span class="status-pill" style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:11px">PAC 居家</span>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:space-between">
-        <button class="btn btn-outline" onclick="switchToSelectedDateGrid()">前往當日排班網格 &gt;</button>
+        <!-- 依指示 3 精確修改為「前往查看單日排班」 -->
+        <button class="btn btn-outline" onclick="switchToSelectedDateGrid()">前往查看單日排班 &gt;</button>
         <button class="btn btn-primary" onclick="closeModal('calDaySummaryModal')">關閉</button>
       </div>
     </div>
   </div>
 
-  <!-- 置中 Modal 1：復健詳情 (05 排版，含粉色標籤有班表版本) -->
+  <!-- 置中 Modal 1：復健詳情 -->
   <div class="modal-overlay" id="detailModal">
     <div class="center-modal-box" style="width:880px;">
       <div class="modal-header">
         <div class="modal-header-title">
           <span id="modalHeaderTitle">08:00 黃志豪（PT）・李文雄 PAC 住院</span>
-          <span class="pink-capsule-badge" id="modalPinkBadge">院內個案 - 有班表版本</span>
+          <span style="display:inline-flex;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;background:#fdf2f8;border:1px solid #f472b6;color:#be185d" id="modalPinkBadge">院內個案 - 有班表版本</span>
         </div>
         <button class="modal-close-btn" onclick="closeModal('detailModal')">✕</button>
       </div>
       <div class="modal-body">
         <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:24px;">
-          <!-- 左欄：個案資訊 -->
           <div>
             <div style="font-size:14px;font-weight:700;margin-bottom:12px">個案資訊</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px">
@@ -855,19 +1026,13 @@
                 PT：腦中風(CVA)右側偏癱，加強患側肢體肌力、關節活動度訓練及防跌倒指導。
               </div>
             </div>
-            <div style="margin-top:16px">
-              <button class="btn btn-outline" style="font-size:12px;padding:4px 10px" onclick="alert('導航前往患者資料頁')">前往患者資料頁 &gt;</button>
-            </div>
           </div>
-
-          <!-- 右欄：治療師資訊與三欄復健時刻表 -->
           <div>
             <div style="font-size:14px;font-weight:700;margin-bottom:12px">治療師資訊</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px;margin-bottom:12px">
               <div><div style="font-size:11px;color:#64748b">治療師</div><div style="font-weight:600" id="modalTherapist">黃志豪（主管/PT）</div></div>
               <div><div style="font-size:11px;color:#64748b">治療時段</div><div style="font-weight:600;color:var(--primary-blue)" id="modalTimeSlot">08:00 - 08:15</div></div>
             </div>
-
             <div style="font-size:13px;font-weight:700;margin-bottom:6px">復健時刻表</div>
             <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:6px;font-size:12px">
               <thead>
@@ -893,18 +1058,17 @@
                 </tr>
               </tbody>
             </table>
-
-            <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:8px">
-              <button class="btn btn-outline" onclick="alert('已開啟排班編輯模式')">編輯排班</button>
-              <button class="btn" style="background:#1e293b;color:#ffffff" onclick="alert('已取消此排班！'); closeModal('detailModal')">取消排班</button>
-            </div>
           </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="alert('已開啟排班編輯模式')">編輯排班</button>
+        <button class="btn" style="background:#1e293b;color:#ffffff" onclick="alert('已取消此排班！'); closeModal('detailModal')">取消排班</button>
       </div>
     </div>
   </div>
 
-  <!-- 置中 Modal 2：換班審核 -->
+  <!-- 置中 Modal 2：換班審核 (主管專屬) -->
   <div class="modal-overlay" id="shiftAuditModal">
     <div class="center-modal-box" style="width:640px;">
       <div class="modal-header">
@@ -928,39 +1092,155 @@
     </div>
   </div>
 
-  <!-- 置中 Modal 3：新增排班 -->
+  <!-- 置中 Modal 3：新增排班 (完全還原 05 原稿 ov_add_popup_0.png，含專業時段選單，指示 2) -->
   <div class="modal-overlay" id="addScheduleModal">
-    <div class="center-modal-box" style="width:560px;">
+    <div class="center-modal-box" style="width:620px;">
       <div class="modal-header">
         <div class="modal-header-title">新增排班</div>
         <button class="modal-close-btn" onclick="closeModal('addScheduleModal')">✕</button>
       </div>
       <div class="modal-body">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">排班類型 *</label>
-            <select class="filter-select" style="width:100%"><option>PAC 住院</option><option>PAC 居家</option></select>
+        <!-- 第 1 列：排班類型、週期 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+          <div>
+            <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">排班類型 <span style="color:#ef4444">*</span></label>
+            <select class="filter-select" style="width:100%">
+              <option>PAC 住院</option>
+              <option>PAC 居家</option>
+              <option>PAC 日照</option>
+              <option>門診復健</option>
+              <option>一般復健</option>
+            </select>
           </div>
-          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">週期 *</label>
-            <select class="filter-select" style="width:100%"><option>每天（週一至週六）</option><option>每週一三五</option></select>
+          <div>
+            <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">排班週期 <span style="color:#ef4444">*</span></label>
+            <select class="filter-select" style="width:100%">
+              <option>每天（週一至週六）</option>
+              <option>每週一三五</option>
+              <option>每週二四六</option>
+              <option>自訂週期</option>
+            </select>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">復健日期 *</label>
-            <input type="text" class="search-input" value="2026/08/01 (一)">
+
+        <!-- 第 2 列：復健日期、時段 (點擊彈出時鐘選單) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;position:relative">
+          <div>
+            <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">復健日期 <span style="color:#ef4444">*</span></label>
+            <input type="text" class="search-input" id="schedDateInput" value="2026/08/01(一)">
           </div>
-          <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">時段 *</label>
-            <input type="text" class="search-input" value="14:45 - 15:00">
+          <div>
+            <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">時段 <span style="color:#ef4444">*</span></label>
+            <input type="text" class="search-input" id="schedTimeSlotInput" value="🕒 14:45" readonly style="cursor:pointer;background:#fff" onclick="toggleTimePicker()">
           </div>
+
+          <!-- 專業時鐘選單 Popover (完全還原 ov_add_popup_0.png) -->
+          <div class="time-picker-popover" id="timePickerPopover">
+            <div class="tp-columns">
+              <div class="tp-ampm-col">
+                <button type="button" class="tp-ampm-btn" id="tpAmpmAM" onclick="selectAmpm('AM')">上午</button>
+                <button type="button" class="tp-ampm-btn active" id="tpAmpmPM" onclick="selectAmpm('PM')">下午</button>
+              </div>
+              <div class="tp-scroll-col">
+                <div class="tp-col-title">時</div>
+                <div class="tp-option-item" onclick="selectHour('08')">8</div>
+                <div class="tp-option-item" onclick="selectHour('09')">9</div>
+                <div class="tp-option-item" onclick="selectHour('10')">10</div>
+                <div class="tp-option-item" onclick="selectHour('11')">11</div>
+                <div class="tp-option-item selected" id="tpHour14" onclick="selectHour('14')">14</div>
+                <div class="tp-option-item" onclick="selectHour('15')">15</div>
+                <div class="tp-option-item" onclick="selectHour('16')">16</div>
+                <div class="tp-option-item" onclick="selectHour('17')">17</div>
+              </div>
+              <div class="tp-scroll-col">
+                <div class="tp-col-title">分</div>
+                <div class="tp-option-item" onclick="selectMinute('00')">00</div>
+                <div class="tp-option-item" onclick="selectMinute('15')">15</div>
+                <div class="tp-option-item" onclick="selectMinute('30')">30</div>
+                <div class="tp-option-item selected" id="tpMin45" onclick="selectMinute('45')">45</div>
+              </div>
+            </div>
+            <div class="tp-actions">
+              <button type="button" class="tp-btn-clear" onclick="clearTimeSlot()">清除</button>
+              <button type="button" class="tp-btn-confirm" onclick="confirmTimeSlot()">確定</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第 3 列：治療師 (分組選單) -->
+        <div style="margin-bottom:14px">
+          <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">治療師 <span style="color:#ef4444">*</span></label>
+          <select class="filter-select" style="width:100%">
+            <optgroup label="物理治療師 (PT)">
+              <option>黃志豪（主管/PT）</option>
+              <option>陳怡君（PT）</option>
+              <option>林承翰（PT）</option>
+              <option>黃雅婷（PT）</option>
+              <option>吳建宏（PT）</option>
+              <option>蔡昕妤（PT）</option>
+              <option>許哲銘（PT）</option>
+            </optgroup>
+            <optgroup label="職能治療師 (OT)">
+              <option>劉思妤（OT）</option>
+              <option>鄭佩芬（OT）</option>
+              <option>謝宗霖（OT）</option>
+            </optgroup>
+            <optgroup label="語言治療師 (ST)">
+              <option>吳怡君（ST）</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- 第 4 列：選擇個案 -->
+        <div style="margin-bottom:14px">
+          <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">選擇個案 <span style="color:#ef4444">*</span></label>
+          <select class="filter-select" style="width:100%">
+            <option>李文雄（腦中風・PAC 住院）</option>
+            <option>林偉（衰弱高齡・PAC 住院）</option>
+            <option>司徒建智（腦中風・PAC 住院）</option>
+            <option>歐陽國華（腦中風・PAC 住院）</option>
+            <option>鄭正雄（衰弱高齡・PAC 住院）</option>
+            <option>黃莉英（脆弱骨折・PAC 住院）</option>
+          </select>
+        </div>
+
+        <!-- 第 5 列：備註 -->
+        <div>
+          <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px">備註</label>
+          <textarea class="search-input" style="height:60px;resize:none" placeholder="輸入排班備註說明..."></textarea>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeModal('addScheduleModal')">取消</button>
-        <button class="btn btn-primary" onclick="alert('新增排班成功！'); closeModal('addScheduleModal')">確認新增</button>
+        <button class="btn btn-primary" onclick="alert('已成功建立新增排班！'); closeModal('addScheduleModal')">確認新增</button>
       </div>
     </div>
   </div>
 
   <script>
+    let currentRoleMode = 'supervisor'; // 'supervisor' or 'therapist'
+    let selectedAmpm = 'PM';
+    let selectedHour = '14';
+    let selectedMin = '45';
+
+    function toggleRoleView() {
+      if (currentRoleMode === 'supervisor') {
+        currentRoleMode = 'therapist';
+        document.getElementById('roleViewText').textContent = '復健治療師（王大明）';
+        document.getElementById('btnShiftAudit').style.display = 'none';
+        document.getElementById('btnAddSchedule').style.display = 'none';
+        document.getElementById('btnApplyShift').style.display = 'inline-flex';
+        document.getElementById('therapistFilterSelect').value = '黃志豪';
+      } else {
+        currentRoleMode = 'supervisor';
+        document.getElementById('roleViewText').textContent = '復健主管（黃志豪）';
+        document.getElementById('btnShiftAudit').style.display = 'inline-flex';
+        document.getElementById('btnAddSchedule').style.display = 'inline-flex';
+        document.getElementById('btnApplyShift').style.display = 'none';
+        document.getElementById('therapistFilterSelect').value = 'all';
+      }
+    }
+
     function switchView(viewType) {
       const btnToday = document.getElementById('btnViewToday');
       const btnCal = document.getElementById('btnViewCalendar');
@@ -986,9 +1266,11 @@
     // 開啟月曆單格排班總表彈窗 (指示 3)
     function openCalDaySummaryModal(dateStr, weekday, count) {
       document.getElementById('calSummaryTitle').textContent = `2026 年 ${dateStr}（${weekday}）・ 排班總表`;
+      document.getElementById('btnModalAddSchedule').style.display = currentRoleMode === 'supervisor' ? 'inline-flex' : 'none';
       document.getElementById('calDaySummaryModal').classList.add('open');
     }
 
+    // 前往查看單日排班 (嚴格遵照指示 3 修改文字與跳轉)
     function switchToSelectedDateGrid() {
       closeModal('calDaySummaryModal');
       switchView('today');
@@ -1002,20 +1284,47 @@
       document.getElementById('modalPatientDisease').textContent = disease;
       document.getElementById('modalPatientCare').textContent = careMode.includes('居家') ? '居家' : '住院';
       document.getElementById('modalHeaderTitle').textContent = `${slot} ${therapist}・${name} ${careMode}`;
-
       const pinkBadge = document.getElementById('modalPinkBadge');
       if (careMode.includes('居家')) {
         pinkBadge.textContent = '居家個案 - 有班表版本（僅供瀏覽）';
       } else {
         pinkBadge.textContent = '院內個案 - 有班表版本';
       }
-
       document.getElementById('detailModal').classList.add('open');
     }
 
     function openShiftAuditModal() { document.getElementById('shiftAuditModal').classList.add('open'); }
     function openAddScheduleModal() { document.getElementById('addScheduleModal').classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // 時段選擇器 Popover (指示 2)
+    function toggleTimePicker() {
+      const pop = document.getElementById('timePickerPopover');
+      pop.classList.toggle('open');
+    }
+    function selectAmpm(v) {
+      selectedAmpm = v;
+      document.getElementById('tpAmpmAM').classList.toggle('active', v === 'AM');
+      document.getElementById('tpAmpmPM').classList.toggle('active', v === 'PM');
+    }
+    function selectHour(h) {
+      selectedHour = h;
+      document.querySelectorAll('.tp-scroll-col:first-of-type .tp-option-item').forEach(el => el.classList.remove('selected'));
+      event.target.classList.add('selected');
+    }
+    function selectMinute(m) {
+      selectedMin = m;
+      document.querySelectorAll('.tp-scroll-col:last-of-type .tp-option-item').forEach(el => el.classList.remove('selected'));
+      event.target.classList.add('selected');
+    }
+    function clearTimeSlot() {
+      document.getElementById('schedTimeSlotInput').value = '🕒 請選擇復健時段';
+      document.getElementById('timePickerPopover').classList.remove('open');
+    }
+    function confirmTimeSlot() {
+      document.getElementById('schedTimeSlotInput').value = `🕒 ${selectedHour}:${selectedMin} (${selectedAmpm === 'AM' ? '上午' : '下午'})`;
+      document.getElementById('timePickerPopover').classList.remove('open');
+    }
   </script>
 </body>
 </html>

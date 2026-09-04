@@ -864,9 +864,11 @@
         </div>
       </div>
 
-      <!-- 區塊 2：初步評估 / 期中報告 / 出院評估 (動態依週次切換，完全對齊多田截圖) -->
+      <!-- 區塊 2：初步評估 / 期中報告 / 出院評估 (動態依週次切換，完全對齊多田截圖與使用者回答 1) -->
       <div id="subReportSection" style="display:none">
-        <div class="eval-form-block">
+        <!-- 2-1: 初評 第 0 週 顯示：初步評估 -->
+        <div id="subBlockInitial" class="eval-form-block">
+          <div style="font-size:14px;font-weight:700;color:#0284c7;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">初步評估紀錄（初評 第 0 週）</div>
           <div class="form-row">
             <label>疾患發病前狀況</label>
             <div class="form-text-box">恢復日常生活及行動功能、自理。</div>
@@ -904,6 +906,64 @@
             <label>居家訪視</label>
             <div class="form-text-box">
               ☑ 同意居家訪視 ｜ 聯絡對象：關係［父女］ ｜ 聯絡電話：0912-345-678 ｜ 地址：彰化縣員林市中山路二段100號
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-2: 複評 1~3 週 顯示：期中報告 -->
+        <div id="subBlockMidterm" class="eval-form-block" style="display:none">
+          <div style="font-size:14px;font-weight:700;color:#0284c7;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">期中報告（複評階段）</div>
+          <div class="form-row">
+            <label>整體成效評估</label>
+            <div class="form-text-box">
+              個案復健進展穩定，日常生活自理（Barthel Index）由 25 分提升至 45 分，翻身與坐起可獨立完成，患側下肢肌力提升至 Grade 3+。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>治療目標檢討</label>
+            <div class="form-text-box">
+              短期目標已達成約 75%，符合預期進度。維持物理、職能加強訓練，語言吞嚥功能評估無明顯誤吸，可嘗試軟質食物。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>治療計畫修正</label>
+            <div class="form-text-box">
+              暫不需下修訓練頻率，維持每週 3 次。物理治療加強動態平衡與助行器步行步態，職能治療加強精細動作手眼協調。
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-3: 結案 第 12 週 顯示：出院評估 -->
+        <div id="subBlockDischarge" class="eval-form-block" style="display:none">
+          <div style="font-size:14px;font-weight:700;color:#0284c7;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">出院評估（結案階段）</div>
+          <div class="form-row">
+            <label>出院後生活方式與居住安排</label>
+            <div class="form-text-box">
+              個案預計返家生活，與女兒同住，並已聘請專責照護員共同協助。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>社福資源轉介</label>
+            <div class="form-text-box">
+              已由個管師協助轉介長期照顧 2.0 居家服務（喘息服務及居家復能指導）。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>輔具評估與轉介</label>
+            <div class="form-text-box">
+              已開立四腳拐杖及便盆洗澡椅輔具評估建議書，家屬已購置並指導安全使用技巧。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>照護整合及社區支援</label>
+            <div class="form-text-box">
+              預約 2 週後回診神經外科與復健科門診追蹤，並轉介社區據點健康促進活動。
+            </div>
+          </div>
+          <div class="form-row">
+            <label>結案原因</label>
+            <div class="form-text-box" style="font-weight:600;color:#166534">
+              個案功能顯著進步，經急性後期照護跨專業團隊共同評估，已達成預期照護目標，評定符合出院返家條件，准予結案。
             </div>
           </div>
         </div>
@@ -985,12 +1045,23 @@
       document.getElementById('currentStageInput').value = idx === 0 ? '初評' : idx === 4 ? '結案' : `複評 ${idx}`;
 
       const tabSub = document.getElementById('tabSubReport');
+      const bInit = document.getElementById('subBlockInitial');
+      const bMid = document.getElementById('subBlockMidterm');
+      const bDisc = document.getElementById('subBlockDischarge');
+
+      bInit.style.display = 'none';
+      bMid.style.display = 'none';
+      bDisc.style.display = 'none';
+
       if (idx === 0) {
         tabSub.textContent = '✓ 初步評估';
+        bInit.style.display = 'block';
       } else if (idx === 4) {
         tabSub.textContent = '✓ 出院評估';
+        bDisc.style.display = 'block';
       } else {
         tabSub.textContent = '✓ 期中報告';
+        bMid.style.display = 'block';
       }
     }
 

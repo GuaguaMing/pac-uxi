@@ -42,7 +42,7 @@ export function AppSidebar() {
     {
       type: 'item',
       id: 'bed-management',
-      label: '排床管理',
+      label: '排床管理 (未開放)',
       icon: '🛏',
     },
     {
@@ -62,13 +62,13 @@ export function AppSidebar() {
       icon: '📄',
       items: [
         { id: 'comprehensive-assessment-report', label: '綜合評估報告書', targetId: 'comprehensive-assessment-report' },
-        { id: 'assessment-forms', label: '復健評估', targetId: 'assessment-forms' },
+        { id: 'assessment-forms', label: '復健評估', targetId: 'comprehensive-assessment-report' },
       ],
     },
     {
       type: 'item',
       id: 'indicator-export',
-      label: '統計數據',
+      label: '統計數據 (未開放)',
       icon: '📊',
     },
     {
